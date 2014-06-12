@@ -1,0 +1,15 @@
+/vis/open OGL 600x600-0+0
+/vis/sceneHandler/create OGL
+/vis/viewer/create ! ! 600x600-0+0
+/vis/viewer/refresh
+
+/vis/drawVolume
+/vis/scene/create
+/vis/scene/add/volume world
+/vis/sceneHandler/attach
+
+/vis/scene/endOfEventAction accumulate
+
+/vis/viewer/set/viewpointThetaPhi 70 70
+
+/vis/ogl/printEPS
