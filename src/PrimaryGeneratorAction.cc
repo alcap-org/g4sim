@@ -17,6 +17,9 @@
 #include "G4RotationMatrix.hh"
 #include "Randomize.hh"
 
+#include "G4LogicalVolumeStore.hh"
+#include "G4Box.hh"
+
 //supported geometry
 #include "MyDetectorManager.hh"
 #include "MyVGeometrySvc.hh"
@@ -220,7 +223,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		SetRandomPosition();
 	}
 	else if ( PositionMode == "target") {
-	  std::cout << "Target Mode Set" << std::endl;
+	  SetRandomPosition();  
 	}
 	else if ( PositionMode != "none" ){
 		std::cout<<"ERROR: unknown PositionMode: "<<PositionMode<<"!!!"<<std::endl;
@@ -340,6 +343,28 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 		if (xSpread) dx=2.*(G4UniformRand()-0.5)*xSpread;
 		if (ySpread) dy=2.*(G4UniformRand()-0.5)*ySpread;
 		if (zSpread) dz=2.*(G4UniformRand()-0.5)*zSpread;
+	}
+	else if (PositionMode=="target"){
+	  // Make sure that the random position chosen is within the Target volume
+	  G4LogicalVolumeStore* log_vol_store = G4LogicalVolumeStore::GetInstance(); // get the store of logical volumes
+	  G4LogicalVolume* target_log_vol = log_vol_store->GetVolume("Target", true); // get the Target logical volume
+	  G4Box* target_solid_vol = (G4Box*) target_log_vol->GetSolid(); // get the Target solid volume
+
+	  // Get a random position based on the spread (copied code from gRand)
+	  do {
+	    dx=G4RandGauss::shoot(0,xSpread);
+	    dy=G4RandGauss::shoot(0,ySpread);
+	    dz=G4RandGauss::shoot(0,zSpread);
+
+	    G4ThreeVector position(x+dx, y+dy, z+dz);
+	    if (target_solid_vol->Inside(position) == kInside) {
+	      std::cout << "AE: " << position << " is inside target" << std::endl;
+	      gotit = true;
+	    }
+	    else {
+	      std::cout << "AE: " << position << " is outside target" << std::endl;
+	    }
+	  } while (!gotit);
 	}
 	particleGun->SetParticlePosition(G4ThreeVector(x+dx,y+dy,z+dz));
 }
