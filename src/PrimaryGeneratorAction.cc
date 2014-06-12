@@ -219,6 +219,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	else if ( PositionMode == "gRand" || PositionMode == "sRand" || PositionMode == "bRand" ){
 		SetRandomPosition();
 	}
+	else if ( PositionMode == "target") {
+	  std::cout << "Target Mode Set" << std::endl;
+	}
 	else if ( PositionMode != "none" ){
 		std::cout<<"ERROR: unknown PositionMode: "<<PositionMode<<"!!!"<<std::endl;
 		G4Exception("PrimaryGeneratorAction::GeneratePrimaries()",
