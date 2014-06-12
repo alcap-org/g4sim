@@ -8,8 +8,7 @@
 /vis/scene/add/volume world
 /vis/sceneHandler/attach
 
-/vis/scene/endOfEventAction accumulate
-
 /vis/viewer/set/viewpointThetaPhi 70 70
 
-/vis/ogl/printEPS
+/vis/scene/add/trajectories smooth
+/vis/scene/endOfEventAction accumulate

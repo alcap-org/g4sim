@@ -43,3 +43,5 @@
 #/g4sim/gun/root_index 2718575
 #/g4sim/myAnalysisSvc/set_ofile_name output/run001.root
 /run/beamOn  100
+
+/vis/ogl/printEPS
