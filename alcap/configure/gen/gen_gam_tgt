@@ -18,7 +18,8 @@
 #	MomAmp:      0.7789
 #	MomAmp:      0.96401
 #	MomAmp:      1.08578
-	MomAmp:      1.40795
+#	MomAmp:      1.40795
+	MomAmp:      0.346828 # Al 2p-1s transition
 #Default Position     x    y   z
 #	                  mm   mm  mm
 	Position:         0    0   0
