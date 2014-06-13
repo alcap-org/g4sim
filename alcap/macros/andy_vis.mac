@@ -1,0 +1,10 @@
+/vis/open OGLIX
+
+/vis/geometry/list 
+/vis/drawVolume
+#/vis/scene/add/volume ChamberIn
+
+/vis/viewer/set/viewpointThetaPhi 70 90
+
+/vis/scene/add/trajectories smooth
+/vis/scene/endOfEventAction accumulate
