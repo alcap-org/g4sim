@@ -5,8 +5,7 @@
 /control/execute {MYG4SIMWORKROOT}/macros/resetCut.mac
 
 # Verbosity
-/tracking/verbose 2
-/stacking/set_no_sec 1
+#/tracking/verbose 2
 
 # Get visualisation
 /control/execute {MYG4SIMWORKROOT}/macros/andy_vis.mac
