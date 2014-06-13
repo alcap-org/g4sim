@@ -17,8 +17,7 @@
 #include "G4RotationMatrix.hh"
 #include "Randomize.hh"
 
-#include "G4LogicalVolumeStore.hh"
-#include "G4Box.hh"
+#include "G4TransportationManager.hh"
 
 //supported geometry
 #include "MyDetectorManager.hh"
@@ -346,9 +345,7 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	}
 	else if (PositionMode=="target"){
 	  // Make sure that the random position chosen is within the Target volume
-	  G4LogicalVolumeStore* log_vol_store = G4LogicalVolumeStore::GetInstance(); // get the store of logical volumes
-	  G4LogicalVolume* target_log_vol = log_vol_store->GetVolume("Target", true); // get the Target logical volume
-	  G4Box* target_solid_vol = (G4Box*) target_log_vol->GetSolid(); // get the Target solid volume
+	  G4Navigator* theNavigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
 
 	  // Get a random position based on the spread (copied code from gRand)
 	  do {
@@ -357,12 +354,14 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	    dz=G4RandGauss::shoot(0,zSpread);
 
 	    G4ThreeVector position(x+dx, y+dy, z+dz);
-	    if (target_solid_vol->Inside(position) == kInside) {
-	      std::cout << "AE: " << position << " is inside target" << std::endl;
-	      gotit = true;
+	    G4VPhysicalVolume* phys_volume = theNavigator->LocateGlobalPointAndSetup(position);
+
+	    if (!phys_volume) {
+	      continue; // if theNavigator didn't return a physical volume
 	    }
-	    else {
-	      std::cout << "AE: " << position << " is outside target" << std::endl;
+
+	    if (phys_volume->GetName() == "Target") {
+	      gotit = true;
 	    }
 	  } while (!gotit);
 	}
