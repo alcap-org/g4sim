@@ -6,6 +6,7 @@
 
 # Verbosity
 /tracking/verbose 2
+/stacking/set_no_sec 1
 
 # Get visualisation
 /control/execute {MYG4SIMWORKROOT}/macros/andy_vis.mac
