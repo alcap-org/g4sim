@@ -8,7 +8,7 @@
 #/tracking/verbose 2
 
 # Get visualisation
-/control/execute {MYG4SIMWORKROOT}/macros/andy_vis.mac
+#/control/execute {MYG4SIMWORKROOT}/macros/andy_vis.mac
 
 # Set Output
 /g4sim/myAnalysisSvc/set_out_card output/output_default
@@ -33,7 +33,7 @@
 #/stacking/clear_black_list
 #/stacking/set_no_MC 1
 #/stacking/set_no_PC 1
-#/stacking/set_no_sec 1
+/stacking/set_no_sec 1
 
 #	For generator
 ##/g4sim/gun/ReadCard gen_root
@@ -45,6 +45,6 @@
 #/random/setSeeds 1844211379 853976860
 #/g4sim/gun/root_index 2718575
 #/g4sim/myAnalysisSvc/set_ofile_name output/run001.root
-/run/beamOn  10
+/run/beamOn  500000
 
-/vis/ogl/printEPS
+#/vis/ogl/printEPS
