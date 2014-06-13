@@ -22,7 +22,7 @@
 #Default Position     x    y   z
 #	                  mm   mm  mm
 	Position:         0    0   0
-#	PosSpread:        30  30 30 
+	PosSpread:        100  100 100 
 #	PosLimit:         17.5
 
 	RandMode:       none #(none/root)
