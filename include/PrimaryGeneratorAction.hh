@@ -176,24 +176,9 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction,
 		bool flag_ppid;
 		bool flag_ptid;
 
-  // For "turtle" position and direction mode
-  TF1* fXPositionFinalFocusFit;
-  double fXPositionFinalFocus_Lower;
-  double fXPositionFinalFocus_Upper;
-
-  TF1* fYPositionFinalFocusFit;
-  double fYPositionFinalFocus_Lower;
-  double fYPositionFinalFocus_Upper;
-
+  // For "muPC" position and direction mode
+  std::string muPC_profile_filename;
   TH2F* fMuPCBeamDistHist;
-
-  TH2F* fMuPCBeamDistRandom;
-  TH2F* fFFBeamDistRandom;
-
-  // For "collimated" position and energy modes
-  TH3F* fCollimatedInputHist_XYPz;
-  TH3F* fCollimatedInputHist_XPxPz;
-  TH3F* fCollimatedInputHist_YPyPz;
 
   // For "collimator" position and direction mode
   TF1* fEnergyLoss;

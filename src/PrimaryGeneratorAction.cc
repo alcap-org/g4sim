@@ -215,7 +215,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    TDirectory* prev_dir = gDirectory;
 	    // Get the relevant functions/histograms
 	    std::string dir_name = getenv("CONFIGUREDATAROOT");
-	    dir_name += "mupc_profile_run3600_Al50.root";
+	    dir_name += muPC_profile_filename;
 	    TFile* mupc_profile_file = new TFile(dir_name.c_str(), "READ");
 	    
 	    // Get the histogram of the beam distribution at the muPC
@@ -983,6 +983,9 @@ void PrimaryGeneratorAction::ReadCard(G4String file_name){
 				knownValueNames.push_back(MacroName);
 				knownValues.push_back(MacroValue);
 			}
+		}
+		else if ( keyword == "muPC_profile_filename:" ) { // the name of the ROOT file with the muPC profile in
+		  buf_card>>muPC_profile_filename;
 		}
 		else{
 			std::cout<<"In PrimaryGeneratorAction::ReadCard, unknown name: '"<<keyword<<"' in file "<<file_name<<std::endl;
