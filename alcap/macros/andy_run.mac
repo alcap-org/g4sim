@@ -14,7 +14,7 @@
 /g4sim/gun/ResetGen               gen/gen_mu_1.30_muPC
 
 # Set Geo
-/g4sim/det/ReloadGeo              geometry_R2013/andy_geometry_SiR2_default
+/g4sim/det/ReloadGeo              geometry_R2013/andy_geometry_SiR2_checiking-upstream-material
 
 #	For this run
 /random/setSeeds 5 6
