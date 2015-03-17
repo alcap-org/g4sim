@@ -64,23 +64,9 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 	ReadCard(file_name);
 	Initialize();
 
-	// Initialise all the TURTLE/data fits
-	fXPositionFinalFocusFit = NULL;
-	fYPositionFinalFocusFit = NULL;
-
-	fXPositionFinalFocus_Lower = -1.5;
-	fXPositionFinalFocus_Upper = 1.5;
-
-	fYPositionFinalFocus_Lower = -1.5;
-	fYPositionFinalFocus_Upper = 1.5;
-
+	// The histogram of the beam profile at the muPC detector
 	fMuPCBeamDistHist = NULL;
 	
-	// Set the "collimated" input hists to NULL
-	fCollimatedInputHist_XYPz = NULL;
-	fCollimatedInputHist_XPxPz = NULL;
-	fCollimatedInputHist_YPyPz = NULL;
-
 	//	fMuPCBeamDistRandom = new TH2F("muPC_random", "muPC_random", 100,-24,24, 100,-24,24);
 	//	fFFBeamDistRandom = new TH2F("FF_random", "FF_random", 100,-24,24, 100,-24,24);;
 }
@@ -206,123 +192,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	else if ( EnergyMode == "gRand" || EnergyMode == "uRand" ){
 		SetRandomEnergy();
 	}
-	else if ( EnergyMode == "collimated") {
-	  if (!fCollimatedInputHist_XYPz && !fCollimatedInputHist_XPxPz && !fCollimatedInputHist_YPyPz) {
-	    TDirectory* prev_dir = gDirectory;
-	    // Get the relevant functions/histograms
-	    std::string dir_name = getenv("CONFIGUREDATAROOT");
-	    dir_name += "CollimatedInput.root";
-	    TFile* collimated_file = new TFile(dir_name.c_str(), "READ");
-	    
-	    fCollimatedInputHist_XYPz = (TH3F*) (collimated_file->Get("hXYPz"))->Clone();
-	    fCollimatedInputHist_XYPz->SetDirectory(0);
-
-	    fCollimatedInputHist_XPxPz = (TH3F*) (collimated_file->Get("hXPxPz"))->Clone();
-	    fCollimatedInputHist_XPxPz->SetDirectory(0);
-
-	    fCollimatedInputHist_YPyPz = (TH3F*) (collimated_file->Get("hYPyPz"))->Clone();
-	    fCollimatedInputHist_YPyPz->SetDirectory(0);
-
-	    collimated_file->Close();
-	    gDirectory = prev_dir; // need to go back to where we were so that we can get the tree written to the output file
-	  }
-
-	  // The idea here is to make sure the correlations are maintained
-	  // The plan is:
-	  //  1. Generate a random set of XYPz
-	  //  2. Select a random x position based on the values of Px and Pz
-	  //  3. Select a random y position based on the values of Py and Pz
-	  //  4. Track this (x, y) pair back to make sure that it passed the ellipse
-	  double px, py, pz; // the variables we want to get
-	  double x, y, z;
-	  z = -7.06*cm; // already set by location of ColMon
-
-	  TH2F* hXPx = NULL; // we will use these to store the projections of the various plots
-	  TH1D* hPx = NULL;
-	  TH2F* hYPy = NULL;
-	  TH1D* hPy = NULL;
-
-	  double monitor_location = 2*cm; // the monitor we read out from to get collimated information was 20mm in front of the collimator
-	  double hole_ellipse_half_x = 1.6*cm; // the two radii of the hole in the collimator
-	  double hole_ellipse_half_y = 2.5*cm;
-
-	  bool found = false;
-	  while (!found) {
-	    fCollimatedInputHist_XYPz->GetRandom3(x, y, pz);
-	    x *= cm; y *= cm; pz *= MeV;
-	    //	    std::cout << "Drawn (x, y, pz): (" << x/cm << " cm, " << y/cm << " cm, " << pz/MeV << " MeV)" << std::endl;
-
-	    // First get the slice in the X-Z plane
-	    int bin = fCollimatedInputHist_XPxPz->GetZaxis()->FindBin(pz);
-	    fCollimatedInputHist_XPxPz->GetZaxis()->SetRange(bin, bin);
-	    hXPx = (TH2F*) fCollimatedInputHist_XPxPz->Project3D("xy");
-
-	    if (hXPx->GetEntries() == 0) {
-	      continue;
-	    }
-
-	    // Now get the slice in the y plane so that we can randomly select a value for x
-	    bin = hXPx->GetYaxis()->FindBin(x);
-	    hXPx->GetYaxis()->SetRange(bin, bin);
-	    hPx = hXPx->ProjectionX();
-
-	    if (hPx->GetEntries() == 0) {
-	      continue;
-	    }
-
-	    // Randomly select a value for x
-	    px = hPx->GetRandom()*MeV;
-
-	    // First get the slice in the Y-Z plane
-	    bin = fCollimatedInputHist_YPyPz->GetZaxis()->FindBin(pz);
-	    fCollimatedInputHist_YPyPz->GetZaxis()->SetRange(bin, bin);
-	    hYPy = (TH2F*) fCollimatedInputHist_YPyPz->Project3D("xy");
-
-	    if (hYPy->GetEntries() == 0) {
-	      continue;
-	    }
-
-
-	    // Now get the slice in the y plane so that we can randomly select a value for y
-	    bin = hYPy->GetYaxis()->FindBin(y);
-	    hYPy->GetYaxis()->SetRange(bin, bin);
-	    hPy = hYPy->ProjectionX();
-	    
-	    if (hPy->GetEntries() == 0) {
-	      continue;
-	    }
-
-	    // Randomly select a value for y
-	    py = hPy->GetRandom()*MeV;
-	    //	    std::cout << "Drawn (px, py) = (" << px/MeV << " MeV, " << py/MeV << " MeV)" << std::endl;
-
-	    // Track back to make sure we did pass ellipse
-	    double p_total = std::sqrt(px*px + py*py + pz*pz);
-
-	    double unit_px = px / p_total;
-	    double trackback_x = x - unit_px*monitor_location;
-	    double unit_py = py / p_total;
-	    double trackback_y = y - unit_py*monitor_location;
-
-	    double ellipse = (trackback_x*trackback_x)/(hole_ellipse_half_x*hole_ellipse_half_x) + (trackback_y*trackback_y)/(hole_ellipse_half_y*hole_ellipse_half_y);
-	    if (ellipse <= 1) {
-	      //	      std::cout << ellipse << " OK" << std::endl;
-	      found = true;
-	    }
-	  }
-	  G4ParticleMomentum particleMomentum(px, py, pz);
-
-	  G4double mom = particleMomentum.mag();
-	  G4double mass = particleGun->GetParticleDefinition()->GetPDGMass();
-	  G4double ekin = sqrt(mom*mom+mass*mass)-mass;
-	  particleGun->SetParticleEnergy(ekin);
-	  particleGun->SetParticleMomentumDirection(particleMomentum.unit());
-
-	  G4ThreeVector start_pos(x, y, z);
-	  particleGun->SetParticlePosition(start_pos);
-
-	  //	  std::cout << particleMomentum/MeV << " MeV, " << mom/MeV << " MeV, " << mass << ", " << ekin << ", " << start_pos/cm << " cm" << std::endl;
-	}
 	else if ( EnergyMode != "none" ){
 		std::cout<<"ERROR: unknown EnergyMode: "<<EnergyMode<<"!!!"<<std::endl;
 		G4Exception("PrimaryGeneratorAction::GeneratePrimaries()",
@@ -340,67 +209,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		dir_3Vec.setTheta(theta);
 		dir_3Vec.setPhi(phi);
 		particleGun->SetParticleMomentumDirection(dir_3Vec);
-	}
-	else if ( DirectionMode == "turtle" || PositionMode == "turtle") {
-
-	  // Plan
-	  // -- Get an X-Y position at muPC
-	  // -- Get an X-Y position at final focus 
-	  // -- Get the direction vector between the two
-	  // -- Track the direction forward to a start point
-
-	  if (!fXPositionFinalFocusFit && !fYPositionFinalFocusFit && !fMuPCBeamDistHist) {
-	    TDirectory* prev_dir = gDirectory;
-	    // Get the relevant functions/histograms
-	    std::string dir_name = getenv("CONFIGUREDATAROOT");
-	    dir_name += "TURTLE_fits.root";
-	    TFile* turtle_file = new TFile(dir_name.c_str(), "READ");
-	    
-	    // Get the functions that describe the x and y positions of the beam at the final focus
-	    fXPositionFinalFocusFit = (TF1*) turtle_file->Get("final_focus_horizontal");
-	    fYPositionFinalFocusFit = (TF1*) turtle_file->Get("final_focus_vertical");
-
-	    // Get the histogram of the beam distribution at the muPC
-	    fMuPCBeamDistHist = (TH2F*) turtle_file->Get("hmuPC_XYWires")->Clone(); // need to clone because the file will be closing soon
-	    fMuPCBeamDistHist->SetDirectory(0); // need to set directory to 0 so that we can use this histogram after the file is closed
-	    turtle_file->Close();
-	    gDirectory = prev_dir; // need to go back to where we were so that we can get the tree written to the output file
-	  }
-
-	  double x_muPC = 0;
-	  double y_muPC = 0;
-	  fMuPCBeamDistHist->GetRandom2(x_muPC, y_muPC);
-	  //	  fMuPCBeamDistRandom->Fill(x_muPC, y_muPC);
-	  double z_muPC = 52.5; // approx 10cm downstream of the end of the beampipe (from previous g4sim geometry)
-	  
-	  double x_ff = fXPositionFinalFocusFit->GetRandom()*10; // convert from cm to mm
-	  double y_ff = fYPositionFinalFocusFit->GetRandom()*10; // convert from cm to mm
-	  //	  fFFBeamDistRandom->Fill(x_ff, y_ff);
-	  double z_ff = 120; // 12cm downstream of the beam pipe (according to MuSun report)
-	  
-	  // Translate to having the target at the origin
-	  double z_pos_beam_pipe = -285.58 - 60; // relative to target
-	  double translation = z_pos_beam_pipe; // from g4sim geometry
-	  //	  std::cout << "translation = " << translation << std::endl;
-	  z_muPC += translation; // from the g4sim geometry
-	  z_ff += translation; 
-	  
-	  G4ThreeVector muPCPos(x_muPC*mm, y_muPC*mm, z_muPC*mm);
-	  G4ThreeVector ffPos(x_ff*mm, y_ff*mm, z_ff*mm);
-	  //	  std::cout << "muPC: (" << muPCPos.x()/mm << ", " << muPCPos.y()/mm << ", " << muPCPos.z()/mm << ") mm" << std::endl;	
-	  //	  std::cout << "FF: (" << ffPos.x()/mm << ", " << ffPos.y()/mm << ", " << ffPos.z()/mm << ") mm" << std::endl;
-	  
-	  G4ThreeVector direction = (ffPos - muPCPos).unit();
-	  //	  std::cout << "dir: (" << direction.x()/mm << ", " << direction.y()/mm << ", " << direction.z()/mm << ") mm" << std::endl;	
-	  
-	  // Track back to exit of beam pipe (z = -304*mm)
-	  double n_steps = (z_pos_beam_pipe - muPCPos.z()/mm) / (direction.z()/mm);
-	  //	  std::cout << "n_steps to start of beam pipe: " << n_steps << std::endl;
-	  G4ThreeVector start_pos = muPCPos + n_steps*direction;
-	  //	  std::cout << "start: (" << start_pos.x()/mm << ", " << start_pos.y()/mm << ", " << start_pos.z()/mm << ") mm" << std::endl;
-
-	  particleGun->SetParticlePosition(start_pos);
-	  particleGun->SetParticleMomentumDirection(direction);
 	}
 	else if ( DirectionMode == "muPC" || PositionMode == "muPC" || PositionMode == "collimator" || DirectionMode == "collimator") {
 	  if (!fMuPCBeamDistHist) {
@@ -559,7 +367,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    particleGun->SetParticlePosition(pos_3Vec); // should probably try and avoid having same line twice
 	  }
 	}
-	else if ( PositionMode == "turtle" || PositionMode == "muPC" || PositionMode == "collimator") {
+	else if (PositionMode == "muPC" || PositionMode == "collimator") {
 	  // Already handled in the DirectionMode if block
 	}
 	else if ( PositionMode != "none" ){
