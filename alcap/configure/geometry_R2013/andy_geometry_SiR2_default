@@ -17,9 +17,9 @@
 
 	PSI 		Simple		    geometry_R2013/detector_packages/subgeo_common-variables
 	PSI 		Simple		    geometry_R2013/detector_packages/subgeo_left-detector-package_with-all-monitors
-	PSI 		Simple		    geometry_R2013/detector_packages/subgeo_right-detector-package_with-all-monitors
+#	PSI 		Simple		    geometry_R2013/detector_packages/subgeo_right-detector-package_with-all-monitors
 
-	PSI		Simple		    geometry_R2013/targets/subgeo_target-Al50_with-monitor
+	PSI		Simple		    geometry_R2013/targets/subgeo_target-SiR2_with-monitor
 
 	PSI		Simple		    geometry_R2013/behind_target/subgeo_back-wall
 	PSI		Simple		    geometry_R2013/behind_target/subgeo_veto-scintillator
