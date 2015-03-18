@@ -5,13 +5,13 @@
 /control/execute {ALCAPWORKROOT}/macros/resetCut.mac
 
 # Get visualisation
-/control/execute {ALCAPWORKROOT}/macros/test_vis.mac
+#/control/execute {ALCAPWORKROOT}/macros/test_vis.mac
 
 # Set Output
 /g4sim/myAnalysisSvc/set_out_card output/output_default
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/gen_mu_1.30_muPC
+/g4sim/gun/ResetGen               gen/gen_mu_1.10_muPC
 
 # Set Geo
 /g4sim/det/ReloadGeo              geometry_R2013/andy_geometry_SiR2_checking-upstream-material
@@ -19,7 +19,7 @@
 #	For this run
 /random/setSeeds 5 6
 /g4sim/myAnalysisSvc/printModulo    10000
-#/tracking/verbose 2
-/run/beamOn  10
 
-/vis/ogl/printEPS
+/run/beamOn  500000
+
+#/vis/ogl/printEPS
