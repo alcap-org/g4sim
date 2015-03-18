@@ -3,15 +3,15 @@
 
 #ServiceName        ServiceType         FileName
 	World           Simple              world_AlCap
+	PSI 		Simple		    geometry_R2013/chamber/subgeo_chamber
 	PSI		Simple		    geometry_R2013/germanium/subgeo_germanium
 
 	PSI		Simple		    geometry_R2013/upstream_counter/subgeo_trigger-box
 	PSI		Simple		    geometry_R2013/upstream_counter/subgeo_muPC_with-all-monitors_andy-mod
-	PSI		Simple		    geometry_R2013/upstream_counter/subgeo_muScA_with-monitor_andy-mod
 	PSI		Simple		    geometry_R2013/upstream_counter/subgeo_muSc_with-monitor
+	PSI		Simple		    geometry_R2013/upstream_counter/subgeo_muScA_with-monitor_andy-mod
 	PSI		Simple		    geometry_R2013/upstream_counter/subgeo_mu-foil_with-monitor_andy-mod
 
-	PSI 		Simple		    geometry_R2013/chamber/subgeo_chamber
 	PSI		Simple		    geometry_R2013/collimator/subgeo_collimator
 #	PSI		Simple		    geometry_R2013/collimator/subgeo_col-mon
 
