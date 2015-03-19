@@ -1,0 +1,114 @@
+#All dimensions in mm
+#general info
+#	checkoverlap
+
+DEFINE: thTp		0.080 #Thickness of black tape
+DEFINE: pRw0		200   #Rposition of BeamPipe Exit, wrt target
+
+
+
+#==================================================================================================================
+#	Sheilding after beam pipe
+#==================================================================================================================
+DEFINE: bXColPE		150.02  # x-y Dimension of Polyethylene and lead after beam pipe
+DEFINE: thColPE		5 # Thickness of Polyethylene after beampipe
+DEFINE: pRColPE		pRw0-thColPE/2 # R position of PE, wrt target
+DEFINE: RColPE		25.005 # Radius of the hole on polyethylene and lead
+DEFINE: thColL		50 # Thickness of lead 
+DEFINE: pRColL		pRw0-thColPE-thColL/2 # R position of lead, wrt target
+
+
+#Box info
+#	Type x      y      z      Name        RepNo MotVolume Material     SDName        posX    posY  posZ    Ephi Ethe Epsi
+#	     mm     mm     mm                                                            mm      mm    mm      deg  deg  deg
+#	                                                                               P R       Phi   Z
+#	                                                                               S R       Phi   Theta  
+	B   bXColPE bXColPE thColPE  ColPE_full
+ 	B   bXColPE bXColPE thColL   ColL_full
+#Tubs info
+#	Type RMin RMax  Length  Start Span Name              RepNo MotVolume Material  SDName    posX posY  posZ  Ephi   Ethe   Epsi  
+#	     mm   mm    mm      deg   deg                                                        mm   mm    mm    deg    deg    deg   
+#	                                                                                       P R    Phi   Z     
+#	                                                                                       S R    Phi   Theta 
+	T    0    RColPE  thColPE  0     360  ColPE_hole             
+	T    0    RColPE  thColL   0     360  ColL_hole  
+
+#BooleanSolid info
+#	Type type  vol1         vol2          Ephi Ethe Epsi PosX  PosY PosZ   name RepNo MotVolume  Material     SDName            posX posY posZ  Ephi Ethe Epsi  
+#	                                      deg  deg  deg  mm    mm   mm                                                          mm   mm   mm    deg  deg  deg   
+#	                                                       P R     Phi  Z                                                         P R    Phi  Z    
+#	                                                       S R     Phi  Theta                                                     S R    Phi  Theta
+	BL   minus  ColPE_full  ColPE_hole     0    0    0    0     0    0      ColPE 1    World  Polyethylene M/MonitorSD S  -pRColPE  0 180  0   0   0 
+	BL   minus  ColL_full   ColL_hole      0    0    0    0     0    0      ColLead 1  World  Lead         M/MonitorSD S  -pRColL   0 180  0   0   0 
+
+#==================================================================================================================
+#	Target
+#==================================================================================================================
+DEFINE: XT 	66 #  Dimension of Target
+DEFINE: thT 	2.0 # Thickness of Target
+
+#Box info
+#	Type x      y     z       Name        RepNo MotVolume   Material     SDName       posX  posY  posZ   Ephi Ethe Epsi
+#	     mm     mm    mm                                                              mm    mm    mm     deg  deg  deg
+#	                                                                                P R     Phi   Z
+#	                                                                                S R     Phi   Theta 
+  	B    XT     XT    thT     Target      1     World Aluminium   M/MonitorSD 0     0     0      0    0    0
+
+#==================================================================================================================
+#	Scintillators
+#==================================================================================================================
+
+DEFINE: bXMuScA  	100.01 # x-y Dimension of scintillator infront of target
+DEFINE: thScA		4 # Thickness of MuScA
+DEFINE: pRMuScA		126+thScA/2 # R position of MuScA, wrt target
+DEFINE: RScA		20 # Radius of the hole on MuScA
+DEFINE: bXMuSc  	60 # x-y Dimension of scintillator infront of target
+DEFINE: thMuSc		0.5 # Thickness of scintillator infront of target 
+DEFINE: pRMuSc  	10 # R position of scintillator at the front of target
+DEFINE: bXMuScV  	XT # x-y Dimension of scintillator behind
+DEFINE: thMuScV		2. # Thickness of MuScV
+DEFINE: pRMuScV		10 # R position of MuScV, wrt target
+
+#Box info
+#	Type x      y      z      Name        RepNo MotVolume Material     SDName        posX    posY  posZ    Ephi Ethe Epsi
+#	     mm     mm     mm                                                            mm      mm    mm      deg  deg  deg
+#	                                                                               P R       Phi   Z
+#	                                                                               S R       Phi   Theta  
+
+        B    bXMuSc   bXMuSc  thMuSc   MuSc  1  World  Scintillator  M/MonitorSD S  -pRMuSc 0 180  0   0   0 
+	B    bXMuScA  bXMuScA thScA    MuScA_full
+	B    bXMuScV  bXMuScV thMuScV  MuScV 1  World  Scintillator  M/MonitorSD S  pRMuScV 0  0  0   0   0
+
+#Tubs info
+#	Type RMin RMax  Length  Start Span Name              RepNo MotVolume Material  SDName    posX posY  posZ  Ephi   Ethe   Epsi  
+#	     mm   mm    mm      deg   deg                                                        mm   mm    mm    deg    deg    deg   
+#	                                                                                       P R    Phi   Z     
+#	                                                                                       S R    Phi   Theta 
+	T    0    RScA  thScA 0     360  MuScA_hole             
+
+
+#BooleanSolid info
+#	Type type  vol1         vol2          Ephi Ethe Epsi PosX  PosY PosZ   name RepNo MotVolume  Material     SDName            posX posY posZ  Ephi Ethe Epsi  
+#	                                      deg  deg  deg  mm    mm   mm                                                          mm   mm   mm    deg  deg  deg   
+#	                                                       P R     Phi  Z                                                         P R    Phi  Z    
+#	                                                       S R     Phi  Theta                                                     S R    Phi  Theta
+	BL   minus MuScA_full MuScA_hole       0    0    0    0     0    0      MuScA 1    World  Scintillator M/MonitorSD S  -pRMuScA  0 180  0   0   0 
+
+
+#==================================================================================================================
+#	Visualization
+#==================================================================================================================
+
+#visual settings
+	VerboseLevel:    5
+	VISSETTING  #Keep this line to call Reset
+#	Name                        red    green  blue  transparency
+
+	vis_World                   0.       0.     0.
+	vis_Target                  1      0      0 
+	vis_MuSc                    0      1      0  
+        vis_MuScA                   0      1      0 
+        vis_MuScV                   0      1      0 
+        vis_MuBeamOrigin            0      0      1		    
+        vis_ColPE                   1      1      0
+	vis_ColLead		    0.5    0.5    0.5

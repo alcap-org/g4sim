@@ -1,0 +1,48 @@
+	PhysicsList: QGSP_BERT
+
+#General setting  
+	Type:      simple #(simple/stable/ion)
+	Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
+
+#Default Direction
+#	           Theta    Phi
+#	           deg      deg
+	Direction: 0        180
+#	ThetaSpread:        1.71887
+#	PhiSpread:          180
+#Default Momentum Amplitude
+#	             MeV
+	MomAmp:      30.0
+	MomSpread:   0.255
+#Default Position         x    y   z
+#	                  mm   mm  mm
+#	Position:         0    0  -355 
+       	Position:         0    0  -205	
+
+#aji: following beam_pipe_half_dimensions
+        PosSpread:        25.005 25.005   0
+
+#	PosLimit:         17.5
+#aji: following is the radius of beampipe (following helps to get a circular beam generation plane, than a square one, however this seems to be not working with brand, we still get square)
+	PosLimit:         25.005
+
+
+	RandMode:       none #(none/root)
+	EnergyMode:     gRand #(root/histo/none)
+	PositionMode:   bRand  #(uniform/root/none/gRand/uRand)
+	DirectionMode:  none #(none/uniform/histo)
+	ThetaMode:      gRand #(none/gRand/uRand)
+	PhiMode:        uRand #(none/gRand/uRand)
+	TimeMode:       none #(none/root)
+	pidMode:        none #(none/root)
+#Default Time
+#	         ns
+	Time:    0
+
+
+##Assuming dp/p = 2% FWHM  then
+##MomAmp  FWHM  spread(=sigma)
+##30  0.6 0.255
+##35  0.7 0.298
+##40  0.8 0.340
+##45  0.9 0.383
