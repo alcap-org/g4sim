@@ -1,13 +1,13 @@
 /vis/open OGLIX
 
 /vis/geometry/list
-/vis/drawVolume MuTrigger
+/vis/drawVolume 
 #/vis/scene/add/volume ChamberIn
 
-#/vis/viewer/addCutawayPlane 0 5.5 0 cm 0 -1 0
+/vis/viewer/addCutawayPlane 0 5.5 0 cm 0 -1 0
 /vis/viewer/set/style w
-#/vis/viewer/set/viewpointThetaPhi 70 90
-/vis/viewer/set/viewpointThetaPhi 90 0
+/vis/viewer/set/viewpointThetaPhi 70 90
+#/vis/viewer/set/viewpointThetaPhi 90 0
 /vis/viewer/set/background 1 1 1 0
 
 /vis/scene/add/trajectories smooth

@@ -13,7 +13,7 @@
 #	PSI		Simple		    geometry_R2013/upstream_counter/subgeo_mu-foil_with-monitor
 
 	PSI		Simple		    geometry_R2013/collimator/subgeo_collimator
-#	PSI		Simple		    geometry_R2013/collimator/subgeo_col-mon
+	PSI		Simple		    geometry_R2013/collimator/subgeo_col-mon
 
 	PSI 		Simple		    geometry_R2013/detector_packages/subgeo_common-variables
 	PSI 		Simple		    geometry_R2013/detector_packages/subgeo_left-detector-package
