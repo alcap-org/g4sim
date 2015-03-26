@@ -11,8 +11,8 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_default
 
 # Set Gen
-#/g4sim/gun/ResetGen               gen/gen_mu_1.30_muPC
-/g4sim/gun/ResetGen               gen/gen_mu_1.10_muPC_2%
+/g4sim/gun/ResetGen               gen/gen_mu_1.30_muPC
+#/g4sim/gun/ResetGen               gen/gen_mu_1.10_muPC_2%
 
 # Set Geo
 /g4sim/det/ReloadGeo              geometry_R2013/andy_geometry_SiR2_checking-upstream-material
