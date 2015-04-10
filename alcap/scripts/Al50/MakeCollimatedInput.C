@@ -1,6 +1,6 @@
 void MakeCollimatedInput() {
 
-  TFile* input = new TFile("output/raw_g4sim.root", "READ");
+  TFile* input = new TFile("output/collimator-monitor_Al50_2014-10-21/collimator-monitor.root", "READ");
   TTree* tree = (TTree*) input->Get("tree");
   int n_entries = =tree->GetEntries();
 
