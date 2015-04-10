@@ -25,7 +25,7 @@ struct ParticleType {
   int colour;
 
   int n_entries_covered;
-} stopped_protons, not_stop_protons, deuterons, tritons, alphas;
+} stopped_protons, not_stop_protons, deuterons, tritons, alphas, scattered_muons;
 
 struct Arm {
   std::string outfilename;
@@ -95,6 +95,7 @@ void AllParticle_EvdE(std::string filename) {
     deuterons.type = "deuteron"; deuterons.particle_name = "deuteron"; deuterons.stopped = 1; deuterons.colour = kCyan;
     tritons.type = "triton"; tritons.particle_name = "triton"; tritons.stopped = 1; tritons.colour = kMagenta;
     alphas.type = "alpha"; alphas.particle_name = "alpha"; alphas.stopped = 1; alphas.colour = kSpring;
+    scattered_muons.type = "muon_scattered"; scattered_muons.particle_name = "mu-"; scattered_muons.stopped = 1; scattered_muons.colour = kBlack;
 
     arms[i_arm].hists.push_back(stopped_protons);
     arms[i_arm].hists.push_back(not_stop_protons);
