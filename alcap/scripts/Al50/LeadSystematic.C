@@ -1,11 +1,14 @@
 #include <iostream>
 #include <sstream>
+#include <cmath>
 
 #include "TFile.h"
 #include "TTree.h"
 #include "TH1.h"
 #include "TCanvas.h"
 #include "TF1.h"
+#include "TLine.h"
+#include "TLegend.h"
 
 struct Case {
 
@@ -30,7 +33,7 @@ void LeadSystematic(std::string filename) {
   TTree* tree = (TTree*) file->Get("tree");
 
   TrueArrivals.casename = "true"; ThickPulses.casename = "thick"; ThinPulses.casename = "thin";
-  TrueArrivals.time_resolution = 0; ThickPulses.time_resolution = 80; ThinPulses.time_resolution = 200;
+  TrueArrivals.time_resolution = 187; ThickPulses.time_resolution = 155; ThinPulses.time_resolution = 219;
   std::vector<Case> cases;
   cases.push_back(TrueArrivals);
   cases.push_back(ThickPulses);
@@ -52,9 +55,9 @@ void LeadSystematic(std::string filename) {
   br_Ot->SetAddress(&Ot);
 
 
-  double bin_width = 50;
+  double bin_width = 25;
   double min_time = -1000;
-  double max_time = 5000;
+  double max_time = 2500;
   int n_bins = (max_time - min_time) / bin_width;
 
   // Loop through the different cases
@@ -66,21 +69,50 @@ void LeadSystematic(std::string filename) {
     i_case->gaussian->SetParameter(0, i_case->time_resolution);
 
     std::string basename = "hArrivalTime_" + i_case->casename;
-    i_case->hArrivalTime = new TH1F(basename.c_str(), basename.c_str(), n_bins,min_time,max_time);
+    i_case->hArrivalTime = new TH1F(basename.c_str(), "", n_bins,min_time,max_time);
     std::string histname = basename + "_Aluminium";
-    i_case->hArrivalTime_Aluminium = new TH1F(histname.c_str(), histname.c_str(), n_bins,min_time,max_time);
+    i_case->hArrivalTime_Aluminium = new TH1F(histname.c_str(), "", n_bins,min_time,max_time);
     histname = basename + "_Lead";
-    i_case->hArrivalTime_Lead = new TH1F(histname.c_str(), histname.c_str(), n_bins,min_time,max_time);
+    i_case->hArrivalTime_Lead = new TH1F(histname.c_str(), "", n_bins,min_time,max_time);
     histname = basename + "_Silicon";
-    i_case->hArrivalTime_Silicon = new TH1F(histname.c_str(), histname.c_str(), n_bins,min_time,max_time);
+    i_case->hArrivalTime_Silicon = new TH1F(histname.c_str(), "", n_bins,min_time,max_time);
     histname = basename + "_Other";
-    i_case->hArrivalTime_Other = new TH1F(histname.c_str(), histname.c_str(), n_bins,min_time,max_time);
+    i_case->hArrivalTime_Other = new TH1F(histname.c_str(), "", n_bins,min_time,max_time);
     histname = basename + "_ScatteredMuons";
-    i_case->hArrivalTime_ScatteredMuons = new TH1F(histname.c_str(), histname.c_str(), n_bins,min_time,max_time);
+    i_case->hArrivalTime_ScatteredMuons = new TH1F(histname.c_str(), "", n_bins,min_time,max_time);
+
+    i_case->hArrivalTime->SetStats(false);
+    i_case->hArrivalTime_Aluminium->SetStats(false);
+    i_case->hArrivalTime_Lead->SetStats(false);
+    i_case->hArrivalTime_Silicon->SetStats(false);
+    i_case->hArrivalTime_Other->SetStats(false);
+    i_case->hArrivalTime_ScatteredMuons->SetStats(false);
+
+    i_case->hArrivalTime->SetLineWidth(2);
+    i_case->hArrivalTime_Aluminium->SetLineWidth(2);
+    i_case->hArrivalTime_Lead->SetLineWidth(2);
+    i_case->hArrivalTime_Silicon->SetLineWidth(2);
+    i_case->hArrivalTime_Other->SetLineWidth(2);
+    i_case->hArrivalTime_ScatteredMuons->SetLineWidth(2);
+
+    i_case->hArrivalTime->SetXTitle("Arrival Time [ns]");
+    i_case->hArrivalTime_Aluminium->SetXTitle("Arrival Time [ns]");
+    i_case->hArrivalTime_Lead->SetXTitle("Arrival Time [ns]");
+    i_case->hArrivalTime_Silicon->SetXTitle("Arrival Time [ns]");
+    i_case->hArrivalTime_Other->SetXTitle("Arrival Time [ns]");
+    i_case->hArrivalTime_ScatteredMuons->SetXTitle("Arrival Time [ns]");
+
+    i_case->hArrivalTime->SetYTitle("Counts");
+    i_case->hArrivalTime_Aluminium->SetYTitle("Counts");
+    i_case->hArrivalTime_Lead->SetYTitle("Counts");
+    i_case->hArrivalTime_Silicon->SetYTitle("Counts");
+    i_case->hArrivalTime_Other->SetYTitle("Counts");
+    i_case->hArrivalTime_ScatteredMuons->SetYTitle("Counts");
 
     i_case->hArrivalTime->SetLineColor(kBlack);
     i_case->hArrivalTime_Aluminium->SetLineColor(kBlue);
     i_case->hArrivalTime_Lead->SetLineColor(kRed);
+    i_case->hArrivalTime_ScatteredMuons->SetLineColor(kBlack);
 
   }
 
@@ -129,7 +161,7 @@ void LeadSystematic(std::string filename) {
 	      i_case->hArrivalTime_Other->Fill(i_Ot);
 	    }
 	  }
-	  else if (i_particleName=="mu-") {
+	  if (i_particleName=="mu-") {
 	    i_case->hArrivalTime_ScatteredMuons->Fill(i_Ot);
 	  }
 	}
@@ -138,10 +170,31 @@ void LeadSystematic(std::string filename) {
   }// end loop through entries
 
   for (std::vector<Case>::iterator i_case = cases.begin(); i_case != cases.end(); ++i_case) {
+    i_case->canvas->cd();
+    
+    i_case->hArrivalTime_Aluminium->SetMinimum(10);
+    i_case->hArrivalTime_Aluminium->SetMaximum(5e3);
+
     // Draw the plots
-    i_case->hArrivalTime->Draw();
-    i_case->hArrivalTime_Aluminium->Draw("SAME");
+    i_case->hArrivalTime_Aluminium->Draw();
     i_case->hArrivalTime_Lead->Draw("SAME");
+    i_case->hArrivalTime_ScatteredMuons->Draw("SAME");
+
+    TLine* time_cut_line = new TLine(100, i_case->hArrivalTime_Aluminium->GetMinimum(), 100, i_case->hArrivalTime_Aluminium->GetMaximum());
+    //    time_cut_line->SetLineStyle(2);
+    time_cut_line->SetLineWidth(2);
+    time_cut_line->SetLineColor(kSpring);
+    time_cut_line->Draw("LSAME");
+
+    TLegend *leg = new TLegend(0.61,0.68,0.81,0.88);
+    leg->SetBorderSize(0);
+    leg->SetTextSize(0.04);
+    leg->SetFillColor(kWhite);
+    leg->AddEntry(i_case->hArrivalTime_Aluminium, "Protons (Al)", "l");
+    leg->AddEntry(i_case->hArrivalTime_Lead, "Protons (Pb)", "l");
+    leg->AddEntry(i_case->hArrivalTime_ScatteredMuons, "Muons", "l");
+    leg->AddEntry(time_cut_line, "Time Cut (100 ns)", "l");
+    leg->Draw();
 
     // Save the canvases
     i_case->canvas->SetLogy(1);
@@ -175,18 +228,42 @@ void LeadSystematic(std::string filename) {
     double other_in_cut = i_case->hArrivalTime_Other->Integral(low_integral_bin, high_integral_bin);
     double scattered_muons_in_cut = i_case->hArrivalTime_ScatteredMuons->Integral(low_integral_bin, high_integral_bin);
 
+    double eff_Al = aluminium_in_cut / total_aluminium;
+    double eff_Pb = lead_in_cut / total_lead;
+    double eff_Si = silicon_in_cut / total_silicon;
+    double eff_other = other_in_cut / total_other;
+    double eff_mu = scattered_muons_in_cut / total_scattered_muons;
+
+    double error_eff_Al = eff_Al * (std::sqrt( (1/aluminium_in_cut) + (1/total_aluminium)));
+    double error_eff_Pb = eff_Pb * (std::sqrt( (1/lead_in_cut) + (1/total_lead)));
+    double error_eff_Si = eff_Si * (std::sqrt( (1/silicon_in_cut) + (1/total_silicon)));
+    double error_eff_other = eff_other * (std::sqrt( (1/other_in_cut) + (1/total_other)));
+    double error_eff_mu = eff_mu * (std::sqrt( (1/scattered_muons_in_cut) + (1/total_scattered_muons)));
+
+    double purity_Al = aluminium_in_cut / total_in_cut;
+    double purity_Pb = lead_in_cut / total_in_cut;
+    double purity_Si = silicon_in_cut / total_in_cut;
+    double purity_other = other_in_cut / total_in_cut;
+    double purity_mu = scattered_muons_in_cut / total_in_cut;
+
+    double error_purity_Al = purity_Al * (std::sqrt( (1/aluminium_in_cut) + (1/total_in_cut)));
+    double error_purity_Pb = purity_Pb * (std::sqrt( (1/lead_in_cut) + (1/total_in_cut)));
+    double error_purity_Si = purity_Si * (std::sqrt( (1/silicon_in_cut) + (1/total_in_cut)));
+    double error_purity_other = purity_other * (std::sqrt( (1/other_in_cut) + (1/total_in_cut)));
+    double error_purity_mu = purity_mu * (std::sqrt( (1/scattered_muons_in_cut) + (1/total_in_cut)));
+    
     std::cout << i_case->casename << ": " << std::endl;
 
-    std::cout << "\tEfficiency (Al) = " << aluminium_in_cut << " / " << total_aluminium << " = " << aluminium_in_cut / total_aluminium << std::endl;
-    std::cout << "\tEfficiency (Pb) = " << lead_in_cut << " / " << total_lead << " = " << lead_in_cut / total_lead << std::endl;
-    std::cout << "\tEfficiency (Si) = " << silicon_in_cut << " / " << total_silicon << " = " << silicon_in_cut / total_silicon << std::endl;
-    std::cout << "\tEfficiency (other) = " << other_in_cut << " / " << total_other << " = " << other_in_cut / total_other << std::endl;
-    std::cout << "\tEfficiency (mu-) = " << scattered_muons_in_cut << " / " << total_scattered_muons << " = " << scattered_muons_in_cut / total_scattered_muons << std::endl;
-    std::cout << "\tPurity (Al) = " << aluminium_in_cut << " / " << total_in_cut<< " = " << aluminium_in_cut / total_in_cut << std::endl;
-    std::cout << "\tPurity (Pb) = " << lead_in_cut << " / " << total_in_cut << " = " << lead_in_cut / total_in_cut << std::endl;
-    std::cout << "\tPurity (Si) = " << silicon_in_cut << " / " << total_in_cut << " = " << silicon_in_cut / total_in_cut << std::endl;
-    std::cout << "\tPurity (other) = " << other_in_cut << " / " << total_in_cut << " = " << other_in_cut / total_in_cut << std::endl;
-    std::cout << "\tPurity (mu-) = " << scattered_muons_in_cut << " / " << total_in_cut << " = " << scattered_muons_in_cut / total_in_cut << std::endl;
+    std::cout << "\tEfficiency (Al) = " << aluminium_in_cut << " / " << total_aluminium << " = " << eff_Al << " +- " << error_eff_Al << std::endl;
+    std::cout << "\tEfficiency (Pb) = " << lead_in_cut << " / " << total_lead << " = " << eff_Pb << " +- " << error_eff_Pb << std::endl;
+    std::cout << "\tEfficiency (Si) = " << silicon_in_cut << " / " << total_silicon << " = " << eff_Si << " +- " << error_eff_Si << std::endl;
+    std::cout << "\tEfficiency (other) = " << other_in_cut << " / " << total_other << " = " << eff_other << " +- " << error_eff_other << std::endl;
+    std::cout << "\tEfficiency (mu-) = " << scattered_muons_in_cut << " / " << total_scattered_muons << " = " << eff_mu << " +- " << error_eff_mu << std::endl;
+    std::cout << "\tPurity (Al) = " << aluminium_in_cut << " / " << total_in_cut<< " = " << purity_Al << " +- " << error_purity_Al << std::endl;
+    std::cout << "\tPurity (Pb) = " << lead_in_cut << " / " << total_in_cut << " = " << purity_Pb << " +- " << error_purity_Pb << std::endl;
+    std::cout << "\tPurity (Si) = " << silicon_in_cut << " / " << total_in_cut << " = " << purity_Si << " +- " << error_purity_Si << std::endl;
+    std::cout << "\tPurity (other) = " << other_in_cut << " / " << total_in_cut << " = " << purity_other << " +- " << error_purity_other << std::endl;
+    std::cout << "\tPurity (mu-) = " << scattered_muons_in_cut << " / " << total_in_cut << " = " << purity_mu << " +- " << error_purity_mu << std::endl;
     std::cout << "=======================================" << std::endl;
   }
 }
