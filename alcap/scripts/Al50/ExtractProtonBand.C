@@ -1,15 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <algorithm>
 
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
 #include "TF1.h"
+#include "TLegend.h"
+#include "TLatex.h"
 
 struct ParticleType {
   std::string type_name;
+  int colour;
+
   double n_selected;
   double n_total;
 
@@ -23,6 +28,8 @@ struct Arm{
   TH2F* hEvdEAll;
   TH2F* hEvdEBand;
   TH1F* hBandProfile;
+  TH1F* hBandRMS;
+  TH1F* hDetRMS;
 
   int n_entry_threshold;  // the number of entries that we determine as the start of a peak
   int first_dE_of_band; // which is the dE value at the start of the band
@@ -36,6 +43,7 @@ struct Arm{
 
 struct Case {
   std::string identifier;
+  std::string label;
   std::vector<Arm*> arms;
 
   std::string input_filename;
@@ -53,19 +61,24 @@ int CalculateEfficienciesAndPurities(Arm* this_arm);
 TH2F* ScaleEvdEPlot(TH2F* hist, double scale_factor);
 void ExtractProtonBand_GraphicalCut(Arm* this_arm);
 
+double energy_range_low = 2500;
+double energy_range_high = 10000;
+
 void DataAndMC() {
-  data.identifier = "data"; data.input_filename = "~/data/out/v92/total.root";
+  data.identifier = "data"; data.label = "#bf{#it{Data}}";
+  data.input_filename = "~/data/out/v94/total.root";
   data.baseplotname = "TME_Al50_EvdE/all_particles/ARM_EvdE";
   data.n_entry_threshold = 15;
   data.first_dE_of_band = 1900;
   data.dE_scale_factor = 1;
 
 
-  MC.identifier = "MC"; MC.input_filename = "plots.root";
+  MC.identifier = "MC"; MC.label = "#bf{#it{Monte Carlo}}";
+  MC.input_filename = "plots_2015-03-04.root";
   MC.baseplotname = "hAll_EvdE_ARM";
   MC.n_entry_threshold = 2;
   MC.first_dE_of_band = 2000;
-  MC.dE_scale_factor = 0.92;
+  MC.dE_scale_factor = 0.93;
 
   std::vector<Case*> cases;
   cases.push_back(&data);
@@ -91,11 +104,20 @@ void DataAndMC() {
       // Scale the total EvdE plot
       (*i_arm)->hEvdEAll = ScaleEvdEPlot((*i_arm)->hEvdEAll, (*i_case)->dE_scale_factor);
 
-      ParticleType* proton_stopped = new ParticleType; proton_stopped->type_name = "proton_stopped";
-      ParticleType* proton_not_stopped = new ParticleType; proton_not_stopped->type_name = "proton_not_stopped";
-      ParticleType* deuteron = new ParticleType; deuteron->type_name = "deuteron";
-      ParticleType* triton = new ParticleType; triton->type_name = "triton"; 
-      ParticleType* alpha = new ParticleType; alpha->type_name = "alpha";
+      // After scaling need to reformat everthing
+      (*i_arm)->hEvdEAll->SetStats(false);
+      (*i_arm)->hEvdEAll->SetTitle("");
+      (*i_arm)->hEvdEAll->SetXTitle("E_{1} + E_{2} [keV]");
+      (*i_arm)->hEvdEAll->SetYTitle("E_{1} [keV]");
+      (*i_arm)->hEvdEAll->SetZTitle("Number of Events");
+      (*i_arm)->hEvdEAll->SetMaximum(4e2);
+      (*i_arm)->hEvdEAll->GetYaxis()->SetTitleOffset(1.4);
+
+      ParticleType* proton_stopped = new ParticleType; proton_stopped->type_name = "proton_stopped"; proton_stopped->colour = kRed;
+      ParticleType* proton_not_stopped = new ParticleType; proton_not_stopped->type_name = "proton_not_stopped"; proton_not_stopped->colour = kBlack;
+      ParticleType* deuteron = new ParticleType; deuteron->type_name = "deuteron"; deuteron->colour = kCyan;
+      ParticleType* triton = new ParticleType; triton->type_name = "triton"; triton->colour = kMagenta;
+      ParticleType* alpha = new ParticleType; alpha->type_name = "alpha"; alpha->colour = kSpring;
       (*i_arm)->particle_types.push_back(proton_stopped); (*i_arm)->particle_types.push_back(proton_not_stopped); 
       (*i_arm)->particle_types.push_back(deuteron); (*i_arm)->particle_types.push_back(triton); (*i_arm)->particle_types.push_back(alpha);
 
@@ -122,11 +144,23 @@ void DataAndMC() {
 
       std::string canvasname = "c_" + (*i_case)->identifier + "_" + (*i_arm)->armname;
       TCanvas* c = new TCanvas(canvasname.c_str(), canvasname.c_str());
+      c->SetLogz(1);
+      c->SetRightMargin(0.15);
+      std::cout << canvasname << std::endl;
 
       //      ExtractProtonBand_Algorithm(*i_arm);
       ExtractProtonBand_GraphicalCut(*i_arm);
 
-      //      (*i_arm)->hEvdEBand->Draw("COLZ");
+      (*i_arm)->hEvdEBand->SetStats(false);
+
+      (*i_arm)->hEvdEBand->GetYaxis()->SetRangeUser(0,3000);
+      (*i_arm)->hEvdEBand->Draw("COLZ");
+      //      (*i_arm)->hEvdEAll->Draw("COLZ");
+
+      TLatex text;
+      text.SetTextAlign(12);
+      text.DrawLatex(15000, 2500, (*i_case)->label.c_str());
+
 
     } // end loop through arms
     file->Close();
@@ -140,25 +174,99 @@ void DataAndMC() {
     TH1F* hProfile_data = (*i_data_arm)->hBandProfile;
     TH1F* hProfile_MC = (*i_MC_arm)->hBandProfile;
 
-    int n_bins = hProfile_data->GetNbinsX();
+    int n_bins_x = hProfile_data->GetXaxis()->GetNbins();
+    double min_x = hProfile_data->GetXaxis()->GetXmin();
+    double max_x = hProfile_data->GetXaxis()->GetXmax();
+    std::string histname = hProfile_data->GetName();
+    histname += "_RMS";
+    (*i_data_arm)->hBandRMS = new TH1F(histname.c_str(), "", n_bins_x,min_x,max_x);
+    (*i_MC_arm)->hBandRMS = new TH1F(histname.c_str(), "", n_bins_x,min_x,max_x);
+
+    histname = hProfile_data->GetName();
+    histname += "_DetRMS";
+    (*i_data_arm)->hDetRMS = new TH1F(histname.c_str(), "", 10,0,100);
+    (*i_data_arm)->hDetRMS->SetXTitle("#sigma_{det} [keV]");
+    (*i_data_arm)->hDetRMS->SetYTitle("Number of Bins");
+    (*i_MC_arm)->hDetRMS = new TH1F(histname.c_str(), "", 10,0,100);
+
     double total_det_rms = 0;
     int n_good_det_rms = 0;
-    for (int i_bin = 1; i_bin <= n_bins; ++i_bin) {
+    for (int i_bin = 1; i_bin <= n_bins_x; ++i_bin) {
       double data_rms = hProfile_data->GetBinError(i_bin);
       double MC_rms = hProfile_MC->GetBinError(i_bin);
-      
+
+      (*i_data_arm)->hBandRMS->SetBinContent(i_bin, data_rms);
+      (*i_MC_arm)->hBandRMS->SetBinContent(i_bin, MC_rms);
+
       if (data_rms > MC_rms) {
 	++n_good_det_rms;
 	double det_rms = std::sqrt(data_rms*data_rms - MC_rms*MC_rms);
+	(*i_data_arm)->hDetRMS->Fill(det_rms);
 	total_det_rms += det_rms;
 	//	std::cout << "Bin #" << i_bin << ": data_rms = " << data_rms << ", MC = " << MC_rms << ", det_rms = " << det_rms << std::endl;
       }
     }
-    (*i_MC_arm)->average_det_rms = 0;//total_det_rms / n_good_det_rms;
+    (*i_MC_arm)->average_det_rms = total_det_rms / n_good_det_rms;
     std::cout << (*i_data_arm)->armname << " Average Det RMS = " << (*i_MC_arm)->average_det_rms << std::endl;
 
+    // Calculate the variance
+    double det_variance = 0;
+    n_good_det_rms = 0;
+    for (int i_bin = 1; i_bin <= n_bins_x; ++i_bin) {
+      double data_rms = hProfile_data->GetBinError(i_bin);
+      double MC_rms = hProfile_MC->GetBinError(i_bin);
+
+      if (data_rms > MC_rms) {
+	++n_good_det_rms;
+	double det_rms = std::sqrt(data_rms*data_rms - MC_rms*MC_rms);
+	det_variance += (det_rms - (*i_MC_arm)->average_det_rms)*(det_rms - (*i_MC_arm)->average_det_rms);
+	//	std::cout << "Bin #" << i_bin << ": data_rms = " << data_rms << ", MC = " << MC_rms << ", det_rms = " << det_rms << std::endl;
+      }
+    }
+    det_variance = std::sqrt(det_variance / n_good_det_rms);
+    std::cout << (*i_data_arm)->armname << " Variance = " << det_variance << std::endl;
+    (*i_MC_arm)->average_det_rms = (*i_MC_arm)->average_det_rms + det_variance;
+
     CalculateEfficienciesAndPurities(*i_MC_arm);
+
+    // plot the smeared particle profiles
+    std::string canvasname = "c_" + (*i_MC_arm)->armname + "_profiles";
+    TCanvas* c = new TCanvas(canvasname.c_str(), canvasname.c_str());
+
+    TLegend *leg = new TLegend(0.61,0.58,0.81,0.78);
+    leg->SetBorderSize(0);
+    leg->SetTextSize(0.04);
+    leg->SetFillColor(kWhite);
+    (*i_MC_arm)->hBandProfile->SetLineWidth(2);
+    //    (*i_MC_arm)->hBandProfile->Draw();
+    
+    for (std::vector<ParticleType*>::iterator i_particle_type = (*i_MC_arm)->particle_types.begin(); i_particle_type != (*i_MC_arm)->particle_types.end(); ++i_particle_type) {
+      (*i_particle_type)->hProfile->SetStats(false);
+      (*i_particle_type)->hProfile->SetTitle("");
+      (*i_particle_type)->hProfile->SetXTitle("E_{1} + E_{2} [keV]");
+      (*i_particle_type)->hProfile->GetYaxis()->SetTitleOffset(1.3);
+      (*i_particle_type)->hProfile->SetYTitle("E_{1} [keV]");
+      (*i_particle_type)->hProfile->SetMaximum(10000);
+      (*i_particle_type)->hProfile->SetLineColor((*i_particle_type)->colour);
+      (*i_particle_type)->hProfile->SetLineWidth(2);
+      (*i_particle_type)->hProfile->Draw("SAME");
+
+      std::string label = (*i_particle_type)->type_name;
+      std::replace(label.begin(), label.end(), '_', ' ');
+      leg->AddEntry((*i_particle_type)->hProfile, label.c_str(), "l");
+    }
+    leg->Draw();
   }
+
+  for (std::vector<Arm*>::iterator i_arm = data.arms.begin(); i_arm != data.arms.end(); ++i_arm) {
+    std::string canvasname = "c_detRMS_" + (*i_arm)->armname;
+    TCanvas* c1 = new TCanvas(canvasname.c_str(), canvasname.c_str());
+
+    (*i_arm)->hDetRMS->SetLineWidth(2);
+    (*i_arm)->hDetRMS->Fit("gaus");
+    (*i_arm)->hDetRMS->SetStats(false);
+    (*i_arm)->hDetRMS->Draw("HIST E");
+  }    
 
   // Write everything to an output file
   TFile* output_file = new TFile("proton_band.root", "RECREATE");
@@ -232,31 +340,52 @@ void ExtractProtonBand_GraphicalCut(Arm* this_arm) {
   std::string histname = "hEvdEBand_" + this_arm->armname;
   this_arm->hEvdEBand = new TH2F(histname.c_str(), histname.c_str(), n_bins_x,min_x,max_x, n_bins_y,min_y,max_y);
   this_arm->hEvdEBand->SetDirectory(0);
+  this_arm->hEvdEBand->SetStats(false);
+  this_arm->hEvdEBand->SetTitle("");
+  this_arm->hEvdEBand->SetXTitle("E_{1} + E_{2} [keV]");
+  this_arm->hEvdEBand->SetYTitle("E_{1} [keV]");
+  this_arm->hEvdEBand->GetYaxis()->SetTitleOffset(1.3);
+  this_arm->hEvdEBand->SetZTitle("Number of Events");
+
+  
     
   histname = "hBandProfile_" + this_arm->armname;
   this_arm->hBandProfile = new TH1F(histname.c_str(), histname.c_str(), n_bins_x,min_x,max_x);
   this_arm->hBandProfile->SetDirectory(0);
+  this_arm->hBandProfile->SetStats(false);
+  this_arm->hBandProfile->SetTitle("");
+  this_arm->hBandProfile->SetXTitle("E_{1} + E_{2} [keV]");
+  this_arm->hBandProfile->SetYTitle("E_{1} [keV]");
+  this_arm->hBandProfile->GetYaxis()->SetTitleOffset(1.3);
+
 
   // The cuts
   double x_1 = 0, y_1 = 2000, x_2 = 4000, y_2 = 0;
   double gradient = (y_2 - y_1) / (x_2 - x_1);
   double offset = y_1;
   TF1* electron_spot_cut = new TF1("electron_spot_cut", "[0]*x + [1]", 0, 15000);
-  electron_spot_cut->SetLineColor(kBlue);
+  electron_spot_cut->SetLineColor(kBlack);
   electron_spot_cut->SetParameter(0, gradient);
   electron_spot_cut->SetParameter(1, offset);
 
   double punch_through_yoffset = 300;
   TF1* punch_through_cut = new TF1("punch_through_cut", "[0]", 0, 25000);
-  punch_through_cut->SetLineColor(kBlue);
+  punch_through_cut->SetLineColor(kBlack);
   punch_through_cut->SetParameter(0, punch_through_yoffset);
 
   // Cut to remove the remaining deuteron band                                                                                                      
   TF1* deuteron_cut = new TF1("deuteron_cut", "[0]*TMath::Exp([1]*x) + [2]", 0, 25000);
-  deuteron_cut->SetLineColor(kBlue);
+  deuteron_cut->SetLineColor(kBlack);
   deuteron_cut->SetParameter(0, 4500);
   deuteron_cut->SetParameter(1, -0.0004);
   deuteron_cut->SetParameter(2, 500);
+
+  /*  TF1* lower_cut = new TF1("lower_cut", "[0]*TMath::Exp([1]*x) + [2]", 0, 25000);
+  lower_cut->SetLineColor(kBlack);
+  lower_cut->SetParameter(0, 2500);
+  lower_cut->SetParameter(1, -0.0004);
+  lower_cut->SetParameter(2, 100);
+  */
   //    evde_hists[i_arm]->Fit(deuteron_cut, "R");
 
   for (int i_bin = 1; i_bin <= n_bins_x; ++i_bin) {
@@ -265,10 +394,11 @@ void ExtractProtonBand_GraphicalCut(Arm* this_arm) {
       double x_coord = this_arm->hEvdEBand->GetXaxis()->GetBinCenter(i_bin);
       double y_coord = this_arm->hEvdEBand->GetYaxis()->GetBinCenter(j_bin);
       double bin_content = this_arm->hEvdEAll->GetBinContent(i_bin, j_bin);
-      if (bin_content < 20 ||                                                                         
-	  y_coord < electron_spot_cut->Eval(x_coord) ||                                                                                             
-	  y_coord < punch_through_cut->Eval(x_coord) ||                                                                                             
+      if (bin_content < 10 ||
+	  y_coord < electron_spot_cut->Eval(x_coord) ||
+	  y_coord < punch_through_cut->Eval(x_coord) ||
 	  y_coord > deuteron_cut->Eval(x_coord) ) {
+	//          y_coord < lower_cut->Eval(x_coord) ||
 	
 	this_arm->hEvdEBand->SetBinContent(i_bin, j_bin, 0);                                                                                       
       }
@@ -291,6 +421,14 @@ void ExtractProtonBand_GraphicalCut(Arm* this_arm) {
   electron_spot_cut->Draw("LSAME");                                                                                                           
   punch_through_cut->Draw("LSAME");                                                                                                           
   deuteron_cut->Draw("LSAME");
+  //  lower_cut->Draw("LSAME");
+
+  TH1D* hProjection = this_arm->hEvdEBand->ProjectionX();
+  int low_integral_bin = hProjection->FindBin(energy_range_low);
+  int high_integral_bin = hProjection->FindBin(energy_range_high);
+  double error;
+  double n_protons = hProjection->IntegralAndError(low_integral_bin, high_integral_bin, error);
+  std::cout << "Number of measured protons (" << energy_range_low << " - " << energy_range_high << " keV) = " << n_protons << " +- " << error << std::endl;
 }
 
 void ExtractProtonBand_Algorithm(Arm* this_arm) {
@@ -430,7 +568,9 @@ int CalculateEfficienciesAndPurities(Arm* this_arm) {
     
   // Loop through the extracted band profile
   int n_bins = hExtractedBand->GetNbinsX();
-  for (int i_bin = 1; i_bin <= n_bins; ++i_bin) {
+  int low_energy_range_bin = hExtractedBand->FindBin(energy_range_low);
+  int high_energy_range_bin = hExtractedBand->FindBin(energy_range_high);
+  for (int i_bin = low_energy_range_bin; i_bin <= high_energy_range_bin; ++i_bin) {
     double i_energy = hExtractedBand->GetBinLowEdge(i_bin);
     double mean = hExtractedBand->GetBinContent(i_bin);
     double rms = hExtractedBand->GetBinError(i_bin);
