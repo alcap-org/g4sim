@@ -4,11 +4,13 @@
 #include "THnSparse.h"
 #include "TBranch.h"
 #include "TLegend.h"
+#include "TCanvas.h"
 
 #include <iostream>
 
 void StoppingMomentumDistribution(std::string filename) {
 
+  TCanvas* c1 = new TCanvas("c1", "c1");
   TFile* file = new TFile(filename.c_str(), "READ");
   TTree* tree = (TTree*) file->Get("tree");
   
@@ -29,6 +31,7 @@ void StoppingMomentumDistribution(std::string filename) {
   TH1F* hIncidentMomentum = new TH1F("hIncidentMomentum", "Momentum of Muons Incident on Target", n_bins,momentum_min,momentum_max);
   hIncidentMomentum->SetXTitle("Momentum [MeV]");
   hIncidentMomentum->SetYTitle("Count per Input Muon");
+  hIncidentMomentum->GetYaxis()->SetTitleOffset(1.3);
   hIncidentMomentum->SetStats(false);
   hIncidentMomentum->SetLineWidth(2);
   //  hIncidentMomentum->SetZTitle("Local Z [#mum]");
@@ -37,14 +40,18 @@ void StoppingMomentumDistribution(std::string filename) {
   TH1F* hStoppedMomentum = new TH1F("hStoppedMomentum", "Momentum of Muons Stopped in Target", n_bins,momentum_min,momentum_max);
   hStoppedMomentum->SetXTitle("Momentum [MeV]");
   hStoppedMomentum->SetYTitle("Count per Input Muon");
+  hStoppedMomentum->GetYaxis()->SetTitleOffset(1.3);
   hStoppedMomentum->SetFillColor(kSpring);
+  gStyle->SetHatchesLineWidth(2);
+  hStoppedMomentum->SetLineColor(kSpring);
+  hStoppedMomentum->SetFillStyle(3005);
   //  hStoppedMomentum->SetZTitle("Local Z [#mum]");
   tree->Draw("sqrt(M_px*M_px + M_py*M_py + M_pz*M_pz)*1e3>>hStoppedMomentum", "M_particleName==\"mu-\" && M_volName==\"Target\" && M_stopped==1", "SAME");
 
   hIncidentMomentum->Scale(1.0 / tree->GetEntries());
   hStoppedMomentum->Scale(1.0 / tree->GetEntries());
 
-  hIncidentMomentum->SetTitle("Momentum of Muons at Target");
+  hIncidentMomentum->SetTitle("");
 
   TLegend* legend = new TLegend(0.14, 0.85, 0.44, 0.75, "");
   legend->SetBorderSize(0);
@@ -64,4 +71,6 @@ void StoppingMomentumDistribution(std::string filename) {
   double error_fraction_stopped = fraction_stopped * sqrt((error_n_stopped/n_stopped)*(error_n_stopped/n_stopped));
   std::cout << "Fraction of mu-stopped = " << n_stopped << " / " << n_input 
 	    << " = " << fraction_stopped << " +- " << error_fraction_stopped << std::endl;
+
+  c1->Print("mupc-mode-stopped-momentum.pdf");
 }
