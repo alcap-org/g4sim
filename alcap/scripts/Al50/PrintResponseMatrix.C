@@ -21,7 +21,7 @@ void PrintResponseMatrix() {
     std::string plotname = savelocation+"/"+arm_names[i_arm]+"_ResponseMatrix";
     std::string pdfname = plotname+".pdf";
     std::string pngname = plotname+".png";
-    c1->SaveAs(pdfname.c_str());
-    c1->SaveAs(pngname.c_str());
+    //    c1->SaveAs(pdfname.c_str());
+    //    c1->SaveAs(pngname.c_str());
   }
 }
