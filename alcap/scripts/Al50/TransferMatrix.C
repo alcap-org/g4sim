@@ -28,7 +28,7 @@ void TransferMatrix(std::string filename) {
   TFile* file = new TFile(filename.c_str(), "READ");
   TTree* tree = (TTree*) file->Get("tree");
   
-  double bin_width = 200;
+  double bin_width = 500;
   double energy_high = 25000;
   double energy_low = 0;
   int n_bins = (energy_high - energy_low) / bin_width;
