@@ -1,6 +1,6 @@
 void FitEnergyLoss() {
 
-  TFile* file = new TFile("../../output/raw_g4sim_Al50_500k_e-loss_0-MomSpread.root", "READ");
+  TFile* file = new TFile("../../output/raw_g4sim_Al100_500k_e-loss_0-MomSpread.root", "READ");
   TTree* tree = (TTree*) file->Get("tree");
 
   TH1F* hist = new TH1F("ELoss", "ELoss", 100,0,0.03);
@@ -12,7 +12,7 @@ void FitEnergyLoss() {
   hist->SetStats(false);
   hist->SetLineWidth(2);
 
-  tree->Draw("0.02996 - sqrt(M_px*M_px + M_py*M_py + M_pz*M_pz)>>ELoss", "M_particleName==\"mu-\" && M_volName==\"ColMon\"", "");
+  tree->Draw("0.03052 - sqrt(M_px*M_px + M_py*M_py + M_pz*M_pz)>>ELoss", "M_particleName==\"mu-\" && M_volName==\"ColMon\"", "");
 
   TF1* fn = new TF1("fn", "[0]*TMath::Landau(x, [1], [2]) + [3]*TMath::Exp([4]*x^[5] + [6]) + [7]*TMath::Gaus(x, [8], [9])", 0, 0.03);
   
@@ -27,8 +27,8 @@ void FitEnergyLoss() {
   fn->SetParameter(8, 0.015);
   fn->SetParameter(9, 0.002);
 
-  hist->Fit(fn, "R");
-  c1->Print("~/plots/ThesisPlots/collimator-mode-energy-loss.pdf");
+  //  hist->Fit(fn, "R");
+  //  c1->Print("~/plots/ThesisPlots/collimator-mode-energy-loss.pdf");
   
  // These are the values I got for Al50
   /*  fn->SetParameter(0, 14051.2);
@@ -46,5 +46,21 @@ void FitEnergyLoss() {
   //  hist->Fit(fn, "R");
     fn->Draw("SAME");
   */
+  
+  // These are the values I got for Al100
+  fn->SetParameter(0, 13239);
+  fn->SetParameter(1, 0.016801);
+  fn->SetParameter(2, 0.001194);
+  fn->SetParameter(3, -16.120);
+  fn->SetParameter(4, 31.453);
+  fn->SetParameter(5, 0.729917);
+  fn->SetParameter(6, -0.279252);
+  fn->SetParameter(7, 1423.26);
+  fn->SetParameter(8, 0.0181725);
+  fn->SetParameter(9, -0.0022659);
+  //  hist->SetStats(true);
+  //  gStyle->SetOptFit(11111);
+  //  hist->Fit(fn, "R");
+  fn->Draw("SAME");
   
 }
