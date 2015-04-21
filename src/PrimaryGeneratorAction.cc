@@ -477,8 +477,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 		if (!fEnergyLoss) {
 		  fEnergyLoss = new TF1("energy_loss", "[0]*TMath::Landau(x, [1], [2]) + [3]*TMath::Exp([4]*x^[5] + [6]) + [7]*TMath::Gaus(x, [8], [9])", 0, 0.03);
-		  // Set the parameters (hard-coded from the fit I did separately (2014-11-04)
-		  fEnergyLoss->SetParameter(0, 14051.2);
+		  // Set the parameters (hard-coded from the Al50 fit I did separately (2014-11-04)
+		  /*		  fEnergyLoss->SetParameter(0, 14051.2);
 		  fEnergyLoss->SetParameter(1, 0.0141187);
 		  fEnergyLoss->SetParameter(2, 0.000738656);
 		  fEnergyLoss->SetParameter(3, -0.0127883);
@@ -488,6 +488,18 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		  fEnergyLoss->SetParameter(7, 2510.06);
 		  fEnergyLoss->SetParameter(8, 0.0155356);
 		  fEnergyLoss->SetParameter(9, 0.00170543);
+		  */
+		  // Set the parameters (hard-coded from the Al100 fit I did separately (2015-04-21)
+		  fEnergyLoss->SetParameter(0, 13239);
+		  fEnergyLoss->SetParameter(1, 0.016801);
+		  fEnergyLoss->SetParameter(2, 0.001194);
+		  fEnergyLoss->SetParameter(3, -16.120);
+		  fEnergyLoss->SetParameter(4, 31.453);
+		  fEnergyLoss->SetParameter(5, 0.729917);
+		  fEnergyLoss->SetParameter(6, -0.279252);
+		  fEnergyLoss->SetParameter(7, 1423.26);
+		  fEnergyLoss->SetParameter(8, 0.0181725);
+		  fEnergyLoss->SetParameter(9, -0.0022659);
 		}
 		// Add some energy loss
 		double e_loss = fEnergyLoss->GetRandom()*GeV;
