@@ -48,19 +48,19 @@ void FitEnergyLoss() {
   */
   
   // These are the values I got for Al100
-  fn->SetParameter(0, 13239);
-  fn->SetParameter(1, 0.016801);
-  fn->SetParameter(2, 0.001194);
-  fn->SetParameter(3, -16.120);
-  fn->SetParameter(4, 31.453);
-  fn->SetParameter(5, 0.729917);
-  fn->SetParameter(6, -0.279252);
-  fn->SetParameter(7, 1423.26);
-  fn->SetParameter(8, 0.0181725);
-  fn->SetParameter(9, -0.0022659);
+  fn->SetParameter(0, 13975);
+  fn->SetParameter(1, 0.016845);
+  fn->SetParameter(2, 0.0012055);
+  fn->SetParameter(3, -51.4268);
+  fn->SetParameter(4, 27.300);
+  fn->SetParameter(5, 0.770016);
+  fn->SetParameter(6, -0.7654553);
+  fn->SetParameter(7, 1325.33);
+  fn->SetParameter(8, 0.0180793);
+  fn->SetParameter(9, -0.0023519);
   //  hist->SetStats(true);
   //  gStyle->SetOptFit(11111);
   //  hist->Fit(fn, "R");
   fn->Draw("SAME");
-  
+    
 }
