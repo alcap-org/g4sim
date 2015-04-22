@@ -11,10 +11,10 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_default
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/gen_mu_1.09_collimated
+/g4sim/gun/ResetGen               gen/gen_mu_1.09_target_hist
 
 # Set Geo
-/g4sim/det/ReloadGeo              geometry_R2013/andy_geometry_Al100_obtain-stopping-distribution
+/g4sim/det/ReloadGeo              geometry_R2013/andy_geometry_Al100_obtain-transfer-matrix
 
 #	For this run
 /random/setSeeds 5 6
