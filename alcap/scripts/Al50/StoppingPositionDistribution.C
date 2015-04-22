@@ -11,7 +11,9 @@ void StoppingPositionDistribution(std::string filename) {
   TFile* file = new TFile(filename.c_str(), "READ");
   TTree* tree = (TTree*) file->Get("tree");
   
-  TH3F* hLocalStoppingPositions = new TH3F("hLocalStoppingPositions", "Positions of Stopped Muons in Target (local coords)", 10,-5,5, 10,-5,5, 60,-30,30);
+  double target_thickness = 100; // um
+  double z_axis_limit = target_thickness/2+10;
+  TH3F* hLocalStoppingPositions = new TH3F("hLocalStoppingPositions", "Positions of Stopped Muons in Target (local coords)", 10,-5,5, 10,-5,5, z_axis_limit*2,-z_axis_limit,+z_axis_limit);
   hLocalStoppingPositions->SetXTitle("Local X [cm]");
   hLocalStoppingPositions->SetYTitle("Local Y [cm]");
   hLocalStoppingPositions->SetZTitle("Local Z [#mum]");
