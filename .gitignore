@@ -38,3 +38,6 @@ geant4*
 # ROOT stuff
 *.root
 *_C.d
+
+# Text outputs
+*.txt
