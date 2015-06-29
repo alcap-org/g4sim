@@ -17,6 +17,7 @@ extern TSystem* gSystem;
 
 struct Arm {
   std::string detname;
+  std::string monname;
   RooUnfoldResponse response;
   int n_hits;
   int n_misses;
@@ -36,11 +37,13 @@ void TransferMatrix(std::string filename) {
   Arm right_arm;
   Arm left_arm;
   right_arm.detname = "SiR";
+  right_arm.monname = "ESi1";
   std::string responsename = right_arm.detname + "_response";
   right_arm.response = RooUnfoldResponse(n_bins,energy_low,energy_high, responsename.c_str());
   right_arm.n_hits = 0;
   right_arm.n_misses = 0;
   left_arm.detname = "SiL";
+  left_arm.monname = "ESi2";
   responsename = left_arm.detname + "_response";
   left_arm.response = RooUnfoldResponse(n_bins,energy_low,energy_high, responsename.c_str());
   left_arm.n_hits = 0;
@@ -132,8 +135,12 @@ void TransferMatrix(std::string filename) {
 	
 	// Loop through the arms
 	for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {
-	  std::string thick_monname = i_arm->detname + "2";
-	  std::string thin_monname = i_arm->detname + "1";
+	  // New monitor names
+	  //	  std::string thick_monname = i_arm->detname+"2";
+	  //	  std::string thin_monname = i_arm->detname+"1";
+	  // Old monitor names
+	  std::string thick_monname = i_arm->monname;
+	  std::string thin_monname = "d"+i_arm->monname;
 
 	  if (i_particleName == "proton" && i_volName == thick_monname && stopped->at(iElement) == 1) {
 	    thick_hit = true;
@@ -160,12 +167,25 @@ void TransferMatrix(std::string filename) {
       
       // After looping through the elements, we will hopefully have found the initial proton again
       if (thick_hit && thin_hit) {
+	double observed_E = E+dE;
+
+	// want the same tracks, where the thin was hit first
+	if ( (thin_trackID != thick_trackID) || (thin_time > thick_time) ) {
+	  continue;
+	}
+	if ( observed_E < 0.5*true_kinetic_energy ) {
+	    std::cout << "Track IDs (thin, thick) = (" << thin_trackID << ", " << thick_trackID << ")" << std::endl;
+	    std::cout << "Times  (thin, thick) = (" << thin_time << ", " << thick_time << ")" << std::endl;
+	    std::cout << "Arms  (thin, thick) = (" << thin_arm->detname << ", " << thick_arm->detname << ")" << std::endl;
+	    std::cout << "Observed = " << observed_E << ", True = " << true_kinetic_energy << std::endl;
+	    std::cout << "E = " << E << ", dE = " << dE << std::endl;
+	  }
+	
 	// For debugging
-	//	std::cout << "Track IDs (thin, thick) = (" << thin_trackID << ", " << thick_trackID << ")" << std::endl;
+	//		std::cout << "Track IDs (thin, thick) = (" << thin_trackID << ", " << thick_trackID << ")" << std::endl;
 	//	std::cout << "Times  (thin, thick) = (" << thin_time << ", " << thick_time << ")" << std::endl;
 	//	std::cout << "Arms  (thin, thick) = (" << thin_arm->detname << ", " << thick_arm->detname << ")" << std::endl;
 	
-	double observed_E = E+dE;
 	if (true_kinetic_energy < observed_E) {
 	  std::cout << "Entry # " << iEntry << ": " << thick_trackID << ", " << thin_trackID << std::endl;
 	  std::cout << "E = " << E << ", dE = " << dE << std::endl;
@@ -175,12 +195,12 @@ void TransferMatrix(std::string filename) {
 	  std::cout << "True p = ("<< true_px << ", " << true_py << ", " << true_pz << ")" << std::endl;
 	  std::cout << "That's weird... " << true_kinetic_energy << " < " << observed_E << std::endl;
 	}
-	
+
 	for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {	
 	  if (i_arm == thick_arm) {
 	    i_arm->response.Fill(observed_E, true_kinetic_energy); // this arm saw the proton
 	    i_arm->n_hits++;
-	  }
+	    }
 	  else {
 	    i_arm->response.Miss(true_kinetic_energy); // the other one didn't
 	    i_arm->n_misses++;
