@@ -79,12 +79,12 @@ void AllParticle_EvdE(std::string filename) {
   const int n_arms = 2;
   LeftArm.outfilename = "pid-cuts-SiL.txt";
   LeftArm.detname = "SiL";
-  LeftArm.monname = "ESi2";
+  //  LeftArm.monname = "ESi2";
   LeftArm.lower_time_cut = 0;
   LeftArm.upper_time_cut = 9999999;
   RightArm.outfilename = "pid-cuts-SiR.txt";
   RightArm.detname = "SiR";
-  RightArm.monname = "ESi1";
+  //  RightArm.monname = "ESi1";
   RightArm.lower_time_cut = 0;
   RightArm.upper_time_cut = 9999999;
   Arm arms[n_arms] = {LeftArm, RightArm};
@@ -149,7 +149,7 @@ void AllParticle_EvdE(std::string filename) {
       for (int i_arm = 0; i_arm < n_arms; ++i_arm) {
 
 	if (i_charge != 0) {
-	  if (i_volName == arms[i_arm].monname && i_ovolName == "Target") {
+	  if (i_volName == arms[i_arm].detname+"2" && i_ovolName == "Target") {
 	  //	  std::cout << "Ot = " << Ot->at(iElement) << std::endl;
 	    double thick_time = i_Ot;
 	    if (thick_time > arms[i_arm].lower_time_cut && thick_time < arms[i_arm].upper_time_cut) {
@@ -157,7 +157,7 @@ void AllParticle_EvdE(std::string filename) {
 	      thick_hit = true;
 	    }	  
 	  }
-	  else if (i_volName == ("d"+arms[i_arm].monname) && i_ovolName == "Target") {
+	  else if (i_volName == (arms[i_arm].detname+"1") && i_ovolName == "Target") {
 	    double thin_time = i_Ot;
 	    if (thin_time > arms[i_arm].lower_time_cut && thin_time < arms[i_arm].upper_time_cut) {
 	      dE = i_edep;
