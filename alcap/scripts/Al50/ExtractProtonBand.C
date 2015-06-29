@@ -66,7 +66,8 @@ double energy_range_high = 10000;
 
 void DataAndMC() {
   data.identifier = "data"; data.label = "#bf{#it{Data}}";
-  data.input_filename = "~/data/out/v94/total.root";
+  data.input_filename = "~/data/out/v94/total.root"; // Al50
+  //  data.input_filename = "~/data/out/v96/Al100.root"; // Al100
   data.baseplotname = "TME_Al50_EvdE/all_particles/ARM_EvdE";
   data.n_entry_threshold = 15;
   data.first_dE_of_band = 1900;
@@ -74,7 +75,8 @@ void DataAndMC() {
 
 
   MC.identifier = "MC"; MC.label = "#bf{#it{Monte Carlo}}";
-  MC.input_filename = "plots_2015-03-04.root";
+  MC.input_filename = "plots_2015-03-04.root"; // Al50
+  //  MC.input_filename = "plots_Al100_2015-04-23.root"; // Al100
   MC.baseplotname = "hAll_EvdE_ARM";
   MC.n_entry_threshold = 2;
   MC.first_dE_of_band = 2000;
@@ -269,7 +271,7 @@ void DataAndMC() {
   }    
 
   // Write everything to an output file
-  TFile* output_file = new TFile("proton_band.root", "RECREATE");
+  TFile* output_file = new TFile("proton_band_Al50_corrections.root", "RECREATE");
 
   for (std::vector<Case*>::iterator i_case = cases.begin(); i_case != cases.end(); ++i_case) {
 
@@ -570,6 +572,7 @@ int CalculateEfficienciesAndPurities(Arm* this_arm) {
   int n_bins = hExtractedBand->GetNbinsX();
   int low_energy_range_bin = hExtractedBand->FindBin(energy_range_low);
   int high_energy_range_bin = hExtractedBand->FindBin(energy_range_high);
+  double total_fraction = 0;
   for (int i_bin = low_energy_range_bin; i_bin <= high_energy_range_bin; ++i_bin) {
     double i_energy = hExtractedBand->GetBinLowEdge(i_bin);
     double mean = hExtractedBand->GetBinContent(i_bin);
@@ -619,8 +622,13 @@ int CalculateEfficienciesAndPurities(Arm* this_arm) {
       }
       */
 
-      (*i_particle_type)->n_selected += n_selected_this_bin;
-      (*i_particle_type)->n_total += n_total_this_bin;
+      double fraction_of_spectrum = hExtractedBand->GetBinContent(i_bin) / hExtractedBand->Integral(low_energy_range_bin, high_energy_range_bin);
+      if ((*i_particle_type)->type_name == "proton_stopped") {
+	total_fraction += fraction_of_spectrum;
+	std::cout << i_energy << ": fraction = " << total_fraction << std::endl;
+      }
+      (*i_particle_type)->n_selected += n_selected_this_bin*fraction_of_spectrum;
+      (*i_particle_type)->n_total += n_total_this_bin*fraction_of_spectrum;
     } // end loop through particle types
   } // end loop through energy bins
 
