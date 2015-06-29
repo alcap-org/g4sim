@@ -14,7 +14,7 @@ void FindMCToDataScaleFactor() {
   hEvdE_MC->SetDirectory(0);
   MC_file->Close();
 
-  double energy_slice = 2500;
+  double energy_slice = 3000;
   int energy_slice_bin = hEvdE_data->GetXaxis()->FindBin(energy_slice);
   TH1D* hDataProjection = hEvdE_data->ProjectionY("_py", energy_slice_bin, energy_slice_bin);  
   energy_slice_bin = hEvdE_MC->GetXaxis()->FindBin(energy_slice);
