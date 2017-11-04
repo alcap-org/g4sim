@@ -1,23 +1,28 @@
 #==================================================================================================================
 #	Target
 #==================================================================================================================
-DEFINE: XT 		100 # x Dimension of Target
-DEFINE: XTB		120 # x Dimension of Target Border
-DEFINE: XTBS	122 # x Dimension of Target Border Shielding
-DEFINE: thT 	0.050 # Thickness of Target
-DEFINE: thTB	5 # Thickness of Target Border
-DEFINE: thTBS	7 # Thickness of Target Border Shielding
+DEFINE: XTB		 100            # x Dimension of Target Border
+DEFINE: XTBHole	 87             # x Dimension of the Hole in the Target Border
+DEFINE: XT 		 XTBHole        # x Dimension of Target (fiducial)
+DEFINE: thPb     2              # Lead thickness
+DEFINE: XTBS	 XTB+2*thPb     # x Dimension of Target Border Shielding
+DEFINE: XTBSHole XTBHole-2*thPb # x Dimension of the Hole in the Target Border Shielding
+DEFINE: thT 	 0.050          # Thickness of Target
+DEFINE: thTB	 5              # Thickness of Target Border
+DEFINE: thTBS	 thTB+2*thPb    # Thickness of Target Border Shielding
+
 #Box info
-#	Type x      y     z       Name        RepNo MotVolume   Material     SDName       posX  posY  posZ   Ephi Ethe Epsi
-#	     mm     mm    mm                                                              mm    mm    mm     deg  deg  deg
-#	                                                                                P R     Phi   Z
-#	                                                                                S R     Phi   Theta 
-	B    XTB    XTB   thTB    bTgtBdWh          
-	B    XT     XT    thTB+1  bTgtBdHl          
-	B    XTBS   XTBS  thTBS   bTgtBdShWh        
-	B    XT     XT    thTBS+1 bTgtBdShHl        
-	B    XTBS   XTBS  thTBS   TargetMount 1     World   VacuumPSI     none        0     0     Z0     45   90   0 
-	B    XT     XT    thT     Target      1     TargetMount Aluminium     none 	  0     0     0      0    0    0
+#	Type x        y        z       Name        RepNo MotVolume   Material      SDName       posX  posY  posZ   Ephi Ethe Epsi
+#	     mm       mm       mm                                                               mm    mm    mm     deg  deg  deg
+#	                                                                                        P R     Phi   Z
+#	                                                                                        S R     Phi   Theta 
+	B    XTB      XTB      thTB    bTgtBdWh          
+	B    XTBHole  XTBHole  thTB+1  bTgtBdHl          
+	B    XTBS     XTBS     thTBS   bTgtBdShWh
+	B    XTBSHole XTBSHole thTBS+1 bTgtBdShHl
+	B    XTBS     XTBS     thTBS   TargetMount 1     Chamber     VacuumPSI     M/MonitorSD  0     0     Z0     -45  90   0 
+	B    XT       XT       thT     Target      1     TargetMount Aluminium     M/MonitorSD 	0     0     0      0    0    0
+
 #BooleanSolid info
 #	Type type  vol1       vol2        Ephi Ethe Epsi PosX PosY PosZ   name                  RepNo MotVolume   Material SDName  posX posY posZ  Ephi Ethe Epsi  
 #	                                  deg  deg  deg  mm   mm   mm                                                              mm   mm   mm    deg  deg  deg   
