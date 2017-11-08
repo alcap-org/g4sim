@@ -19,6 +19,7 @@
 #include "G4ParticleMomentum.hh"
 #include "G4TransportationManager.hh"
 #include "Randomize.hh"
+#include "G4IonTable.hh"
 
 //supported geometry
 #include "MyDetectorManager.hh"
@@ -75,7 +76,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 	fYPositionFinalFocus_Upper = 1.5;
 
 	fMuPCBeamDistHist = NULL;
-	
+
 	// Set the "collimated" input hists to NULL
 	fCollimatedInputHist_XYPz = NULL;
 	fCollimatedInputHist_XPxPz = NULL;
@@ -130,7 +131,7 @@ void* PrimaryGeneratorAction::get_extra(G4String name){
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 	//this function is called at the begining of event
-	// 
+	//
 	if (UseRoot){
 		root_get_para();
 	}
@@ -151,8 +152,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 	if (fType=="ion"){
 		if (!fParticle){
-			G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-			fParticle = particleTable->GetIon(Z,A,E*keV);
+			// G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+			// fParticle = particleTable->GetIon(Z,A,E*keV);
+			fParticle = G4IonTable::GetIonTable()->GetIon(Z,A,E*keV);
 			if (!fParticle){
 				std::cout<<"ERROR: In PrimaryGeneratorAction::PrimaryGeneratorAction() Cannot find particle "
 						 <<"Z = "<<Z
@@ -163,9 +165,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 						FatalException, "Cannot find particle.");
 			}
 		}
-		if (fType == "stable"){
-			fParticle->SetPDGStable(true);
-		}
+		// if (fType == "stable"){
+		// 	fParticle->SetPDGStable(true);
+		// }
 		particleGun->SetParticleDefinition(fParticle);
 		mass = particleGun->GetParticleDefinition()->GetPDGMass();
 		particleGun->SetParticleCharge(C*eplus);
@@ -213,7 +215,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    std::string dir_name = getenv("CONFIGUREDATAROOT");
 	    dir_name += "CollimatedInput.root";
 	    TFile* collimated_file = new TFile(dir_name.c_str(), "READ");
-	    
+
 	    fCollimatedInputHist_XYPz = (TH3F*) (collimated_file->Get("hXYPz"))->Clone();
 	    fCollimatedInputHist_XYPz->SetDirectory(0);
 
@@ -287,7 +289,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    bin = hYPy->GetYaxis()->FindBin(y);
 	    hYPy->GetYaxis()->SetRange(bin, bin);
 	    hPy = hYPy->ProjectionX();
-	    
+
 	    if (hPy->GetEntries() == 0) {
 	      continue;
 	    }
@@ -345,7 +347,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 	  // Plan
 	  // -- Get an X-Y position at muPC
-	  // -- Get an X-Y position at final focus 
+	  // -- Get an X-Y position at final focus
 	  // -- Get the direction vector between the two
 	  // -- Track the direction forward to a start point
 
@@ -355,7 +357,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    std::string dir_name = getenv("CONFIGUREDATAROOT");
 	    dir_name += "TURTLE_fits.root";
 	    TFile* turtle_file = new TFile(dir_name.c_str(), "READ");
-	    
+
 	    // Get the functions that describe the x and y positions of the beam at the final focus
 	    fXPositionFinalFocusFit = (TF1*) turtle_file->Get("final_focus_horizontal");
 	    fYPositionFinalFocusFit = (TF1*) turtle_file->Get("final_focus_vertical");
@@ -372,27 +374,27 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  fMuPCBeamDistHist->GetRandom2(x_muPC, y_muPC);
 	  //	  fMuPCBeamDistRandom->Fill(x_muPC, y_muPC);
 	  double z_muPC = 52.5; // approx 10cm downstream of the end of the beampipe (from previous g4sim geometry)
-	  
+
 	  double x_ff = fXPositionFinalFocusFit->GetRandom()*10; // convert from cm to mm
 	  double y_ff = fYPositionFinalFocusFit->GetRandom()*10; // convert from cm to mm
 	  //	  fFFBeamDistRandom->Fill(x_ff, y_ff);
 	  double z_ff = 120; // 12cm downstream of the beam pipe (according to MuSun report)
-	  
+
 	  // Translate to having the target at the origin
 	  double z_pos_beam_pipe = -285.58 - 60; // relative to target
 	  double translation = z_pos_beam_pipe; // from g4sim geometry
 	  //	  std::cout << "translation = " << translation << std::endl;
 	  z_muPC += translation; // from the g4sim geometry
-	  z_ff += translation; 
-	  
+	  z_ff += translation;
+
 	  G4ThreeVector muPCPos(x_muPC*mm, y_muPC*mm, z_muPC*mm);
 	  G4ThreeVector ffPos(x_ff*mm, y_ff*mm, z_ff*mm);
-	  //	  std::cout << "muPC: (" << muPCPos.x()/mm << ", " << muPCPos.y()/mm << ", " << muPCPos.z()/mm << ") mm" << std::endl;	
+	  //	  std::cout << "muPC: (" << muPCPos.x()/mm << ", " << muPCPos.y()/mm << ", " << muPCPos.z()/mm << ") mm" << std::endl;
 	  //	  std::cout << "FF: (" << ffPos.x()/mm << ", " << ffPos.y()/mm << ", " << ffPos.z()/mm << ") mm" << std::endl;
-	  
+
 	  G4ThreeVector direction = (ffPos - muPCPos).unit();
-	  //	  std::cout << "dir: (" << direction.x()/mm << ", " << direction.y()/mm << ", " << direction.z()/mm << ") mm" << std::endl;	
-	  
+	  //	  std::cout << "dir: (" << direction.x()/mm << ", " << direction.y()/mm << ", " << direction.z()/mm << ") mm" << std::endl;
+
 	  // Track back to exit of beam pipe (z = -304*mm)
 	  double n_steps = (z_pos_beam_pipe - muPCPos.z()/mm) / (direction.z()/mm);
 	  //	  std::cout << "n_steps to start of beam pipe: " << n_steps << std::endl;
@@ -409,7 +411,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    std::string dir_name = getenv("CONFIGUREDATAROOT");
 	    dir_name += "mupc_profile_run3600_Al50.root";
 	    TFile* mupc_profile_file = new TFile(dir_name.c_str(), "READ");
-	    
+
 	    // Get the histogram of the beam distribution at the muPC
 	    fMuPCBeamDistHist = (TH2F*) mupc_profile_file->Get("muPC/hmuPC_XYWires")->Clone(); // need to clone because the file will be closing soon
 	    fMuPCBeamDistHist->SetDirectory(0); // need to set directory to 0 so that we can use this histogram after the file is closed
@@ -418,7 +420,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  }
 
 	  bool found = false;
-	  
+
 	  while (!found) {
 
 	    if (DirectionMode == "muPC" || PositionMode == "muPC") {
@@ -441,7 +443,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    double p_tot = std::sqrt(px*px + py*py + pz*pz);
 	    //	    std::cout << "Before: (px, py, pz) = (" << px << ", " << py << ", " << pz << ")" << std::endl;
 	    //	    std::cout << "p_tot = " << p_tot << std::endl;
-	    
+
 	    // Rescale components so that we get the correct momentum again
 	    double scale_factor = pz / p_tot;
 	    px *= scale_factor;
@@ -463,7 +465,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    G4double ekin = sqrt(mom*mom+mass*mass)-mass;
 	    particleGun->SetParticleEnergy(ekin);
 	    particleGun->SetParticleMomentumDirection(direction);
-	    	    
+
 	    if (DirectionMode == "collimator" || PositionMode == "collimator") {
 	      double z_pos_collimator = -90.5;
 	      double n_steps = (z_pos_collimator - muPCPos.z()/mm) / (direction.z()/mm);
@@ -540,10 +542,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		SetRandomPosition();
 	}
 	else if ( PositionMode == "target") {
-	  SetRandomPosition();  
+	  SetRandomPosition();
 	}
 	else if ( PositionMode == "source") {
-	  SetRandomPosition();  
+	  SetRandomPosition();
 	}
 	else if ( PositionMode == "histo") {
 	  if (PM_hist) { // if we have a TH3F
@@ -601,7 +603,7 @@ void PrimaryGeneratorAction::InformEventHeaderHeader(){
         // Set Random number seeds in the event header (R0 and R1) taken from elsewhere
 	EventHeaderSvc::GetEventHeaderSvc()->SetSeedsValue();
 
-        // Set the primary particle's momentum in the event header 
+        // Set the primary particle's momentum in the event header
 	G4ParticleMomentum mom=particleGun->GetParticleMomentumDirection();
         double E_kinetic=particleGun->GetParticleEnergy();
         double M=particleGun->GetParticleDefinition()->GetPDGMass();
@@ -609,11 +611,11 @@ void PrimaryGeneratorAction::InformEventHeaderHeader(){
         mom=P*mom;
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialMomentum(mom.x(),mom.y(),mom.z());
 
-        // Set the primary particle's position in the event header 
+        // Set the primary particle's position in the event header
 	G4ThreeVector pos=particleGun->GetParticlePosition();
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialPosition(pos.x(),pos.y(),pos.z());
 
-        // Set the primary particle's position in the event header 
+        // Set the primary particle's position in the event header
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialParticle(particleGun->GetParticleDefinition()->GetParticleName());
 }
 
@@ -661,13 +663,13 @@ void PrimaryGeneratorAction::SetRandomDirection(){
 		if (PhiSpread) dPhi=G4RandGauss::shoot(Phi,PhiSpread);
 	}
 	else if (PhiMode=="uRand"){
-		if (PhiSpread) {dPhi=(G4UniformRand()-0.5)*PhiSpread;} 
+		if (PhiSpread) {dPhi=(G4UniformRand()-0.5)*PhiSpread;}
 	}
 	if(ThetaMode=="gRand"){
 		if (ThetaSpread) dTheta=G4RandGauss::shoot(Theta,ThetaSpread);
 	}
 	else if (ThetaMode=="uRand"){
-		if (ThetaSpread) {dTheta=(G4UniformRand()-0.5)*ThetaSpread;} 
+		if (ThetaSpread) {dTheta=(G4UniformRand()-0.5)*ThetaSpread;}
 	}
 	G4ThreeVector dir(1,1,1);
 	dir.setTheta(Theta+dTheta);
@@ -695,9 +697,9 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	}
 	else if (PositionMode=="sRand"){
 		do {
-			if (xSpread) {dx=2.*(G4UniformRand()-0.5);dx2 = dx*dx;dx*=xSpread;} 
-			if (ySpread) {dy=2.*(G4UniformRand()-0.5);dy2 = dy*dy;dy*=ySpread;} 
-			if (zSpread) {dz=2.*(G4UniformRand()-0.5);dz2 = dz*dz;dz*=zSpread;} 
+			if (xSpread) {dx=2.*(G4UniformRand()-0.5);dx2 = dx*dx;dx*=xSpread;}
+			if (ySpread) {dy=2.*(G4UniformRand()-0.5);dy2 = dy*dy;dy*=ySpread;}
+			if (zSpread) {dz=2.*(G4UniformRand()-0.5);dz2 = dz*dz;dz*=zSpread;}
 			if (dx2+dy2+dz2<=1.) gotit = true;
 		} while (!gotit);
 	}
@@ -793,6 +795,21 @@ void PrimaryGeneratorAction::SetUniformPosition(){
 			pos.setPhi(iphi);
 			pos.setRho(ir);
 			pos.setZ(iz);
+		}
+		else if ( sol_type == "Box" ) {
+		  G4double x, y, z;
+		  G4int iBox = pSimpleGeometryParameter->get_SolidIndex(index);
+		  x = pSimpleGeometryParameter->get_Box_X(iBox,ivol);
+		  y = pSimpleGeometryParameter->get_Box_Y(iBox,ivol);
+		  z = pSimpleGeometryParameter->get_Box_Z(iBox,ivol);
+
+		  G4double ix, iy, iz;
+		  ix = G4UniformRand()*x - x/2;
+		  iy = G4UniformRand()*y - y/2;
+		  iz = G4UniformRand()*z - z/2;
+		  pos.setX(ix);
+		  pos.setY(iy);
+		  pos.setZ(iz);
 		}
 		else{
 			std::cout<<"ERROR: in PrimaryGeneratorAction::SetUniformPosition unsupported solid type: "<<sol_type<<"!!!"<<std::endl;
@@ -904,7 +921,7 @@ void PrimaryGeneratorAction::BuildHistoFromFile(){
 		}
 		DM_hist = h;
 	}
-	
+
 	if (PositionMode =="histo"){
 		G4String full_infile_name = dir_name +  PM_hist_filename;
 //		if (fp) delete fp;
@@ -924,7 +941,7 @@ void PrimaryGeneratorAction::BuildHistoFromFile(){
 		}
 		if(obj->InheritsFrom("TH3")){
 		  PM_hist = (TH3*) obj;
-		
+
 		}
 		else if (obj->InheritsFrom("THnSparse")) {
 		  PM_hist_sparse = (THnSparseF*) obj;
