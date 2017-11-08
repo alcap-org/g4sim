@@ -1,0 +1,42 @@
+	PhysicsList: QGSP_BERT
+
+#General setting  
+	Type:      simple #(simple/stable/ion)
+	Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
+
+#Default Direction
+#	           Theta    Phi
+#	           deg      deg
+	Direction: 0        180
+#	ThetaSpread:        10
+#	PhiSpread:	    10
+#	ThetaSpread:        1.71887
+#	PhiSpread:          180
+#Default Momentum Amplitude
+#	             MeV
+#	MomAmp:      15.9
+# 3% FWHM mom-bite
+#	MomSpread:   0.203
+
+#	Ekin:	     1.5
+#	EkinSpread:  1.2
+	Ekin:	     1.40
+	EkinSpread:  0.134
+
+#Default Position     x    y   z
+#	              mm   mm  mm
+	Position:     6.31  2.40  -125
+	PosSpread:    15.66 23.36  0
+#	PosLimit:     17.5
+
+	RandMode:       none #(none/root)
+	EnergyMode:     gRand #(root/histo/none)
+	PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
+	DirectionMode:  none #(none/uniform/histo)
+	ThetaMode:      gRand #(none/gRand/uRand)
+	PhiMode:        gRand #(none/gRand/uRand)
+	TimeMode:       none #(none/root)
+	pidMode:        none #(none/root)
+#Default Time
+#	         ns
+	Time:    0
