@@ -203,7 +203,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		particleGun->SetParticleMomentumDirection(G4ThreeVector(root_double[3] * MeV, root_double[4] * MeV, root_double[5] * MeV).unit());
 		particleGun->SetParticleEnergy(ekin);
 	}
-	else if ( EnergyMode == "gRand" || EnergyMode == "uRand" ){
+	else if ( EnergyMode == "gRand" || EnergyMode == "uRand" || EnergyMode == "expoRand" ){
 		SetRandomEnergy();
 	}
 	else if ( EnergyMode == "collimated") {
@@ -639,6 +639,9 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 		else if(EnergyMode=="uRand"){
 			dE=(G4UniformRand()-0.5)*EkinSpread;
 		}
+		else if(EnergyMode == "expoRand"){
+		  dE=(G4RandExponential::shoot(EkinSpread));
+		}
 		particleGun->SetParticleEnergy(Ekin+dE);
 	}
 	else if (EnergyType == 0 ){
@@ -648,6 +651,9 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 		}
 		else if(EnergyMode=="uRand"){
 			dMom=(G4UniformRand()-0.5)*MomSpread;
+		}
+		else if(EnergyMode == "expoRand"){
+		  std::cout << "expoRand not implemented for momentum!" << std::endl;
 		}
 		G4double ekin = sqrt((Pa+dMom)*(Pa+dMom)+mass*mass)-mass;
 		particleGun->SetParticleEnergy(ekin);
