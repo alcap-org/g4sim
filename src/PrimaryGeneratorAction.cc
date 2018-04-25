@@ -692,8 +692,7 @@ void PrimaryGeneratorAction::SetRandomDirection(){
 		if (ThetaSpread) {dTheta=(G4UniformRand()-0.5)*ThetaSpread;} 
 	}
 	G4ThreeVector dir(1,1,1);
-	dir.setTheta(Theta+dTheta);
-	dir.setPhi(Phi+dPhi);
+	dir.setRThetaPhi(1, Theta+dTheta, Phi+dPhi);
 	if(PhiMode=="mixed") {
 		if(G4UniformRand() < 0.5) 
 			dir.setPhi(0+dPhi);
@@ -704,7 +703,7 @@ void PrimaryGeneratorAction::SetRandomDirection(){
 	dir = rot*dir;
 	particleGun->SetParticleMomentumDirection(dir.unit());
 }
-void PrimaryGeneratorAction::SetPosition(G4double *parameters, G4double rotation) {
+/*void PrimaryGeneratorAction::SetPosition(G4double *parameters, G4double rotation) {
         G4double fx = parameters[0];
         G4double fy = parameters[1];
         G4double fz = parameters[2];
@@ -715,7 +714,7 @@ void PrimaryGeneratorAction::SetPosition(G4double *parameters, G4double rotation
         gPosition.rotateY(rotation*deg);
         particleGun->SetParticlePosition(gPosition);
 	//std::cout << "Set Position: " << fx << " " << fy << " " << fz << std::endl;
-}
+	}*/
 void PrimaryGeneratorAction::SetRandomPosition(){
 	G4double dx=0;
 	G4double dy=0;
