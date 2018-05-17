@@ -13,16 +13,16 @@ checkoverlap
 #       - 1500 microns thick (nominal elog:R2015b/22)
 #	- 50 x 50 mm active area (elog:R2015b/22))
 #
-# For P5 only SiL1 is in the centre, SiL3 is in it's correct position
-# for the time being jsut turn off the SiL3 detector
+# S14 is for the Si16a dataset
+#
 #==================================================================================================================
 DEFINE: thDLSi 0.0005 # thickness of the Si dead layer
 DEFINE: thDLAl 0.0005 # thickness of the Al dead layer
 
 DEFINE: nomThSiL1 0.052 # nominal SiL1 thickness (dead layer needs to be included in this)
-DEFINE: thSiL1  nomThSiL1-2*thDLSi # active SiL1 thickness
-DEFINE: wSiL1   50.5  # SiL1 width
-DEFINE: hSiL1   50.5  # SiL1 height
+DEFINE: thSiL1  nomThSiL1 # -2*thDLSi # active SiL1 thickness
+DEFINE: wSiL1   50 #.5  # SiL1 width
+DEFINE: hSiL1   50 #.5  # SiL1 height
 DEFINE: nStrips 16    # SiL1 channels
 
 DEFINE: wStrip  wSiL1/nStrips # width of 1 strip
@@ -30,12 +30,12 @@ DEFINE: hStrip  hSiL1         # height of 1 strip
 DEFINE: thStrip thSiL1	      # thickness of 1 strip
 
 DEFINE: nomThSiL2  1.535 # SiL2 thickness
-DEFINE: thSiL2  nomThSiL2-2*thDLSi # SiL2 thickness
+DEFINE: thSiL2  nomThSiL2 # -2*thDLSi # SiL2 thickness
 DEFINE: wSiL2   50  # SiL2 width
 DEFINE: hSiL2   50  # SiL2 height
 
 DEFINE: nomThSiL3  1.500 # SiL3 thickness
-DEFINE: thSiL3  nomThSiL3-2*thDLSi # SiL3 thickness
+DEFINE: thSiL3  nomThSiL3 # -2*thDLSi # SiL3 thickness
 DEFINE: wSiL3   50  # SiL3 width
 DEFINE: hSiL3   50  # SiL3 height
 
@@ -92,7 +92,7 @@ DEFINE: zLDetBlock Z0 # distance above floor
 
 	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_1 1 LeftDetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl1 0 0 0 
 	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_1 1 LeftDetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi1 0 0 0 
-	B    wStrip hStrip thStrip Target    16    LeftDetBlock Silicon  M/MonitorSD     xStrip yStrip zStrip  0    0   0 
+	B    wStrip hStrip thStrip SiL1    16    LeftDetBlock Silicon  M/MonitorSD     xStrip yStrip zStrip  0    0   0 
 	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_2 1 LeftDetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi2 0 0 0 
 	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_2 1 LeftDetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl2 0 0 0 
 

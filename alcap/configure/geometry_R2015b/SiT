@@ -7,7 +7,7 @@ checkoverlap
 #==================================================================================================================
 
 DEFINE: nomThSiT 0.058 # nominal SiT thickness (dead layer needs to be included in this)
-DEFINE: thSiT  nomThSiT-2*thDLSi # active SiT thickness
+DEFINE: thSiT  nomThSiT # -2*thDLSi-2*thDLAl # active SiT thickness
 DEFINE: wSiT   50  # SiT width
 DEFINE: hSiT   50  # SiT height
 DEFINE: nSiTQuads 4    # SiT channels

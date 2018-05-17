@@ -45,8 +45,8 @@ DEFINE: pRUR		RO+LpUR/2-thUR/2 # R position of Upstream Right Flange
 #Tubs info
 #	Type RMin RMax  Length Start Span Name              RepNo MotVolume Material  SDName    posX posY  posZ   Ephi   Ethe   Epsi  
 #	     mm   mm    mm     deg   deg                                                        mm   mm    mm     deg    deg    deg   
-#	                                                                                P R    Phi   Z     
-#	                                                                                S R    Phi   Theta 
+#	                                                                                      P R    Phi   Z     
+#	                                                                                      S R    Phi   Theta 
 	T    0    RO    HO     0     360  tubChamber
 	T    0    Rt    Ht     0     360  tubChamberCover
 	T    0    Rp1O  Lp1    0     360  tubBeamPort 
