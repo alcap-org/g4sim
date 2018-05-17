@@ -1,0 +1,56 @@
+	PhysicsList: QGSP_BERT
+
+#General setting  
+	Type:      simple #(simple/stable/ion)
+	Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
+#	Particle:  geantino
+
+#Default Direction
+#	           Theta    Phi
+#	           deg      deg
+	Direction: 0      0
+	ThetaSpread: 15
+	PhiSpread: 360
+
+#	ThetaSpread: 1.89
+#	PhiSpread: 6.27
+# Don't know where I got these numbers
+#	ThetaSpread:        6.78
+#	PhiSpread:	    73.8
+#Default Momentum Amplitude
+#	             MeV
+#	MomAmp:      15.9
+# 3% FWHM mom-bite
+#	MomSpread:   0.203
+	Ekin:	     1.43
+	EkinSpread:  0.22
+
+# dataRand
+#	Ekin:	     1.5
+#	EkinSpread:  0.15
+#	EkinSpread2: 0.1
+
+
+#Default Position     x    y   z
+#	              mm   mm  mm
+# At Target
+#	Position:     6.31  2.40  -125
+#	PosSpread:    15.66 23.36  0
+	Position:     2  3  -100      	  
+	PosSpread:    5  10  0
+#	PosLimit:     17.5
+
+	RandMode:       none #(none/root)
+#	EnergyMode:     histo #(root/histo/none)
+#			EMHFN: muon_beam_energies.root
+#			EMHHN: hTotalMuonBeamEnergy_9740
+	EnergyMode:	gRand
+	PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
+	DirectionMode:  none #(none/uniform/histo)
+	ThetaMode:      gRand #(none/gRand/uRand)
+	PhiMode:        gRand #(none/gRand/uRand)
+	TimeMode:       none #(none/root)
+	pidMode:        none #(none/root)
+#Default Time
+#	         ns
+	Time:    0
