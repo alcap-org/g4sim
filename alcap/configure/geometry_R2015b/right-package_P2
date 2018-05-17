@@ -40,7 +40,7 @@ DEFINE: RBlockGaps 1 # 1 mm between silicon layers (?)
 
 DEFINE: wRDetBlock wSiR1+1 # the width of the right detector block mother volume
 DEFINE: hRDetBlock hSiR1+1 # the height of the right detector block mother volume
-DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+2*RBlockGaps+2*3*thDLAl # the width of the left detector block mother volume
+DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+2*RBlockGaps+2*3*thDLSi+2*3*thDLAl # the width of the left detector block mother volume
 
 DEFINE: zSiR1DLAl1 -thRDetBlock/2+thDLAl/2
 DEFINE: zSiR1DLSi1 zSiR1DLAl1+thDLAl/2+thDLSi/2
