@@ -141,9 +141,6 @@ V_FILTERSECTION
 V_FILTERSECTION
 
 TRIGGERSECTION
-	minCdcHits        -1           // minimum required CDCLayer nHits. Would be set invalid if minCdcHits = -1
-	minCdcCellHits    -1           // minimum required CDCCell nHits. Would be set invalid if minCdcCellHits = -1
-	minTriggerHits    -1           // minimum required Trigger nHits. Would be set invalid if minTriggerHits = -1
 	minV_Hits         -1           // minimum required V_nHits. Would be set invalid if = -1
 	minM_Hits         -1            // minimum required M_nHits. Would be set invalid if = -1
 	minEleMom         -1  MeV      // minimum required Electron momentum. Would be set invalid if minEleMom = -1 MeV
