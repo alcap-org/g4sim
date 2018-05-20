@@ -109,22 +109,22 @@ PrimaryGeneratorAction* PrimaryGeneratorAction::GetPrimaryGeneratorAction(){
 }
 
 void* PrimaryGeneratorAction::get_extra(G4String name){
-	if (name=="weight") {if(!flag_weight)  return &root_double[9];}
-	else if (name=="ox") {if(!flag_ox)  return &root_double[10];}
-	else if (name=="oy") {if(!flag_oy)  return &root_double[11];}
-	else if (name=="oz") {if(!flag_oz)  return &root_double[12];}
-	else if (name=="opx") {if(!flag_opx)  return &root_double[13];}
-	else if (name=="opy") {if(!flag_opy)  return &root_double[14];}
-	else if (name=="opz") {if(!flag_opz)  return &root_double[15];}
-	else if (name=="ot") {if(!flag_ot)  return &root_double[16];}
-	else if (name=="ppid") {if(!flag_ppid)  return &root_int[1];}
-	else if (name=="ptid") {if(!flag_ptid)  return &root_int[2];}
-	else if (name=="process") {if(!flag_process)  return root_str[0];}
-	else if (name=="volume") {if(!flag_volume)  return root_str[1];}
+	if      (name=="weight"  && !flag_weight)  return &root_double[9];
+	else if (name=="ox"      && !flag_ox)      return &root_double[10];
+	else if (name=="oy"      && !flag_oy)      return &root_double[11];
+	else if (name=="oz"      && !flag_oz)      return &root_double[12];
+	else if (name=="opx"     && !flag_opx)     return &root_double[13];
+	else if (name=="opy"     && !flag_opy)     return &root_double[14];
+	else if (name=="opz"     && !flag_opz)     return &root_double[15];
+	else if (name=="ot"      && !flag_ot)      return &root_double[16];
+	else if (name=="ppid"    && !flag_ppid)    return &root_int[1];
+	else if (name=="ptid"    && !flag_ptid)    return &root_int[2];
+	else if (name=="process" && !flag_process) return root_str[0];
+	else if (name=="volume"  && !flag_volume)  return root_str[1];
 //	else if (name=="R0") {if(flag_R0)  return &root_double[7];}
 //	else if (name=="R1") {if(flag_R1)  return &root_double[8];}
-	else if (name=="R0") {if(!flag_R0)  return &root_int[3];}
-	else if (name=="R1") {if(!flag_R1)  return &root_int[4];}
+	else if (name=="R0"      && !flag_R0)      return &root_int[3];
+	else if (name=="R1"      && !flag_R1)      return &root_int[4];
 	return NULL;
 }
 
@@ -549,10 +549,10 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	}
 	else if ( PositionMode == "histo") {
 	  if (PM_hist) { // if we have a TH3F
-		double x=0,y=0,z=0;
-		PM_hist->GetRandom3(x,y,z);
-		G4ThreeVector pos_3Vec(x, y, z);
-		particleGun->SetParticlePosition(pos_3Vec);
+	  	double x=0,y=0,z=0;
+	  	PM_hist->GetRandom3(x,y,z);
+	  	G4ThreeVector pos_3Vec(x, y, z);
+	  	particleGun->SetParticlePosition(pos_3Vec);
 	  }
 	  else if (PM_hist_sparse) {
 	    double random_pos[3];
@@ -560,6 +560,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    G4ThreeVector pos_3Vec(random_pos[0], random_pos[1], random_pos[2]);
 	    particleGun->SetParticlePosition(pos_3Vec); // should probably try and avoid having same line twice
 	  }
+	}
+	else if ( PositionMode == "localhisto") {
+		SetPositionInTargetFromHistogram();
 	}
 	else if ( PositionMode == "turtle" || PositionMode == "muPC" || PositionMode == "collimator") {
 	  // Already handled in the DirectionMode if block
@@ -659,23 +662,21 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 void PrimaryGeneratorAction::SetRandomDirection(){
 	G4double dPhi=0;
 	G4double dTheta=0;
-	if(PhiMode=="gRand"){
-		if (PhiSpread) dPhi=G4RandGauss::shoot(Phi,PhiSpread);
+	if(PhiMode=="gRand") {
+		dPhi = G4RandGauss::shoot(0, PhiSpread);
 	}
 	else if (PhiMode=="uRand"){
-		if (PhiSpread) {dPhi=(G4UniformRand()-0.5)*PhiSpread;}
+		dPhi = (G4UniformRand()-0.5) * PhiSpread;
 	}
 	if(ThetaMode=="gRand"){
-		if (ThetaSpread) dTheta=G4RandGauss::shoot(Theta,ThetaSpread);
+		dTheta = G4RandGauss::shoot(0, ThetaSpread);
 	}
 	else if (ThetaMode=="uRand"){
-		if (ThetaSpread) {dTheta=(G4UniformRand()-0.5)*ThetaSpread;}
+		dTheta = (G4UniformRand()-0.5) * ThetaSpread;
 	}
-	G4ThreeVector dir(1,1,1);
-	dir.setTheta(Theta+dTheta);
-	dir.setPhi(Phi+dPhi);
-	G4RotationMatrix rot(Ephi,Etheta,Epsi);
-	dir = rot*dir;
+	G4ThreeVector dir;
+	dir.setRThetaPhi(1, Theta+dTheta, Phi+dPhi);
+	dir *= G4RotationMatrix(Ephi, Etheta, Epsi);
 	particleGun->SetParticleMomentumDirection(dir.unit());
 }
 
@@ -750,6 +751,44 @@ void PrimaryGeneratorAction::SetRandomPosition(){
   particleGun->SetParticlePosition(position);
 }
 
+void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
+
+	MyVGeometryParameter*    pMyVGeometryParameter    = MyDetectorManager::GetMyDetectorManager()->GetSvc("Target")->get_GeometryParameter();
+	SimpleGeometryParameter* pSimpleGeometryParameter = dynamic_cast<SimpleGeometryParameter*> (pMyVGeometryParameter);
+	int index = pSimpleGeometryParameter->get_VolIndex("Target");
+
+	double x, y, z;
+	PM_hist->GetRandom3(x, y, z);
+	G4ThreeVector pos(x, y, z);
+
+	// Rotate and move to mother coordinates
+	G4RotationMatrix rot(pSimpleGeometryParameter->get_Ephi(index),
+	                     pSimpleGeometryParameter->get_Etheta(index),
+	                     pSimpleGeometryParameter->get_Epsi(index));
+	pos = rot.inverse()*pos;
+	pos += G4ThreeVector(pSimpleGeometryParameter->get_PosX(index),
+	                     pSimpleGeometryParameter->get_PosY(index),
+	                     pSimpleGeometryParameter->get_PosZ(index));
+
+	G4String mot_volume = pSimpleGeometryParameter->get_MotherName(index);
+	while (mot_volume != "None") {
+		SimpleGeometryParameter* pmotSimpleGeometryParameter =
+		  MyDetectorManager::GetMyDetectorManager()->GetParaFromVolume(mot_volume);
+		int mot_index = pmotSimpleGeometryParameter->get_VolIndex(mot_volume);
+
+		G4RotationMatrix rot(pmotSimpleGeometryParameter->get_Ephi(mot_index),
+		                     pmotSimpleGeometryParameter->get_Etheta(mot_index),
+		                     pmotSimpleGeometryParameter->get_Epsi(mot_index));
+		pos = rot.inverse()*pos;
+		pos += G4ThreeVector(pmotSimpleGeometryParameter->get_PosX(mot_index),
+		                     pmotSimpleGeometryParameter->get_PosY(mot_index),
+		                     pmotSimpleGeometryParameter->get_PosZ(mot_index));
+
+		mot_volume = pmotSimpleGeometryParameter->get_MotherName(mot_index);
+	}
+	particleGun->SetParticlePosition(pos);
+}
+
 void PrimaryGeneratorAction::SetUniformPosition(){
 
 	MyVGeometryParameter* pMyVGeometryParameter = MyDetectorManager::GetMyDetectorManager()->GetSvc(UP_SubDet)->get_GeometryParameter();
@@ -778,6 +817,7 @@ void PrimaryGeneratorAction::SetUniformPosition(){
 		G4ThreeVector pos(1,0,0);
 		G4int n = pSimpleGeometryParameter->get_RepNo(index);
 		G4int ivol = G4UniformRand()*n;
+
 		if ( sol_type == "Tubs" ){
 			G4double RMax,RMin,length,StartPhi,SpanPhi;
 			G4int iTubs = pSimpleGeometryParameter->get_SolidIndex(index);
@@ -922,7 +962,7 @@ void PrimaryGeneratorAction::BuildHistoFromFile(){
 		DM_hist = h;
 	}
 
-	if (PositionMode =="histo"){
+	if (PositionMode == "histo" || PositionMode == "localhisto"){
 		G4String full_infile_name = dir_name +  PM_hist_filename;
 //		if (fp) delete fp;
 		fp = new TFile(full_infile_name.c_str());
@@ -1349,7 +1389,8 @@ void PrimaryGeneratorAction::Initialize(){
 	particleGun->SetParticlePosition(G4ThreeVector(x,y,z));
 	particleGun->SetParticleTime(t);
 
-	if (EnergyMode == "histo" || DirectionMode == "histo" || PositionMode == "histo" ){
+	if (EnergyMode == "histo" || DirectionMode == "histo" ||
+	    PositionMode == "histo" || PositionMode == "localhisto"){
 		BuildHistoFromFile();
 	}
 	UseRoot = false;
