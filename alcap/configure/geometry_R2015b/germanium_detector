@@ -1,8 +1,8 @@
 #==================================================================================================================
 #	Germanium Detector
 #==================================================================================================================
-DEFINE: LGe			44 # Length of Germanium Detector (from owncloud datasheet)
-DEFINE: RGe			53/2 # R of Germanium Detector (from owncloud datasheet)
+DEFINE: LGe			44 # Length of Germanium Detector (from owncloud datasheet documents/Equipment/GeCH.pdf)
+DEFINE: RGe			53/2 # R of Germanium Detector (from owncloud datasheet documents/Equipment/GeCH.pdf)
 DEFINE: pRGe		RO+75+LGe/2 # R position of Germanium Detector (from elog:385)
 
 #Tubs info

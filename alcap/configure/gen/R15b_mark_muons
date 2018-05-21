@@ -2,50 +2,39 @@
 
 #General setting  
 	Type:      simple #(simple/stable/ion)
-	Particle:  proton #(e+/e-/deuteron/chargedgeantino/gamma/...)
+	Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
 
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-	Direction:  90       180
-	ThetaSpread:        360
-	PhiSpread:          360
+	Direction: 0        0
+	ThetaSpread:        0
+	PhiSpread:          0
 #Default Momentum Amplitude
 #	             MeV
-#	MomAmp:      10
-#	MomSpread:   10
-	Ekin:      12.5
-	EkinSpread:   25
-#	Ekin:      1
-#	EkinSpread:   5
-
+#	MomAmp:      26.3 #26.3
+#	MomSpread:   0.335 #0.335
 #Default Position     x    y   z
 #	                  mm   mm  mm
-#	Position:         0  0  10
-#	PosSpread:        8.33 5   1
+	Ekin: 1.39
+	EkinSpread: 0.122
+
+	Position:         0    0  -55         
+	PosSpread:        18.60 18.6 0 # in muPC mode used to add an offset
 #	PosLimit:         17.5
 
 	RandMode:       none #(none/root)
-	EnergyMode:     uRand #(root/histo/none)
-#	EnergyMode:     expoRand #(root/histo/none)
-	PositionMode:   histo #(uniform/root/none/gRand/uRand/turtle/muPC)
+	EnergyMode:     gRand #(root/histo/none/collimated)
+	PositionMode:   gRand #(uniform/root/none/gRand/uRand/turtle/muPC)
 	DirectionMode:  none #(none/uniform/histo/turtle/muPC)
-	ThetaMode:      uRand #(none/gRand/uRand)
-	PhiMode:        uRand #(none/gRand/uRand)
+	ThetaMode:      none #(none/gRand/uRand)
+	PhiMode:        none #(none/gRand/uRand)
 	TimeMode:       none #(none/root)
 	pidMode:        none #(none/root)
 #Default Time
 #	         ns
 	Time:    0
 #
-# Position histogram and file
-#
-#	PMHFN:       R15b_output_muon-stop-positions_shallower-still.root
-#	PMHFN:       R15b_output_Geom-P1_muon-stop-positions.root
-	PMHFN:       R15b_output_Geom-P5_muon-stop-positions_new.root
-#	PMHFN:       R15b_output_Geom-S14_muon-stop-positions.root
-	PMHHN:       hGlobalStoppingPositions
-
 #Scale Momentum  Spread
 #1.03  28.84     0.368
 #1.04  29.12     0.372

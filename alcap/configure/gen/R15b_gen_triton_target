@@ -2,12 +2,12 @@
 
 #General setting  
 	Type:      simple #(simple/stable/ion)
-	Particle:  proton #(e+/e-/deuteron/chargedgeantino/gamma/...)
+	Particle:  triton #(e+/e-/deuteron/chargedgeantino/gamma/...)
 
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-	Direction:  90       180
+#	Direction: 0        180
 	ThetaSpread:        360
 	PhiSpread:          360
 #Default Momentum Amplitude
@@ -16,9 +16,6 @@
 #	MomSpread:   10
 	Ekin:      12.5
 	EkinSpread:   25
-#	Ekin:      1
-#	EkinSpread:   5
-
 #Default Position     x    y   z
 #	                  mm   mm  mm
 #	Position:         0  0  10
@@ -27,7 +24,6 @@
 
 	RandMode:       none #(none/root)
 	EnergyMode:     uRand #(root/histo/none)
-#	EnergyMode:     expoRand #(root/histo/none)
 	PositionMode:   histo #(uniform/root/none/gRand/uRand/turtle/muPC)
 	DirectionMode:  none #(none/uniform/histo/turtle/muPC)
 	ThetaMode:      uRand #(none/gRand/uRand)
@@ -40,11 +36,9 @@
 #
 # Position histogram and file
 #
-#	PMHFN:       R15b_output_muon-stop-positions_shallower-still.root
-#	PMHFN:       R15b_output_Geom-P1_muon-stop-positions.root
-	PMHFN:       R15b_output_Geom-P5_muon-stop-positions_new.root
-#	PMHFN:       R15b_output_Geom-S14_muon-stop-positions.root
+	PMHFN:       R15b_output_Geom-S14_muon-stop-positions.root
 	PMHHN:       hGlobalStoppingPositions
+
 
 #Scale Momentum  Spread
 #1.03  28.84     0.368

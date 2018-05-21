@@ -20,6 +20,9 @@ struct Arm {
   RooUnfoldResponse* response;
   int n_hits;
   int n_misses;
+  double total_thin_edep;
+  double total_thick_edep;
+  bool thick_stopped;
 };
 
 struct LayerHit {
@@ -31,22 +34,35 @@ struct LayerHit {
   //  double px, py, pz;
   int parent_pid;
   std::string ovolName;
+  std::vector<std::string> volNames;
+  std::vector<double> edeps;
+  std::vector<std::string> particleNames;
+  int stopped;
 };
   
 
-void TransferMatrix(std::string filename) {
+void R15b_Si16b_TransferMatrix_Refactor() {
 
+  //  std::string filename = "output/R15b_10M_Geom-P5_protons-restricted-dir.root";
+  //  std::string filename = "output/R15b_10M_Geom-P5_protons.root";
+  //  std::string filename = "output/R15b_10M_Geom-P5_protons_shallower.root";
+  //  std::string filename = "output/R15b_10M_Geom-P5_protons_shallower-still.root";
+  //  std::string filename = "output/R15b_1M_Geom-P5_protons.root";
+  std::string filename = "output/R15b_10M_Geom-P5_protons_new.root";
+
+  std::string outfilename = "R15b_Si16b_response-matrix_100keV-bins_new.root";
+  
   TFile* file = new TFile(filename.c_str(), "READ");
   TTree* tree = (TTree*) file->Get("tree");
   
-  double bin_width = 500;
+  double bin_width = 100;
   //  double energy_high = 25000;
   //  double energy_low = 0;
   //  int n_bins = (energy_high - energy_low) / bin_width;
-  double observed_energy_high = 10000;
+  double observed_energy_high = 25000;
   double observed_energy_low = 0;
   int n_observed_bins = (observed_energy_high - observed_energy_low) / bin_width;
-  double true_energy_high = 15000;
+  double true_energy_high = 25000;
   double true_energy_low = 0;
   int n_true_bins = (true_energy_high - true_energy_low) / bin_width;
 
@@ -144,124 +160,119 @@ void TransferMatrix(std::string filename) {
     true_kinetic_energy = total_energy - proton_mass;
 
     //      std::cout << "Entry #" << iEntry << ": true kinetic energy = " << true_kinetic_energy << std::endl;
-
+    bool didnt_start_in_target = false;
     for (int iElement = 0; iElement < particleName->size();  ++iElement) {
 
       std::string i_particleName = particleName->at(iElement);
-      if (i_particleName != "proton") { // only want protons
+      //      if (i_particleName != "proton") { // only want protons
 	//	std::cout << i_particleName << " " << tid->at(iElement) << " " << edep->at(iElement)*1e6 << " " << t->at(iElement) <<std::endl;
-	continue;
-      }
+      //	continue;
+      //      }
       std::string i_volName = volName->at(iElement);
       std::string i_ovolName = ovolName->at(iElement);
+      int i_tid = tid->at(iElement);
 
-      // Loop through the arms and record all protons that have hit any of the Si detectors
+      if (i_tid == 1 && i_ovolName.find("Target")==std::string::npos) { // only want events that started in the target
+	//	std::cout << "ACtually started in " << i_ovolName << std::endl;
+	didnt_start_in_target = true;
+	break;
+      }
+
+      // Loop through the arms and record all energy deposits that have hit in any of the Si detectors
       for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {
 	std::string thick_monname = i_arm->detname+"2";
 	std::string thin_monname = i_arm->detname+"1";
 
-	if (i_volName == thick_monname && stopped->at(iElement) == 1) {
+	if (i_volName == thick_monname){ // && stopped->at(iElement) == 1) {
 	  LayerHit* layer_hit = new LayerHit();
 	  layer_hit->layerID = "thick";
 	  layer_hit->arm = i_arm->detname;
-	  layer_hit->track_ID = tid->at(iElement);
+	  layer_hit->track_ID = i_tid;
 	  layer_hit->time = t->at(iElement);
 	  layer_hit->edep = edep->at(iElement)*1e6; // convert to keV
 	  layer_hit->ovolName = i_ovolName;
+	  for (int jElement = 0; jElement < particleName->size(); ++jElement) {
+	    layer_hit->volNames.push_back(volName->at(jElement));
+	    layer_hit->edeps.push_back(edep->at(jElement)*1e6);
+	    layer_hit->particleNames.push_back(particleName->at(jElement));
+	  }
+	  layer_hit->stopped = stopped->at(iElement);
 	  layer_hits.push_back(layer_hit);
 	}
 	else if (i_volName == thin_monname) {
 	  LayerHit* layer_hit = new LayerHit();
 	  layer_hit->layerID = "thin";
 	  layer_hit->arm = i_arm->detname;
-	  layer_hit->track_ID = tid->at(iElement);
+	  layer_hit->track_ID = i_tid;
 	  layer_hit->time = t->at(iElement);
 	  layer_hit->edep = edep->at(iElement)*1e6; // convert to keV
 	  layer_hit->ovolName = i_ovolName;
+	  for (int jElement = 0; jElement < particleName->size(); ++jElement) {
+	    layer_hit->volNames.push_back(volName->at(jElement));
+	    layer_hit->edeps.push_back(edep->at(jElement)*1e6);
+	    layer_hit->particleNames.push_back(particleName->at(jElement));
+	  }
+	  layer_hit->stopped = stopped->at(iElement);
 	  layer_hits.push_back(layer_hit);
 	}
       }
     }
-      
-    // After looping through the elements, we will hopefully have a list of layer hits (hopefully no more than 2)
-    // Check pairs of hits for one in the thin layer and one in the thick layer of the same arm with the same track ID
-    double observed_E = -1;
-    if (layer_hits.size() > 2) {
-      std::cout << "Entry #" << iEntry << std::endl;
+
+    if (didnt_start_in_target) {
+      continue;
+    }
+    // After looping through the elements, we will hopefully have a list of layer hits
+    for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {
+      i_arm->total_thin_edep = i_arm->total_thick_edep = 0;
+      i_arm->thick_stopped = false;
       for (std::vector<LayerHit*>::iterator i_layer_hit = layer_hits.begin(); i_layer_hit != layer_hits.end(); ++i_layer_hit) {
-	std::cout << (*i_layer_hit)->layerID << " " << (*i_layer_hit)->arm << " " << (*i_layer_hit)->track_ID << " " << (*i_layer_hit)->edep << " " << (*i_layer_hit)->time << " " << (*i_layer_hit)->ovolName << " " << true_kinetic_energy << std::endl;
+	if (i_arm->detname == (*i_layer_hit)->arm) {
+	  if ( (*i_layer_hit)->layerID == "thin") {
+	    i_arm->total_thin_edep += (*i_layer_hit)->edep;
+	  }
+	  else if ( (*i_layer_hit)->layerID == "thick") {
+	    i_arm->total_thick_edep += (*i_layer_hit)->edep;
+	    if ( (*i_layer_hit)->stopped == 1 && (*i_layer_hit)->track_ID == 1) {
+	      i_arm->thick_stopped = true;
+	    }
+	  }
+	}
       }
+    }
+
+    for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {
+      double observed_E = i_arm->total_thin_edep + i_arm->total_thick_edep;
+      if (observed_E > 0 && i_arm->thick_stopped == true) {
+	i_arm->response->Fill(observed_E, true_kinetic_energy); // this arm saw the proton
+	i_arm->n_hits++;
+      }
+      else {
+	i_arm->response->Miss(true_kinetic_energy); // otherwise it didn't
+	i_arm->n_misses++;
+      }
+
+      /*      if ( observed_E < 0.5*true_kinetic_energy ) {
+	std::cout << "Entry #" << iEntry << std::endl;
+	for (std::vector<LayerHit*>::iterator i_layer_hit = layer_hits.begin(); i_layer_hit != layer_hits.end(); ++i_layer_hit) {
+	  std::cout << "Hit i: arm = " << (*i_layer_hit)->arm << ", layer = " << (*i_layer_hit)->layerID << ", track ID = " << (*i_layer_hit)->track_ID << ", time = " << (*i_layer_hit)->time << ", ovol = " << (*i_layer_hit)->ovolName << ", edep = " << (*i_layer_hit)->edep << ", volNames = ";
+	  for (int i_vol = 0; i_vol < (*i_layer_hit)->volNames.size(); ++i_vol) {
+	    std::cout << (*i_layer_hit)->volNames.at(i_vol) << " (" << (*i_layer_hit)->particleNames.at(i_vol) << ", " << (*i_layer_hit)->edeps.at(i_vol) << ") ";
+	  }
+	  std::cout << std::endl;
+	}
+      }
+      */
     }
 
     for (std::vector<LayerHit*>::iterator i_layer_hit = layer_hits.begin(); i_layer_hit != layer_hits.end(); ++i_layer_hit) {
-      //      std::cout << (*i_layer_hit)->layerID << " " << (*i_layer_hit)->arm << " " << (*i_layer_hit)->track_ID << " " << (*i_layer_hit)->edep << " " << (*i_layer_hit)->ovolName << std::endl;
-      for (std::vector<LayerHit*>::iterator j_layer_hit = i_layer_hit+1; j_layer_hit != layer_hits.end(); ++j_layer_hit) {
-	//	std::cout << (*i_layer_hit)->layerID << " " << (*i_layer_hit)->arm << " " << (*i_layer_hit)->track_ID << " " << (*i_layer_hit)->ovolName << " " <<  (*j_layer_hit)->layerID << " " << (*j_layer_hit)->arm << " " << (*j_layer_hit)->track_ID << " " << (*j_layer_hit)->ovolName << std::endl;
-
-	if ( ((*i_layer_hit)->layerID != (*j_layer_hit)->layerID) && // want hits in opposite layers
-	     ((*i_layer_hit)->arm == (*j_layer_hit)->arm) && // want the same arm
-	     ((*i_layer_hit)->track_ID == (*j_layer_hit)->track_ID) && // want the same track ID
-	     ((*i_layer_hit)->track_ID == 1) && // and it's a primary proton
-	     ((*i_layer_hit)->ovolName.find("Target")!=std::string::npos && (*j_layer_hit)->ovolName == (*i_layer_hit)->ovolName) // want them to have originated in the target
-	     ) {
-
-	  observed_E = (*i_layer_hit)->edep + (*j_layer_hit)->edep;
-	  /*	  if ((*i_layer_hit)->layerID == "thin") {
-	    observed_E = (*i_layer_hit)->edep;
-	  }
-	  else {
-	    observed_E = (*j_layer_hit)->edep;
-	  }
-	  */
-	  //	  observed_E += (*i_layer_hit)->edep;
-
-	  /*	  if ( observed_E < 0.5*true_kinetic_energy ) {
-	    std::cout << "Hit i: arm = " << (*i_layer_hit)->arm << ", layer = " << (*i_layer_hit)->layerID << ", track ID = " << (*i_layer_hit)->track_ID << ", time = " << (*i_layer_hit)->time << ", ovol = " << (*i_layer_hit)->ovolName << std::endl;
-	    std::cout << "Hit j: arm = " << (*j_layer_hit)->arm << ", layer = " << (*j_layer_hit)->layerID << ", track ID = " << (*j_layer_hit)->track_ID << ", time = " << (*j_layer_hit)->time << ", ovol = " << (*j_layer_hit)->ovolName << std::endl;
-	    std::cout << "Observed = " << observed_E << ", True = " << true_kinetic_energy << std::endl;
-	    }*/
-
-	  for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {	
-	    if (i_arm->detname == (*i_layer_hit)->arm && observed_E < 9500 && observed_E > 2200) {
-	      i_arm->response->Fill(observed_E, true_kinetic_energy); // this arm saw the proton
-	      i_arm->n_hits++;
-	    }
-	    else {
-	      i_arm->response->Miss(true_kinetic_energy); // the other one didn't
-	      i_arm->n_misses++;
-	    }
-	  }
-	    
-	  break;
-	}
-      }
-      if (observed_E > 0) {
-	break; // found the hit now so don;t go through the other loop
-      }
-    }
-    if (observed_E < 0) { // if we've got this far and didn't find good hits
-      //	std::cout << true_kinetic_energy << " keV missed" << std::endl;
-      for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {
-	i_arm->response->Miss(true_kinetic_energy); // both arms missed the proton
-	i_arm->n_misses++;
-      }
+      delete *i_layer_hit;
     }
   }
   
-  TFile* out_file = new TFile("output.root", "RECREATE");
+  TFile* out_file = new TFile(outfilename.c_str(), "RECREATE");
   for (std::vector<Arm>::iterator i_arm = arms.begin(); i_arm != arms.end(); ++i_arm) {
     TH2* hResponse = i_arm->response->Hresponse();
 
-    /*    // Remove any bin with 1 entry in it
-    for (int i_bin = 1; i_bin <= hResponse->GetXaxis()->GetNbins(); ++i_bin) {
-      for (int j_bin = 1; j_bin <= hResponse->GetYaxis()->GetNbins(); ++j_bin) {
-	int bin_content = hResponse->GetBinContent(i_bin, j_bin);
-	if (bin_content == 1) {
-	  hResponse->SetBinContent(i_bin, j_bin, 0);
-	}
-      }
-      }*/
-    hResponse->ResetStats();
     hResponse->SetXTitle("Observed E [keV]");
     hResponse->SetYTitle("True E [keV]");
     i_arm->response->Write();

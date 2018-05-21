@@ -1,3 +1,23 @@
+AlCap R15b
+==========
+
+Two stages of simulation:
+    1) muon beam
+       -- copy configure/gen/R15b_gen_Si16b
+       -- copy macros/andy_R15b_Si16b_muon-beam-sim.mac
+       -- run small (100k) event jobs and tune to your dataset's SiT stop peak (use scripts/R15b_MuonBeamSim_SiTEDepValidation.C)
+       -- once tuned, run longer job to get stopped muon positions (use scripts/R15b_MuonBeamSim_StoppingPositionDistribution.C)
+          -- put the resulting ROOT file into the data/ folder
+
+    2) emitted particles (e.g. protons)
+       -- copy macros/andy_R15b_Si16b_proton.mac
+       -- change PMHFN in configure/gen/R15b_gen_proton to point to the new stopping target positions
+       -- run simulation
+       -- get transfer matrix (e.g. scripts/R15b_Si16b_TransferMatrix.C)
+
+########################################################################################################
+From R13:
+
 alcap
 =====
 

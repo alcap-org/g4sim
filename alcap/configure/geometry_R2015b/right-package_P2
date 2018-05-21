@@ -17,7 +17,7 @@ checkoverlap
 #==================================================================================================================
 
 DEFINE: nomThSiR1 0.058 # nominal SiR1 thickness (dead layer needs to be included in this)
-DEFINE: thSiR1  nomThSiR1-2*thDLSi # active SiR1 thickness
+DEFINE: thSiR1  nomThSiR1 # -2*thDLSi # active SiR1 thickness
 DEFINE: wSiR1   50  # SiR1 width
 DEFINE: hSiR1   50  # SiR1 height
 DEFINE: nR1Quads 4    # SiR1 channels
@@ -27,12 +27,12 @@ DEFINE: hR1Quad  hSiR1/(nR1Quads/2)         # height of 1 quad
 DEFINE: thR1Quad thSiR1	      # thickness of 1 quad
 
 DEFINE: nomThSiR2  1.545 # SiR2 thickness
-DEFINE: thSiR2  nomThSiR2-2*thDLSi # SiR2 thickness
+DEFINE: thSiR2  nomThSiR2 # -2*thDLSi # SiR2 thickness
 DEFINE: wSiR2   50  # SiR2 width
 DEFINE: hSiR2   50  # SiR2 height
 
 DEFINE: nomThSiR3  1.500 # SiR3 thickness
-DEFINE: thSiR3  nomThSiR3-2*thDLSi # SiR3 thickness
+DEFINE: thSiR3  nomThSiR3 # -2*thDLSi # SiR3 thickness
 DEFINE: wSiR3   50  # SiR3 width
 DEFINE: hSiR3   50  # SiR3 height
 
@@ -40,7 +40,7 @@ DEFINE: RBlockGaps 1 # 1 mm between silicon layers (?)
 
 DEFINE: wRDetBlock wSiR1+1 # the width of the right detector block mother volume
 DEFINE: hRDetBlock hSiR1+1 # the height of the right detector block mother volume
-DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+2*RBlockGaps+2*3*thDLAl # the width of the left detector block mother volume
+DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+2*RBlockGaps+2*3*thDLSi+2*3*thDLAl # the width of the left detector block mother volume
 
 DEFINE: zSiR1DLAl1 -thRDetBlock/2+thDLAl/2
 DEFINE: zSiR1DLSi1 zSiR1DLAl1+thDLAl/2+thDLSi/2

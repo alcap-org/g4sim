@@ -7,31 +7,37 @@
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-	Direction:  90       180
-	ThetaSpread:        360
-	PhiSpread:          360
+	Direction: 85        180 #SiR
+#	Direction: 90        0 #SiL
+	ThetaSpread:        25
+	PhiSpread:          25
 #Default Momentum Amplitude
 #	             MeV
 #	MomAmp:      10
 #	MomSpread:   10
-	Ekin:      12.5
-	EkinSpread:   25
-#	Ekin:      1
-#	EkinSpread:   5
 
+# triton 9,14
+# deuteron 7, 12
+# proton 5, 10
+#
+# proton_pt 5, 30
+# deuteron_pt 7, 34
+# triton_pt 9, 36
+	Ekin:  6
+	EkinSpread: 12
 #Default Position     x    y   z
 #	                  mm   mm  mm
-#	Position:         0  0  10
-#	PosSpread:        8.33 5   1
+#	Position:         0  0  0
+#	PosSpread:        0  0  0
 #	PosLimit:         17.5
 
 	RandMode:       none #(none/root)
-	EnergyMode:     uRand #(root/histo/none)
-#	EnergyMode:     expoRand #(root/histo/none)
-	PositionMode:   histo #(uniform/root/none/gRand/uRand/turtle/muPC)
+	EnergyMode:     uRand #root/histo/none)
+	PositionMode:   mixed #(uniform/root/none/gRand/bRand/sRand/turtle/muPC)
+#	UIV: Simple Target Target
 	DirectionMode:  none #(none/uniform/histo/turtle/muPC)
 	ThetaMode:      uRand #(none/gRand/uRand)
-	PhiMode:        uRand #(none/gRand/uRand)
+	PhiMode:        mixed #(none/gRand/uRand)
 	TimeMode:       none #(none/root)
 	pidMode:        none #(none/root)
 #Default Time
@@ -40,11 +46,6 @@
 #
 # Position histogram and file
 #
-#	PMHFN:       R15b_output_muon-stop-positions_shallower-still.root
-#	PMHFN:       R15b_output_Geom-P1_muon-stop-positions.root
-	PMHFN:       R15b_output_Geom-P5_muon-stop-positions_new.root
-#	PMHFN:       R15b_output_Geom-S14_muon-stop-positions.root
-	PMHHN:       hGlobalStoppingPositions
 
 #Scale Momentum  Spread
 #1.03  28.84     0.368
