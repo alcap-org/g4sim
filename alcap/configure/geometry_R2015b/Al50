@@ -2,15 +2,15 @@ checkoverlap
 #==================================================================================================================
 #	Target
 #==================================================================================================================
-DEFINE: XTB		 100            # x Dimension of Target Border
-DEFINE: XTBHole	 87             # x Dimension of the Hole in the Target Border
-DEFINE: XT 		 XTBHole        # x Dimension of Target (fiducial)
+DEFINE: XTB      100            # x Dimension of Target Border
+DEFINE: XTBHole  87             # x Dimension of the Hole in the Target Border
+DEFINE: XT       XTBHole        # x Dimension of Target (fiducial)
 DEFINE: thPb     2              # Lead thickness
-DEFINE: XTBS	 XTB+2*thPb     # x Dimension of Target Border Shielding
+DEFINE: XTBS     XTB+2*thPb     # x Dimension of Target Border Shielding
 DEFINE: XTBSHole XTBHole-2*thPb # x Dimension of the Hole in the Target Border Shielding
-DEFINE: thT 	 0.050          # Thickness of Target
-DEFINE: thTB	 5              # Thickness of Target Border
-DEFINE: thTBS	 thTB+2*thPb    # Thickness of Target Border Shielding
+DEFINE: thT      0.050          # Thickness of Target
+DEFINE: thTB     5              # Thickness of Target Border
+DEFINE: thTBS    thTB+2*thPb    # Thickness of Target Border Shielding
 
 #Box info
 #	Type x        y        z       Name        RepNo MotVolume   Material      SDName       posX  posY  posZ   Ephi Ethe Epsi
