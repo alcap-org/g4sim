@@ -40,7 +40,7 @@ DEFINE: RBlockGaps 1 # 1 mm between silicon layers (?)
 
 DEFINE: wRDetBlock wSiR1+1 # the width of the right detector block mother volume
 DEFINE: hRDetBlock hSiR1+1 # the height of the right detector block mother volume
-DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+2*RBlockGaps+2*3*thDLSi+2*3*thDLAl # the width of the left detector block mother volume
+DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+2*RBlockGaps+2*3*thDLSi+2*3*thDLAl+1 # the width of the left detector block mother volume
 
 DEFINE: zSiR1DLAl1 -thRDetBlock/2+thDLAl/2
 DEFINE: zSiR1DLSi1 zSiR1DLAl1+thDLAl/2+thDLSi/2
@@ -84,32 +84,31 @@ DEFINE: zRDetBlock Z0 # distance above floor
 #	Type x      y      z      Name        RepNo MotVolume Material     SDName        posX    posY  posZ    Ephi Ethe Epsi
 #	     mm     mm     mm                                                            mm      mm    mm      deg  deg  deg
 #	                                                                               P R       Phi   Z
-#	                                                                               S R       Phi   Theta  
-        B    wRDetBlock hRDetBlock thRDetBlock RightDetBlock 1 ChamberIn Vacuum none      xRDetBlock yRDetBlock zRDetBlock 0 -90 0
+#	                                                                               S R       Phi   Theta
+    B    wRDetBlock hRDetBlock thRDetBlock RightDetBlock 1 ChamberIn Vacuum none      xRDetBlock yRDetBlock zRDetBlock 0 -90 0
 
-	B    wSiR1  hSiR1  thDLAl  SiR1DeadAl_1 1 RightDetBlock Aluminium none          xSiR1  ySiR1 zSiR1DLAl1 0 0 0 
-	B    wSiR1  hSiR1  thDLSi  SiR1DeadSi_1 1 RightDetBlock Silicon none          xSiR1  ySiR1 zSiR1DLSi1 0 0 0 
-	B    wR1Quad hR1Quad thR1Quad SiR1       4   RightDetBlock Silicon M/MonitorSD      xR1Quad  yR1Quad zR1Quad  0    0   0   
-	B    wSiR1  hSiR1  thDLSi  SiR1DeadSi_2 1 RightDetBlock Silicon none          xSiR1  ySiR1 zSiR1DLSi2 0 0 0 
-	B    wSiR1  hSiR1  thDLAl  SiR1DeadAl_2 1 RightDetBlock Aluminium none          xSiR1  ySiR1 zSiR1DLAl2 0 0 0 
+	B    wSiR1  hSiR1  thDLAl  SiR1DeadAl_1 1 RightDetBlock Aluminium none          xSiR1  ySiR1 zSiR1DLAl1 0 0 0
+	B    wSiR1  hSiR1  thDLSi  SiR1DeadSi_1 1 RightDetBlock Silicon   none          xSiR1  ySiR1 zSiR1DLSi1 0 0 0
+	B    wR1Quad hR1Quad thR1Quad SiR1      4 RightDetBlock Silicon   M/MonitorSD   xR1Quad yR1Quad zR1Quad 0 0 0  
+	B    wSiR1  hSiR1  thDLSi  SiR1DeadSi_2 1 RightDetBlock Silicon   none          xSiR1  ySiR1 zSiR1DLSi2 0 0 0
+	B    wSiR1  hSiR1  thDLAl  SiR1DeadAl_2 1 RightDetBlock Aluminium none          xSiR1  ySiR1 zSiR1DLAl2 0 0 0
 
-	B    wSiR2  hSiR2  thDLAl  SiR2DeadAl_1 1 RightDetBlock Aluminium none          xSiR2  ySiR2 zSiR2DLAl1 0 0 0 
-	B    wSiR2  hSiR2  thDLSi  SiR2DeadSi_1 1 RightDetBlock Silicon none          xSiR2  ySiR2 zSiR2DLSi1 0 0 0 
-	B    wSiR2  hSiR2  thSiR2  SiR2    1    RightDetBlock Silicon  M/MonitorSD        xSiR2  ySiR2  zSiR2   0    0   0 
-	B    wSiR2  hSiR2  thDLSi  SiR2DeadSi_2 1 RightDetBlock Silicon none          xSiR2  ySiR2 zSiR2DLSi2 0 0 0 
-	B    wSiR2  hSiR2  thDLAl  SiR2DeadAl_2 1 RightDetBlock Aluminium none          xSiR2  ySiR2 zSiR2DLAl2 0 0 0 
+	B    wSiR2  hSiR2  thDLAl  SiR2DeadAl_1 1 RightDetBlock Aluminium none          xSiR2  ySiR2 zSiR2DLAl1 0 0 0
+	B    wSiR2  hSiR2  thDLSi  SiR2DeadSi_1 1 RightDetBlock Silicon   none          xSiR2  ySiR2 zSiR2DLSi1 0 0 0
+	B    wSiR2  hSiR2  thSiR2  SiR2         1 RightDetBlock Silicon   M/MonitorSD   xSiR2  ySiR2 zSiR2      0 0 0
+	B    wSiR2  hSiR2  thDLSi  SiR2DeadSi_2 1 RightDetBlock Silicon   none          xSiR2  ySiR2 zSiR2DLSi2 0 0 0
+	B    wSiR2  hSiR2  thDLAl  SiR2DeadAl_2 1 RightDetBlock Aluminium none          xSiR2  ySiR2 zSiR2DLAl2 0 0 0
 
-	B    wSiR3  hSiR3  thDLAl  SiR3DeadAl_1 1 RightDetBlock Aluminium none          xSiR3  ySiR3 zSiR3DLAl1 0 0 0 
-	B    wSiR3  hSiR3  thDLSi  SiR3DeadSi_1 1 RightDetBlock Silicon none          xSiR3  ySiR3 zSiR3DLSi1 0 0 0 
-	B    wSiR3  hSiR3  thSiR3  SiR3    1    RightDetBlock Silicon  M/MonitorSD        xSiR3  ySiR3  zSiR3   0    0   0 
-	B    wSiR3  hSiR3  thDLSi  SiR3DeadSi_2 1 RightDetBlock Silicon none          xSiR3  ySiR3 zSiR3DLSi2 0 0 0 
-	B    wSiR3  hSiR3  thDLAl  SiR3DeadAl_2 1 RightDetBlock Aluminium none          xSiR3  ySiR3 zSiR3DLAl2 0 0 0 
+	B    wSiR3  hSiR3  thDLAl  SiR3DeadAl_1 1 RightDetBlock Aluminium none          xSiR3  ySiR3 zSiR3DLAl1 0 0 0
+	B    wSiR3  hSiR3  thDLSi  SiR3DeadSi_1 1 RightDetBlock Silicon   none          xSiR3  ySiR3 zSiR3DLSi1 0 0 0
+	B    wSiR3  hSiR3  thSiR3  SiR3         1 RightDetBlock Silicon   M/MonitorSD   xSiR3  ySiR3 zSiR3      0 0 0
+	B    wSiR3  hSiR3  thDLSi  SiR3DeadSi_2 1 RightDetBlock Silicon   none          xSiR3  ySiR3 zSiR3DLSi2 0 0 0
+	B    wSiR3  hSiR3  thDLAl  SiR3DeadAl_2 1 RightDetBlock Aluminium none          xSiR3  ySiR3 zSiR3DLAl2 0 0 0
 
 #visual settings
 	VerboseLevel:    5
 	VISSETTING  #Keep this line to call Reset
 #	Name                red    green  blue  transparency
-	vis_SiR1	    1      0      0  
-	vis_SiR2	    0      1      0  
-	vis_SiR3	    0      0      1  
-
+	vis_SiR1	    1      0      0
+	vis_SiR2	    0      1      0
+	vis_SiR3	    0      0      1
