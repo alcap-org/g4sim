@@ -23,6 +23,7 @@ G4History.macro
 currentEvent.rndm
 currentRun.rndm
 g4sim
+alcap/runlog
 
 # Backups
 *~
@@ -38,3 +39,4 @@ geant4*
 # ROOT stuff
 *.root
 *_C.d
+*.pcm

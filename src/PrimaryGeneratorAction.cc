@@ -76,7 +76,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 	fYPositionFinalFocus_Upper = 1.5;
 
 	fMuPCBeamDistHist = NULL;
-	
+
 	// Set the "collimated" input hists to NULL
 	fCollimatedInputHist_XYPz = NULL;
 	fCollimatedInputHist_XPxPz = NULL;
@@ -109,29 +109,29 @@ PrimaryGeneratorAction* PrimaryGeneratorAction::GetPrimaryGeneratorAction(){
 }
 
 void* PrimaryGeneratorAction::get_extra(G4String name){
-	if (name=="weight") {if(!flag_weight)  return &root_double[9];}
-	else if (name=="ox") {if(!flag_ox)  return &root_double[10];}
-	else if (name=="oy") {if(!flag_oy)  return &root_double[11];}
-	else if (name=="oz") {if(!flag_oz)  return &root_double[12];}
-	else if (name=="opx") {if(!flag_opx)  return &root_double[13];}
-	else if (name=="opy") {if(!flag_opy)  return &root_double[14];}
-	else if (name=="opz") {if(!flag_opz)  return &root_double[15];}
-	else if (name=="ot") {if(!flag_ot)  return &root_double[16];}
-	else if (name=="ppid") {if(!flag_ppid)  return &root_int[1];}
-	else if (name=="ptid") {if(!flag_ptid)  return &root_int[2];}
-	else if (name=="process") {if(!flag_process)  return root_str[0];}
-	else if (name=="volume") {if(!flag_volume)  return root_str[1];}
+	if      (name=="weight"  && !flag_weight)  return &root_double[9];
+	else if (name=="ox"      && !flag_ox)      return &root_double[10];
+	else if (name=="oy"      && !flag_oy)      return &root_double[11];
+	else if (name=="oz"      && !flag_oz)      return &root_double[12];
+	else if (name=="opx"     && !flag_opx)     return &root_double[13];
+	else if (name=="opy"     && !flag_opy)     return &root_double[14];
+	else if (name=="opz"     && !flag_opz)     return &root_double[15];
+	else if (name=="ot"      && !flag_ot)      return &root_double[16];
+	else if (name=="ppid"    && !flag_ppid)    return &root_int[1];
+	else if (name=="ptid"    && !flag_ptid)    return &root_int[2];
+	else if (name=="process" && !flag_process) return root_str[0];
+	else if (name=="volume"  && !flag_volume)  return root_str[1];
 //	else if (name=="R0") {if(flag_R0)  return &root_double[7];}
 //	else if (name=="R1") {if(flag_R1)  return &root_double[8];}
-	else if (name=="R0") {if(!flag_R0)  return &root_int[3];}
-	else if (name=="R1") {if(!flag_R1)  return &root_int[4];}
+	else if (name=="R0"      && !flag_R0)      return &root_int[3];
+	else if (name=="R1"      && !flag_R1)      return &root_int[4];
 	return NULL;
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 	//this function is called at the begining of event
-	// 
+	//
 	if (UseRoot){
 		root_get_para();
 	}
@@ -152,8 +152,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 	if (fType=="ion"){
 		if (!fParticle){
-//			G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-//			fParticle = particleTable->GetIon(Z,A,E*keV); //use G4RadioactiveDecay instead
+			// G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+			// fParticle = particleTable->GetIon(Z,A,E*keV);
 			fParticle = G4IonTable::GetIonTable()->GetIon(Z,A,E*keV);
 			if (!fParticle){
 				std::cout<<"ERROR: In PrimaryGeneratorAction::PrimaryGeneratorAction() Cannot find particle "
@@ -165,9 +165,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 						FatalException, "Cannot find particle.");
 			}
 		}
-//		if (fType == "stable"){
-//			fParticle->SetPDGStable(true);
-//		}
+		// if (fType == "stable"){
+		// 	fParticle->SetPDGStable(true);
+		// }
 		particleGun->SetParticleDefinition(fParticle);
 		mass = particleGun->GetParticleDefinition()->GetPDGMass();
 		particleGun->SetParticleCharge(C*eplus);
@@ -215,7 +215,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    std::string dir_name = getenv("CONFIGUREDATAROOT");
 	    dir_name += "CollimatedInput.root";
 	    TFile* collimated_file = new TFile(dir_name.c_str(), "READ");
-	    
+
 	    fCollimatedInputHist_XYPz = (TH3F*) (collimated_file->Get("hXYPz"))->Clone();
 	    fCollimatedInputHist_XYPz->SetDirectory(0);
 
@@ -289,7 +289,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    bin = hYPy->GetYaxis()->FindBin(y);
 	    hYPy->GetYaxis()->SetRange(bin, bin);
 	    hPy = hYPy->ProjectionX();
-	    
+
 	    if (hPy->GetEntries() == 0) {
 	      continue;
 	    }
@@ -350,7 +350,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 	  // Plan
 	  // -- Get an X-Y position at muPC
-	  // -- Get an X-Y position at final focus 
+	  // -- Get an X-Y position at final focus
 	  // -- Get the direction vector between the two
 	  // -- Track the direction forward to a start point
 
@@ -360,7 +360,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    std::string dir_name = getenv("CONFIGUREDATAROOT");
 	    dir_name += "TURTLE_fits.root";
 	    TFile* turtle_file = new TFile(dir_name.c_str(), "READ");
-	    
+
 	    // Get the functions that describe the x and y positions of the beam at the final focus
 	    fXPositionFinalFocusFit = (TF1*) turtle_file->Get("final_focus_horizontal");
 	    fYPositionFinalFocusFit = (TF1*) turtle_file->Get("final_focus_vertical");
@@ -377,27 +377,27 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  fMuPCBeamDistHist->GetRandom2(x_muPC, y_muPC);
 	  //	  fMuPCBeamDistRandom->Fill(x_muPC, y_muPC);
 	  double z_muPC = 52.5; // approx 10cm downstream of the end of the beampipe (from previous g4sim geometry)
-	  
+
 	  double x_ff = fXPositionFinalFocusFit->GetRandom()*10; // convert from cm to mm
 	  double y_ff = fYPositionFinalFocusFit->GetRandom()*10; // convert from cm to mm
 	  //	  fFFBeamDistRandom->Fill(x_ff, y_ff);
 	  double z_ff = 120; // 12cm downstream of the beam pipe (according to MuSun report)
-	  
+
 	  // Translate to having the target at the origin
 	  double z_pos_beam_pipe = -285.58 - 60; // relative to target
 	  double translation = z_pos_beam_pipe; // from g4sim geometry
 	  //	  std::cout << "translation = " << translation << std::endl;
 	  z_muPC += translation; // from the g4sim geometry
-	  z_ff += translation; 
-	  
+	  z_ff += translation;
+
 	  G4ThreeVector muPCPos(x_muPC*mm, y_muPC*mm, z_muPC*mm);
 	  G4ThreeVector ffPos(x_ff*mm, y_ff*mm, z_ff*mm);
-	  //	  std::cout << "muPC: (" << muPCPos.x()/mm << ", " << muPCPos.y()/mm << ", " << muPCPos.z()/mm << ") mm" << std::endl;	
+	  //	  std::cout << "muPC: (" << muPCPos.x()/mm << ", " << muPCPos.y()/mm << ", " << muPCPos.z()/mm << ") mm" << std::endl;
 	  //	  std::cout << "FF: (" << ffPos.x()/mm << ", " << ffPos.y()/mm << ", " << ffPos.z()/mm << ") mm" << std::endl;
-	  
+
 	  G4ThreeVector direction = (ffPos - muPCPos).unit();
-	  //	  std::cout << "dir: (" << direction.x()/mm << ", " << direction.y()/mm << ", " << direction.z()/mm << ") mm" << std::endl;	
-	  
+	  //	  std::cout << "dir: (" << direction.x()/mm << ", " << direction.y()/mm << ", " << direction.z()/mm << ") mm" << std::endl;
+
 	  // Track back to exit of beam pipe (z = -304*mm)
 	  double n_steps = (z_pos_beam_pipe - muPCPos.z()/mm) / (direction.z()/mm);
 	  //	  std::cout << "n_steps to start of beam pipe: " << n_steps << std::endl;
@@ -415,7 +415,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 //	    dir_name += "mupc_profile_run3600_Al50.root";
             dir_name += getenv("MUONBEAMROOT");
 	    TFile* mupc_profile_file = new TFile(dir_name.c_str(), "READ");
-	    
+
 	    // Get the histogram of the beam distribution at the muPC
             if(!mupc_profile_file->Get("hmuPC_XYWires") ) {
                G4cout << "Histogram hmuPC_XYWires does not exist." << G4endl;
@@ -428,7 +428,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	  }
 
 	  bool found = false;
-	  
+
 	  while (!found) {
 
 	    if (DirectionMode == "muPC" || PositionMode == "muPC") {
@@ -451,7 +451,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    double p_tot = std::sqrt(px*px + py*py + pz*pz);
 	    //	    std::cout << "Before: (px, py, pz) = (" << px << ", " << py << ", " << pz << ")" << std::endl;
 	    //	    std::cout << "p_tot = " << p_tot << std::endl;
-	    
+
 	    // Rescale components so that we get the correct momentum again
 	    double scale_factor = pz / p_tot;
 	    px *= scale_factor;
@@ -473,7 +473,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    G4double ekin = sqrt(mom*mom+mass*mass)-mass;
 	    particleGun->SetParticleEnergy(ekin);
 	    particleGun->SetParticleMomentumDirection(direction);
-	    	    
+
 	    if (DirectionMode == "collimator" || PositionMode == "collimator") {
 	      double z_pos_collimator = -90.5;
 	      double n_steps = (z_pos_collimator - muPCPos.z()/mm) / (direction.z()/mm);
@@ -550,17 +550,17 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		SetRandomPosition();
 	}
 	else if ( PositionMode == "target") {
-	  SetRandomPosition();  
+	  SetRandomPosition();
 	}
 	else if ( PositionMode == "source") {
-	  SetRandomPosition();  
+	  SetRandomPosition();
 	}
 	else if ( PositionMode == "histo") {
 	  if (PM_hist) { // if we have a TH3F
-		x=0; y=0; z=0;
-		PM_hist->GetRandom3(x,y,z);
-		G4ThreeVector pos_3Vec(x, y, z);
-		particleGun->SetParticlePosition(pos_3Vec);
+	  	double x=0,y=0,z=0;
+	  	PM_hist->GetRandom3(x,y,z);
+	  	G4ThreeVector pos_3Vec(x, y, z);
+	  	particleGun->SetParticlePosition(pos_3Vec);
 	  }
 	  else if (PM_hist_sparse) {
 	    double random_pos[3];
@@ -568,6 +568,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	    G4ThreeVector pos_3Vec(random_pos[0], random_pos[1], random_pos[2]);
 	    particleGun->SetParticlePosition(pos_3Vec); // should probably try and avoid having same line twice
 	  }
+	}
+	else if ( PositionMode == "localhisto") {
+		SetPositionInTargetFromHistogram();
 	}
 	else if ( PositionMode == "turtle" || PositionMode == "muPC" || PositionMode == "collimator") {
 	  // Already handled in the DirectionMode if block
@@ -611,7 +614,7 @@ void PrimaryGeneratorAction::InformEventHeaderHeader(){
         // Set Random number seeds in the event header (R0 and R1) taken from elsewhere
 	EventHeaderSvc::GetEventHeaderSvc()->SetSeedsValue();
 
-        // Set the primary particle's momentum in the event header 
+        // Set the primary particle's momentum in the event header
 	G4ParticleMomentum mom=particleGun->GetParticleMomentumDirection();
         double E_kinetic=particleGun->GetParticleEnergy();
         double M=particleGun->GetParticleDefinition()->GetPDGMass();
@@ -619,11 +622,11 @@ void PrimaryGeneratorAction::InformEventHeaderHeader(){
         mom=P*mom;
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialMomentum(mom.x(),mom.y(),mom.z());
 
-        // Set the primary particle's position in the event header 
+        // Set the primary particle's position in the event header
 	G4ThreeVector pos=particleGun->GetParticlePosition();
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialPosition(pos.x(),pos.y(),pos.z());
 
-        // Set the primary particle's position in the event header 
+        // Set the primary particle's position in the event header
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialParticle(particleGun->GetParticleDefinition()->GetParticleName());
 }
 
@@ -676,31 +679,31 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 void PrimaryGeneratorAction::SetRandomDirection(){
 	G4double dPhi=0;
 	G4double dTheta=0;
-	if(PhiMode=="gRand"){
-		if (PhiSpread) dPhi=G4RandGauss::shoot(Phi,PhiSpread);
+	if(PhiMode=="gRand") {
+		dPhi = G4RandGauss::shoot(0, PhiSpread);
 	}
 	else if (PhiMode=="uRand"){
-		if (PhiSpread) {dPhi=(G4UniformRand()-0.5)*PhiSpread;} 
+		dPhi = (G4UniformRand()-0.5) * PhiSpread;
 	}
 	else if (PhiMode=="mixed") {
 		if (PhiSpread) {dPhi=(G4UniformRand()-0.5)*PhiSpread;}
 	}
 	if(ThetaMode=="gRand"){
-		if (ThetaSpread) dTheta=G4RandGauss::shoot(Theta,ThetaSpread);
+		dTheta = G4RandGauss::shoot(0, ThetaSpread);
 	}
 	else if (ThetaMode=="uRand"){
-		if (ThetaSpread) {dTheta=(G4UniformRand()-0.5)*ThetaSpread;} 
+		dTheta = (G4UniformRand()-0.5) * ThetaSpread;
 	}
-	G4ThreeVector dir(1,1,1);
+
+	G4ThreeVector dir;
 	dir.setRThetaPhi(1, Theta+dTheta, Phi+dPhi);
 	if(PhiMode=="mixed") {
-		if(G4UniformRand() < 0.5) 
+		if(G4UniformRand() < 0.5)
 			dir.setPhi(0+dPhi);
 		else
 			dir.setPhi(180/57.3+dPhi);
 	}
-	G4RotationMatrix rot(Ephi,Etheta,Epsi);
-	dir = rot*dir;
+	dir *= G4RotationMatrix(Ephi, Etheta, Epsi);
 	particleGun->SetParticleMomentumDirection(dir.unit());
 }
 /*void PrimaryGeneratorAction::SetPosition(G4double *parameters, G4double rotation) {
@@ -760,9 +763,9 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	}
 	else if (PositionMode=="sRand"){
 		do {
-			if (xSpread) {dx=2.*(G4UniformRand()-0.5);dx2 = dx*dx;dx*=xSpread;} 
-			if (ySpread) {dy=2.*(G4UniformRand()-0.5);dy2 = dy*dy;dy*=ySpread;} 
-			if (zSpread) {dz=2.*(G4UniformRand()-0.5);dz2 = dz*dz;dz*=zSpread;} 
+			if (xSpread) {dx=2.*(G4UniformRand()-0.5);dx2 = dx*dx;dx*=xSpread;}
+			if (ySpread) {dy=2.*(G4UniformRand()-0.5);dy2 = dy*dy;dy*=ySpread;}
+			if (zSpread) {dz=2.*(G4UniformRand()-0.5);dz2 = dz*dz;dz*=zSpread;}
 			if (dx2+dy2+dz2<=1.) gotit = true;
 		} while (!gotit);
 	}
@@ -811,6 +814,44 @@ void PrimaryGeneratorAction::SetRandomPosition(){
         particleGun->SetParticlePosition(position);
 }
 
+void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
+
+	MyVGeometryParameter*    pMyVGeometryParameter    = MyDetectorManager::GetMyDetectorManager()->GetSvc("Target")->get_GeometryParameter();
+	SimpleGeometryParameter* pSimpleGeometryParameter = dynamic_cast<SimpleGeometryParameter*> (pMyVGeometryParameter);
+	int index = pSimpleGeometryParameter->get_VolIndex("Target");
+
+	double x, y, z;
+	PM_hist->GetRandom3(x, y, z);
+	G4ThreeVector pos(x, y, z);
+
+	// Rotate and move to mother coordinates
+	G4RotationMatrix rot(pSimpleGeometryParameter->get_Ephi(index),
+	                     pSimpleGeometryParameter->get_Etheta(index),
+	                     pSimpleGeometryParameter->get_Epsi(index));
+	pos = rot.inverse()*pos;
+	pos += G4ThreeVector(pSimpleGeometryParameter->get_PosX(index),
+	                     pSimpleGeometryParameter->get_PosY(index),
+	                     pSimpleGeometryParameter->get_PosZ(index));
+
+	G4String mot_volume = pSimpleGeometryParameter->get_MotherName(index);
+	while (mot_volume != "None") {
+		SimpleGeometryParameter* pmotSimpleGeometryParameter =
+		  MyDetectorManager::GetMyDetectorManager()->GetParaFromVolume(mot_volume);
+		int mot_index = pmotSimpleGeometryParameter->get_VolIndex(mot_volume);
+
+		G4RotationMatrix rot(pmotSimpleGeometryParameter->get_Ephi(mot_index),
+		                     pmotSimpleGeometryParameter->get_Etheta(mot_index),
+		                     pmotSimpleGeometryParameter->get_Epsi(mot_index));
+		pos = rot.inverse()*pos;
+		pos += G4ThreeVector(pmotSimpleGeometryParameter->get_PosX(mot_index),
+		                     pmotSimpleGeometryParameter->get_PosY(mot_index),
+		                     pmotSimpleGeometryParameter->get_PosZ(mot_index));
+
+		mot_volume = pmotSimpleGeometryParameter->get_MotherName(mot_index);
+	}
+	particleGun->SetParticlePosition(pos);
+}
+
 void PrimaryGeneratorAction::SetUniformPosition(){
 	MyVGeometryParameter* pMyVGeometryParameter = MyDetectorManager::GetMyDetectorManager()->GetSvc(UP_SubDet)->get_GeometryParameter();
 	if (!pMyVGeometryParameter){
@@ -838,6 +879,7 @@ void PrimaryGeneratorAction::SetUniformPosition(){
 		G4ThreeVector pos(1,0,0);
 		G4int n = pSimpleGeometryParameter->get_RepNo(index);
 		G4int ivol = G4UniformRand()*n;
+
 		if ( sol_type == "Tubs" ){
 			G4double RMax,RMin,length,StartPhi,SpanPhi;
 			G4int iTubs = pSimpleGeometryParameter->get_SolidIndex(index);
@@ -951,8 +993,8 @@ void PrimaryGeneratorAction::BuildHistoFromFile(){
 		}
 		DM_hist = h;
 	}
-	
-	if (PositionMode =="histo"){
+
+	if (PositionMode == "histo" || PositionMode == "localhisto"){
 		G4String full_infile_name = dir_name +  PM_hist_filename;
 //		if (fp) delete fp;
 		fp = new TFile(full_infile_name.c_str());
@@ -971,7 +1013,7 @@ void PrimaryGeneratorAction::BuildHistoFromFile(){
 		}
 		if(obj->InheritsFrom("TH3")){
 		  PM_hist = (TH3*) obj;
-		
+
 		}
 		else if (obj->InheritsFrom("THnSparse")) {
 		  PM_hist_sparse = (THnSparseF*) obj;
@@ -1379,7 +1421,8 @@ void PrimaryGeneratorAction::Initialize(){
 	particleGun->SetParticlePosition(G4ThreeVector(x,y,z));
 	particleGun->SetParticleTime(t);
 
-	if (EnergyMode == "histo" || DirectionMode == "histo" || PositionMode == "histo" ){
+	if (EnergyMode == "histo" || DirectionMode == "histo" ||
+	    PositionMode == "histo" || PositionMode == "localhisto"){
 		BuildHistoFromFile();
 	}
 	UseRoot = false;

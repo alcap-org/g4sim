@@ -32,7 +32,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction,
 							   public MyConfigure
 {
 	public:
-		PrimaryGeneratorAction();    
+		PrimaryGeneratorAction();
 		virtual ~PrimaryGeneratorAction();
 
 		void GeneratePrimaries(G4Event*);
@@ -70,6 +70,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction,
 		void SetUniformDirection();
 		void SetRandomDirection();
 		void SetRandomPosition();
+		void SetPositionInTargetFromHistogram();
 		void SetRandomEnergy();
 		void SetUniformPosition();
 		void BuildHistoFromFile();
