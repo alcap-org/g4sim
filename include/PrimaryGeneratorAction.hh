@@ -127,6 +127,10 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction,
 		G4double                   Ephi;
 		G4double                   Etheta;
 		G4double                   Epsi;
+		G4double                   EmissionThresh; // MeV
+		G4double                   EmissionShape;  // MeV
+		G4double                   EmissionTemp;   // MeV
+		G4double                   EmissionMax;    // MeV
 
 		//For EnergyMode
 		TH1F*                      EM_hist;
@@ -136,7 +140,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction,
 		G4String                   DM_hist_filename;
 		G4String                   DM_hist_histname;
 		TH3*                       PM_hist;
-                THnSparseF*                PM_hist_sparse;
+		THnSparseF*                PM_hist_sparse;
 		G4String                   PM_hist_filename;
 		G4String                   PM_hist_histname;
 
@@ -198,6 +202,14 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction,
 
   // For "collimator" position and direction mode
   TF1* fEnergyLoss;
+
+  // For TheoreticalEmission energy mode
+  // p(E)  = (1-E_th/E)^a*exp(-E/E_0)
+  // E_th := EmissionThresh
+  // a    := EmissionShape
+  // E_0  := EmissionTemp
+  // The range is (EmissionThresh, EmissionMax)
+  TF1* fTheoreticalEnergyEmission;
 };
 
 #endif

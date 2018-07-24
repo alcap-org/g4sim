@@ -84,6 +84,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
 	//	fMuPCBeamDistRandom = new TH2F("muPC_random", "muPC_random", 100,-24,24, 100,-24,24);
 	//	fFFBeamDistRandom = new TH2F("FF_random", "FF_random", 100,-24,24, 100,-24,24);;
+
+	fTheoreticalEnergyEmission = NULL;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
@@ -207,6 +209,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	}
 	else if ( EnergyMode == "gRand" || EnergyMode == "uRand" || EnergyMode == "expRand"){
 		SetRandomEnergy();
+	}
+	else if (EnergyMode == "TheoreticalEnergyEmission") {
+		particleGun->SetParticleEnergy(fTheoreticalEnergyEmission->GetRandom()*MeV);
 	}
 	else if ( EnergyMode == "collimated") {
 	  if (!fCollimatedInputHist_XYPz && !fCollimatedInputHist_XPxPz && !fCollimatedInputHist_YPyPz) {
@@ -334,10 +339,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
 	if ( DirectionMode == "uniform" ){
 		SetUniformDirection();
+	} else if ( DirectionMode == "random") {
+		SetRandomDirection();
 	}
-        else if ( DirectionMode == "random") {
-                SetRandomDirection();
-        }
 	else if ( DirectionMode == "histo" ){
 		G4double theta = DM_hist->GetRandom() * rad;
 		G4double phi = G4UniformRand() * 360. *deg;
@@ -483,38 +487,38 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	      double hole_ellipse_half_y = 25*mm;
 	      double ellipse = (start_pos.x()*start_pos.x())/(hole_ellipse_half_x*hole_ellipse_half_x) + (start_pos.y()*start_pos.y())/(hole_ellipse_half_y*hole_ellipse_half_y);
 	      if ( ellipse < 1) {
-		particleGun->SetParticlePosition(start_pos);
+	      	particleGun->SetParticlePosition(start_pos);
 
-		if (!fEnergyLoss) {
-		  fEnergyLoss = new TF1("energy_loss", "[0]*TMath::Landau(x, [1], [2]) + [3]*TMath::Exp([4]*x^[5] + [6]) + [7]*TMath::Gaus(x, [8], [9])", 0, 0.03);
+	      	if (!fEnergyLoss) {
+	      		fEnergyLoss = new TF1("energy_loss", "[0]*TMath::Landau(x, [1], [2]) + [3]*TMath::Exp([4]*x^[5] + [6]) + [7]*TMath::Gaus(x, [8], [9])", 0, 0.03);
 		  // Set the parameters (hard-coded from the fit I did separately (2014-11-04)
-		  fEnergyLoss->SetParameter(0, 14051.2);
-		  fEnergyLoss->SetParameter(1, 0.0141187);
-		  fEnergyLoss->SetParameter(2, 0.000738656);
-		  fEnergyLoss->SetParameter(3, -0.0127883);
-		  fEnergyLoss->SetParameter(4, 0.0599257);
-		  fEnergyLoss->SetParameter(5, 11.5222);
-		  fEnergyLoss->SetParameter(6, -1.30946);
-		  fEnergyLoss->SetParameter(7, 2510.06);
-		  fEnergyLoss->SetParameter(8, 0.0155356);
-		  fEnergyLoss->SetParameter(9, 0.00170543);
-		}
+	      		fEnergyLoss->SetParameter(0, 14051.2);
+	      		fEnergyLoss->SetParameter(1, 0.0141187);
+	      		fEnergyLoss->SetParameter(2, 0.000738656);
+	      		fEnergyLoss->SetParameter(3, -0.0127883);
+	      		fEnergyLoss->SetParameter(4, 0.0599257);
+	      		fEnergyLoss->SetParameter(5, 11.5222);
+	      		fEnergyLoss->SetParameter(6, -1.30946);
+	      		fEnergyLoss->SetParameter(7, 2510.06);
+	      		fEnergyLoss->SetParameter(8, 0.0155356);
+	      		fEnergyLoss->SetParameter(9, 0.00170543);
+	      	}
 		// Add some energy loss
-		double e_loss = fEnergyLoss->GetRandom()*GeV;
-		G4double new_mom = mom - e_loss;
-		mass = particleGun->GetParticleDefinition()->GetPDGMass();
-		ekin = sqrt(new_mom*new_mom+mass*mass)-mass;
-		particleGun->SetParticleEnergy(ekin);
+	      	double e_loss = fEnergyLoss->GetRandom()*GeV;
+	      	G4double new_mom = mom - e_loss;
+	      	mass = particleGun->GetParticleDefinition()->GetPDGMass();
+	      	ekin = sqrt(new_mom*new_mom+mass*mass)-mass;
+	      	particleGun->SetParticleEnergy(ekin);
 		//		std::cout << "Old Mom: " << mom << ", e_loss: " << e_loss << ", new_mom: " << new_mom << std::endl;
-		found = true;
+	      	found = true;
 	      }
 	    }
 	    if (DirectionMode == "muPC" || PositionMode == "muPC") {
 	      // Track back to the end of the beam pipe
-	      double z_pos_beam_pipe = -285.58 - 60;
-	      double n_steps = (z_pos_beam_pipe - muPCPos.z()/mm) / (direction.z()/mm);
+	    	double z_pos_beam_pipe = -285.58 - 60;
+	    	double n_steps = (z_pos_beam_pipe - muPCPos.z()/mm) / (direction.z()/mm);
 	      //	  std::cout << "n_steps to start of beam pipe: " << n_steps << std::endl;
-	      G4ThreeVector start_pos = muPCPos + n_steps*direction;
+	    	G4ThreeVector start_pos = muPCPos + n_steps*direction;
 	      //	      std::cout << "AE: PosSpread: " << xSpread << ", " << ySpread << ", " << zSpread << std::endl;
 	      G4ThreeVector move(xSpread, ySpread, zSpread); // to translate the whole beam
 	      start_pos += move;
@@ -652,10 +656,9 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 		else if(EnergyMode=="uRand"){
 			dE=(G4UniformRand()-0.5)*EkinSpread;
 		}
-
-                else if(EnergyMode=="expRand"){
-                        dE=G4RandExponential::shoot(EkinSpread);
-                }
+		else if(EnergyMode=="expRand") {
+			dE=G4RandExponential::shoot(EkinSpread);
+		}
 		//std::cout << "Ekin: " << Ekin << " dE: " << dE << " EkinSpread: " << EkinSpread << std::endl;
 
 		particleGun->SetParticleEnergy(Ekin+dE);
@@ -1301,6 +1304,14 @@ void PrimaryGeneratorAction::ReadCard(G4String file_name){
 				knownValues.push_back(MacroValue);
 			}
 		}
+		else if ( keyword == "TheoreticalEnergyEmission:" ) {
+			buf_card>>EmissionThresh>>EmissionShape>>EmissionTemp>>EmissionMax;
+			fTheoreticalEnergyEmission = new TF1("TheoreticalEnergyEmission",
+			                                     "(1-[0]/x)^[1]*exp(-x/[2])",
+			                                     EmissionThresh, EmissionMax);
+			fTheoreticalEnergyEmission->SetParameters(EmissionThresh, EmissionShape,
+			                                          EmissionTemp);
+		}
 		else{
 			std::cout<<"In PrimaryGeneratorAction::ReadCard, unknown name: '"<<keyword<<"' in file "<<file_name<<std::endl;
 			std::cout<<"Will ignore this line!"<<std::endl;
@@ -1484,6 +1495,9 @@ void PrimaryGeneratorAction::Dump(){
 	std::cout<<"DirectionMode:                                "<<DirectionMode<<std::endl;
 	std::cout<<"PhiMode:                                      "<<PhiMode<<std::endl;
 	std::cout<<"ThetaMode:                                    "<<ThetaMode<<std::endl;
+	std::cout<<"Emission Threshold:                           "<<EmissionThresh<<std::endl;
+	std::cout<<"Emission Shape:                               "<<EmissionShape<<std::endl;
+	std::cout<<"Emission Temperature:                         "<<EmissionTemp<<std::endl;
 	std::cout<<"File Name for EnergyMode = histo:             "<<EM_hist_filename<<std::endl;
 	std::cout<<"Histogram Name for EnergyMode = histo:        "<<EM_hist_histname<<std::endl;
 	std::cout<<"File Name for DirectionMode = histo:          "<<DM_hist_filename<<std::endl;
