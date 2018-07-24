@@ -27,6 +27,7 @@ alcap/runlog
 
 # Backups
 *~
+._*
 
 # Geant4 install
 geant4*
