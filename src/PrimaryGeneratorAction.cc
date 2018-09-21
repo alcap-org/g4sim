@@ -17,6 +17,7 @@
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
 #include "G4ParticleMomentum.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4TransportationManager.hh"
 #include "Randomize.hh"
 #include "G4IonTable.hh"
@@ -635,16 +636,11 @@ void PrimaryGeneratorAction::InformEventHeaderHeader(){
 }
 
 void PrimaryGeneratorAction::SetUniformDirection(){
-	G4double dir_x = 0., dir_y = 0., dir_z = 0.;
-	G4bool dir_OK = false;
-	while( !dir_OK ){
-		dir_x=G4UniformRand()-0.5;
-		dir_y=G4UniformRand()-0.5;
-		dir_z=G4UniformRand()-0.5;
-		if ( dir_x*dir_x + dir_y*dir_y + dir_z*dir_z <= 0.025 && dir_x*dir_x + dir_y*dir_y + dir_z*dir_z != 0) dir_OK = true;
-	}
-	G4ThreeVector dir_3Vec(dir_x, dir_y, dir_z);
-	particleGun->SetParticleMomentumDirection(dir_3Vec);
+	G4double theta = std::acos(G4UniformRand()*2-1);
+	G4double phi = G4UniformRand()*twopi*rad;
+	G4ThreeVector dir;
+	dir.setRThetaPhi(1, theta, phi);
+	particleGun->SetParticleMomentumDirection(dir);
 }
 
 void PrimaryGeneratorAction::SetRandomEnergy(){
@@ -684,25 +680,20 @@ void PrimaryGeneratorAction::SetRandomDirection(){
 	G4double dTheta=0;
 	if(PhiMode=="gRand") {
 		dPhi = G4RandGauss::shoot(0, PhiSpread);
-	}
-	else if (PhiMode=="uRand"){
+	}	else if (PhiMode=="uRand" || PhiMode=="mixed"){
 		dPhi = (G4UniformRand()-0.5) * PhiSpread;
 	}
-	else if (PhiMode=="mixed") {
-		if (PhiSpread) {dPhi=(G4UniformRand()-0.5)*PhiSpread;}
-	}
 	if(ThetaMode=="gRand"){
-		dTheta = G4RandGauss::shoot(0, ThetaSpread);
-	}
-	else if (ThetaMode=="uRand"){
-		dTheta = (G4UniformRand()-0.5) * ThetaSpread;
+		dTheta = G4RandGauss::shoot(0, ThetaSpread); // ***FIX THIS***
+	} else if (ThetaMode=="uRand"){
+		dTheta = std::acos(G4UniformRand()*2-1) * ThetaSpread;
 	}
 
 	G4ThreeVector dir;
 	dir.setRThetaPhi(1, Theta+dTheta, Phi+dPhi);
 	if(PhiMode=="mixed") {
 		if(G4UniformRand() < 0.5)
-			dir.setPhi(0+dPhi);
+			dir.setPhi(dPhi);
 		else
 			dir.setPhi(180/57.3+dPhi);
 	}
@@ -730,41 +721,34 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	G4double dz2=0;
 	bool gotit=false;
 	if(PositionMode=="gRand"){
-		do {
-			//dx=G4RandGauss::shoot(x,xSpread);
-			dx=G4RandGauss::shoot(x,xSpread);
-			dy=G4RandGauss::shoot(y,ySpread);
-			dz=G4RandGauss::shoot(z,zSpread);
-			if (dx2+dy2+dz2<=PosLimit2) gotit = true;
-		} while (!gotit);
+		dx=G4RandGauss::shoot(0, xSpread);
+		dy=G4RandGauss::shoot(0, ySpread);
+		dz=G4RandGauss::shoot(0, zSpread);
 	}
-	else if(PositionMode=="mixed"){
-		do {
-			//dx=G4RandGauss::shoot(x,xSpread);
-	                TF1 *fGausLand = new TF1("fGausLand", "gaus(0)+landau(3)", -0.05, 0.05);
-			fGausLand->SetParameter(0,  5.36210e+03);
-			fGausLand->SetParameter(1, -1.99607e-02);
-			fGausLand->SetParameter(2, -1.15798e-02);
-			fGausLand->SetParameter(3,  1.36434e+04);
-			fGausLand->SetParameter(4, -3.39090e-02);
-			fGausLand->SetParameter(5,  9.66437e-03);
-                	dx = fGausLand->GetRandom(); // in mm
+	else if(PositionMode=="mixed") {
+		//dx=G4RandGauss::shoot(x,xSpread);
+		TF1 *fGausLand = new TF1("fGausLand", "gaus(0)+landau(3)", -0.05, 0.05);
+		fGausLand->SetParameter(0,  5.36210e+03);
+		fGausLand->SetParameter(1, -1.99607e-02);
+		fGausLand->SetParameter(2, -1.15798e-02);
+		fGausLand->SetParameter(3,  1.36434e+04);
+		fGausLand->SetParameter(4, -3.39090e-02);
+		fGausLand->SetParameter(5,  9.66437e-03);
+    dx = fGausLand->GetRandom(); // in mm
 
-			TF1 *fGaussY = new TF1("fGaussY", "gaus", -25, 25);
-			fGaussY->SetParameter(0, 1.707e+04);
-			fGaussY->SetParameter(1, 8.775 * 3.16);
-			fGaussY->SetParameter(2, 7.379 * 3.16);
-			dy = fGaussY->GetRandom(); //in mm
+    TF1 *fGaussY = new TF1("fGaussY", "gaus", -25, 25);
+    fGaussY->SetParameter(0, 1.707e+04);
+    fGaussY->SetParameter(1, 8.775 * 3.16);
+    fGaussY->SetParameter(2, 7.379 * 3.16);
+		dy = fGaussY->GetRandom(); //in mm
 
-			TF1 *fGaussZ = new TF1("fGaussZ", "gaus", -25, 25);
-			fGaussZ->SetParameter(0, 1.707e+04);
-			fGaussZ->SetParameter(1, 9.967 * 3.16);
-			fGaussZ->SetParameter(2, 4.994 * 3.16);
-			dz = fGaussZ->GetRandom(); //in mm
-			if (dx2+dy2+dz2<=PosLimit2) gotit = true;
-		} while (!gotit);
+		TF1 *fGaussZ = new TF1("fGaussZ", "gaus", -25, 25);
+		fGaussZ->SetParameter(0, 1.707e+04);
+		fGaussZ->SetParameter(1, 9.967 * 3.16);
+		fGaussZ->SetParameter(2, 4.994 * 3.16);
+		dz = fGaussZ->GetRandom(); //in mm
 	}
-	else if (PositionMode=="sRand"){
+	else if (PositionMode=="sRand") {
 		do {
 			if (xSpread) {dx=2.*(G4UniformRand()-0.5);dx2 = dx*dx;dx*=xSpread;}
 			if (ySpread) {dy=2.*(G4UniformRand()-0.5);dy2 = dy*dy;dy*=ySpread;}
@@ -804,17 +788,17 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	    //	    std::cout << "AE (after rotation): " << position << std::endl;
 	    //	    std::cout << "AE vol name: " << phys_volume->GetName() << std::endl;
 
-	    if ( (PositionMode=="source" && phys_volume->GetName() == "Source") ||
-		 (PositionMode=="target" && phys_volume->GetName() == "Target") ) {
+	    if ((PositionMode=="source" && phys_volume->GetName() == "Source") ||
+	        (PositionMode=="target" && phys_volume->GetName() == "Target") ) {
 	      gotit = true;
 	    }
 	  } while (!gotit);
 	}
-        G4ThreeVector position(x+dx, y+dy, z+dz);
-        if (PositionMode == "mixed" || PositionMode == "bRand" || PositionMode == "source" || PositionMode == "target") {
-          position.rotateY(135*deg);
-        }
-        particleGun->SetParticlePosition(position);
+	G4ThreeVector position(x+dx, y+dy, z+dz);
+	if (PositionMode == "mixed" || PositionMode == "bRand" || PositionMode == "source" || PositionMode == "target") {
+		position.rotateY(135*deg);
+	}
+	particleGun->SetParticlePosition(position);
 }
 
 void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
@@ -845,7 +829,7 @@ void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
 		G4RotationMatrix rot(pmotSimpleGeometryParameter->get_Ephi(mot_index),
 		                     pmotSimpleGeometryParameter->get_Etheta(mot_index),
 		                     pmotSimpleGeometryParameter->get_Epsi(mot_index));
-		pos = rot.inverse()*pos;
+		pos *= rot.inverse();
 		pos += G4ThreeVector(pmotSimpleGeometryParameter->get_PosX(mot_index),
 		                     pmotSimpleGeometryParameter->get_PosY(mot_index),
 		                     pmotSimpleGeometryParameter->get_PosZ(mot_index));
