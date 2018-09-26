@@ -676,26 +676,28 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 }
 
 void PrimaryGeneratorAction::SetRandomDirection(){
-	G4double dPhi=0;
-	G4double dTheta=0;
+	G4double t = Theta;
+	G4double dPhi = 0;
 	if(PhiMode=="gRand") {
 		dPhi = G4RandGauss::shoot(0, PhiSpread);
 	}	else if (PhiMode=="uRand" || PhiMode=="mixed"){
 		dPhi = (G4UniformRand()-0.5) * PhiSpread;
 	}
 	if(ThetaMode=="gRand"){
-		dTheta = G4RandGauss::shoot(0, ThetaSpread); // ***FIX THIS***
+		t = G4RandGauss::shoot(Theta, ThetaSpread);
 	} else if (ThetaMode=="uRand"){
-		dTheta = std::acos(G4UniformRand()*2-1) * ThetaSpread;
+		G4double lim[2] = { std::cos(Theta-ThetaSpread),
+			                  std::cos(Theta+ThetaSpread) };
+		t = std::acos(G4UniformRand() * (lim[1] - lim[0]) + lim[0]);
 	}
 
 	G4ThreeVector dir;
-	dir.setRThetaPhi(1, Theta+dTheta, Phi+dPhi);
+	dir.setRThetaPhi(1, t, Phi+dPhi);
 	if(PhiMode=="mixed") {
 		if(G4UniformRand() < 0.5)
 			dir.setPhi(dPhi);
 		else
-			dir.setPhi(180/57.3+dPhi);
+			dir.setPhi(pi+dPhi);
 	}
 	dir *= G4RotationMatrix(Ephi, Etheta, Epsi);
 	particleGun->SetParticleMomentumDirection(dir.unit());
