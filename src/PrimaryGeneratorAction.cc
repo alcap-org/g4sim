@@ -893,6 +893,7 @@ void PrimaryGeneratorAction::SetUniformPosition(){
 		  x = pSimpleGeometryParameter->get_Box_X(iBox,ivol);
 		  y = pSimpleGeometryParameter->get_Box_Y(iBox,ivol);
 		  z = pSimpleGeometryParameter->get_Box_Z(iBox,ivol);
+		  //		  std::cout << "AE: Box Dimensions = " << x << " x " << y << " x " << z << std::endl;
 
 		  G4double ix, iy, iz;
 		  ix = G4UniformRand()*x - x/2;
@@ -901,6 +902,7 @@ void PrimaryGeneratorAction::SetUniformPosition(){
 		  pos.setX(ix);
 		  pos.setY(iy);
 		  pos.setZ(iz);
+		  //		  std::cout << "AE: Random Position = (" << ix << ", " << iy << ", " << iz << ")" << std::endl;
 		}
 		else{
 			std::cout<<"ERROR: in PrimaryGeneratorAction::SetUniformPosition unsupported solid type: "<<sol_type<<"!!!"<<std::endl;
@@ -908,22 +910,38 @@ void PrimaryGeneratorAction::SetUniformPosition(){
 					"InvalidInput", FatalException,
 					"unsupported solid type");
 		}
+		G4RotationMatrix rot(pSimpleGeometryParameter->get_Ephi(index,ivol),
+		                     pSimpleGeometryParameter->get_Etheta(index,ivol),
+		                     pSimpleGeometryParameter->get_Epsi(index,ivol));
+		pos = rot.inverse()*pos;
+
 		G4double xp,yp,zp;
 		xp = pSimpleGeometryParameter->get_PosX(index,ivol);
 		yp = pSimpleGeometryParameter->get_PosY(index,ivol);
 		zp = pSimpleGeometryParameter->get_PosZ(index,ivol);
 		pos += G4ThreeVector(xp,yp,zp);
+		//		std::cout << "AE: Position within mother volume = (" << xp << ", " << yp << ", " << zp << ")" << std::endl;
+		//		std::cout << "AE: Now position = (" << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << ")" << std::endl;
 		G4String mot_volume = pSimpleGeometryParameter->get_MotherName(index);
+		//		std::cout << "AE: Mother volume = " << mot_volume << std::endl;
 		SimpleGeometryParameter * pmotSimpleGeometryParameter = 0;
 		int temp_index = index;
 		int mot_index = -1;
 		while (mot_volume!="None"){
 			pmotSimpleGeometryParameter = MyDetectorManager::GetMyDetectorManager()->GetParaFromVolume(mot_volume);
 			mot_index = pmotSimpleGeometryParameter->get_VolIndex(mot_volume);
+
+			G4RotationMatrix rot(pmotSimpleGeometryParameter->get_Ephi(mot_index),
+					     pmotSimpleGeometryParameter->get_Etheta(mot_index),
+					     pmotSimpleGeometryParameter->get_Epsi(mot_index));
+			pos = rot.inverse()*pos;
+
 			G4double mot_xp = pmotSimpleGeometryParameter->get_PosX(mot_index);
 			G4double mot_yp = pmotSimpleGeometryParameter->get_PosY(mot_index);
 			G4double mot_zp = pmotSimpleGeometryParameter->get_PosZ(mot_index);
 			pos += G4ThreeVector(mot_xp,mot_yp,mot_zp);
+			//			std::cout << "AE: Position within mother = (" << mot_xp << ", " << mot_yp << ", " << mot_zp << ")" << std::endl;
+			//			std::cout << "AE: Now adding mother volume (" << mot_volume << ") transformations. Position = (" << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << ")" << std::endl;
 			temp_index = mot_index;
 			mot_volume = pmotSimpleGeometryParameter->get_MotherName(temp_index);
 		}
