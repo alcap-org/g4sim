@@ -338,12 +338,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 				"unknown EnergyMode");
 	}
 
-	if ( DirectionMode == "uniform" ){
-		SetUniformDirection();
-	} else if ( DirectionMode == "random") {
-		SetRandomDirection();
-	}
-	else if ( DirectionMode == "histo" ){
+	if ( DirectionMode == "histo" ){
 		G4double theta = DM_hist->GetRandom() * rad;
 		G4double phi = G4UniformRand() * 360. *deg;
 		G4ThreeVector dir_3Vec(1, 1, 1);
@@ -635,14 +630,6 @@ void PrimaryGeneratorAction::InformEventHeaderHeader(){
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialParticle(particleGun->GetParticleDefinition()->GetParticleName());
 }
 
-void PrimaryGeneratorAction::SetUniformDirection(){
-	G4double theta = std::acos(G4UniformRand()*2-1);
-	G4double phi = G4UniformRand()*twopi*rad;
-	G4ThreeVector dir;
-	dir.setRThetaPhi(1, theta, phi);
-	particleGun->SetParticleMomentumDirection(dir);
-}
-
 void PrimaryGeneratorAction::SetRandomEnergy(){
 	if (EnergyType == 1){
 		G4double dE=0;
@@ -686,8 +673,8 @@ void PrimaryGeneratorAction::SetRandomDirection(){
 	if(ThetaMode=="gRand"){
 		t = G4RandGauss::shoot(Theta, ThetaSpread);
 	} else if (ThetaMode=="uRand"){
-		G4double lim[2] = { std::cos(Theta-ThetaSpread),
-			                  std::cos(Theta+ThetaSpread) };
+		G4double lim[2] = { std::cos(Theta-ThetaSpread/2),
+			                  std::cos(Theta+ThetaSpread/2) };
 		t = std::acos(G4UniformRand() * (lim[1] - lim[0]) + lim[0]);
 	}
 

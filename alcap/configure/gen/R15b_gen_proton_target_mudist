@@ -7,9 +7,9 @@ PhysicsList: QGSP_BERT
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-#	Direction: 0        0
-#	ThetaSpread:        360
-#	PhiSpread:          360
+	Direction: 90        180
+	ThetaSpread:        180
+	PhiSpread:          360
 #Default Momentum Amplitude
 #	             MeV
 #	MomAmp:      10
@@ -28,9 +28,9 @@ PhysicsList: QGSP_BERT
 	PMHFN:          mudist.root
 	PMHHN:          mustopdist
 #	UIV:            Simple Target Target
-	DirectionMode:  uniform #(none/uniform/histo/turtle/muPC)
-	ThetaMode:      none #(none/gRand/uRand)
-	PhiMode:        none #(none/gRand/uRand)
+	DirectionMode:  none #(none/histo/turtle/muPC)
+	ThetaMode:      uRand #(none/gRand/uRand)
+	PhiMode:        uRand #(none/gRand/uRand)
 	TimeMode:       none #(none/root)
 	pidMode:        none #(none/root)
 #Default Time
