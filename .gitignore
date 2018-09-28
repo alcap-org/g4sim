@@ -24,9 +24,11 @@ currentEvent.rndm
 currentRun.rndm
 g4sim
 alcap/runlog
+alcap/macros/parallel
 
 # Backups
 *~
+._*
 
 # Geant4 install
 geant4*

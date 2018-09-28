@@ -1,0 +1,34 @@
+PhysicsList: QGSP_BERT
+
+#General setting  
+Type:      simple
+Particle:  mu-
+
+# Energy and positions from elog:123 and 169 (and 172 sort of)
+
+#Default Direction
+#				Theta	Phi
+#				deg		deg
+Direction:		0        0
+#ThetaSpread:	15
+#PhiSpread:		10
+
+Ekin:	     1.54
+EkinSpread:  0.27
+
+#Default Position     x    y   z
+#	              mm   mm  mm
+Position:     6.31  2.40  -125
+PosSpread:    15.66 23.36  0
+ 
+RandMode:       none #(none/root)
+EnergyMode:     gRand #(root/histo/none)
+PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
+DirectionMode:  none #(none/uniform/histo)
+ThetaMode:      gRand #(none/gRand/uRand)
+PhiMode:        gRand #(none/gRand/uRand)
+TimeMode:       none #(none/root)
+pidMode:        none #(none/root)
+#Default Time
+#	         ns
+Time:    0

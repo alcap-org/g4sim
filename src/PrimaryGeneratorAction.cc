@@ -17,6 +17,7 @@
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
 #include "G4ParticleMomentum.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4TransportationManager.hh"
 #include "Randomize.hh"
 #include "G4IonTable.hh"
@@ -84,6 +85,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
 	//	fMuPCBeamDistRandom = new TH2F("muPC_random", "muPC_random", 100,-24,24, 100,-24,24);
 	//	fFFBeamDistRandom = new TH2F("FF_random", "FF_random", 100,-24,24, 100,-24,24);;
+
+	fTheoreticalEnergyEmission = NULL;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
@@ -207,6 +210,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	}
 	else if ( EnergyMode == "gRand" || EnergyMode == "uRand" || EnergyMode == "expRand"){
 		SetRandomEnergy();
+	}
+	else if (EnergyMode == "TheoreticalEnergyEmission") {
+		particleGun->SetParticleEnergy(fTheoreticalEnergyEmission->GetRandom()*MeV);
 	}
 	else if ( EnergyMode == "collimated") {
 	  if (!fCollimatedInputHist_XYPz && !fCollimatedInputHist_XPxPz && !fCollimatedInputHist_YPyPz) {
@@ -332,13 +338,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 				"unknown EnergyMode");
 	}
 
-	if ( DirectionMode == "uniform" ){
-		SetUniformDirection();
-	}
-        else if ( DirectionMode == "random") {
-                SetRandomDirection();
-        }
-	else if ( DirectionMode == "histo" ){
+	if ( DirectionMode == "histo" ){
 		G4double theta = DM_hist->GetRandom() * rad;
 		G4double phi = G4UniformRand() * 360. *deg;
 		G4ThreeVector dir_3Vec(1, 1, 1);
@@ -483,38 +483,38 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	      double hole_ellipse_half_y = 25*mm;
 	      double ellipse = (start_pos.x()*start_pos.x())/(hole_ellipse_half_x*hole_ellipse_half_x) + (start_pos.y()*start_pos.y())/(hole_ellipse_half_y*hole_ellipse_half_y);
 	      if ( ellipse < 1) {
-		particleGun->SetParticlePosition(start_pos);
+	      	particleGun->SetParticlePosition(start_pos);
 
-		if (!fEnergyLoss) {
-		  fEnergyLoss = new TF1("energy_loss", "[0]*TMath::Landau(x, [1], [2]) + [3]*TMath::Exp([4]*x^[5] + [6]) + [7]*TMath::Gaus(x, [8], [9])", 0, 0.03);
+	      	if (!fEnergyLoss) {
+	      		fEnergyLoss = new TF1("energy_loss", "[0]*TMath::Landau(x, [1], [2]) + [3]*TMath::Exp([4]*x^[5] + [6]) + [7]*TMath::Gaus(x, [8], [9])", 0, 0.03);
 		  // Set the parameters (hard-coded from the fit I did separately (2014-11-04)
-		  fEnergyLoss->SetParameter(0, 14051.2);
-		  fEnergyLoss->SetParameter(1, 0.0141187);
-		  fEnergyLoss->SetParameter(2, 0.000738656);
-		  fEnergyLoss->SetParameter(3, -0.0127883);
-		  fEnergyLoss->SetParameter(4, 0.0599257);
-		  fEnergyLoss->SetParameter(5, 11.5222);
-		  fEnergyLoss->SetParameter(6, -1.30946);
-		  fEnergyLoss->SetParameter(7, 2510.06);
-		  fEnergyLoss->SetParameter(8, 0.0155356);
-		  fEnergyLoss->SetParameter(9, 0.00170543);
-		}
+	      		fEnergyLoss->SetParameter(0, 14051.2);
+	      		fEnergyLoss->SetParameter(1, 0.0141187);
+	      		fEnergyLoss->SetParameter(2, 0.000738656);
+	      		fEnergyLoss->SetParameter(3, -0.0127883);
+	      		fEnergyLoss->SetParameter(4, 0.0599257);
+	      		fEnergyLoss->SetParameter(5, 11.5222);
+	      		fEnergyLoss->SetParameter(6, -1.30946);
+	      		fEnergyLoss->SetParameter(7, 2510.06);
+	      		fEnergyLoss->SetParameter(8, 0.0155356);
+	      		fEnergyLoss->SetParameter(9, 0.00170543);
+	      	}
 		// Add some energy loss
-		double e_loss = fEnergyLoss->GetRandom()*GeV;
-		G4double new_mom = mom - e_loss;
-		mass = particleGun->GetParticleDefinition()->GetPDGMass();
-		ekin = sqrt(new_mom*new_mom+mass*mass)-mass;
-		particleGun->SetParticleEnergy(ekin);
+	      	double e_loss = fEnergyLoss->GetRandom()*GeV;
+	      	G4double new_mom = mom - e_loss;
+	      	mass = particleGun->GetParticleDefinition()->GetPDGMass();
+	      	ekin = sqrt(new_mom*new_mom+mass*mass)-mass;
+	      	particleGun->SetParticleEnergy(ekin);
 		//		std::cout << "Old Mom: " << mom << ", e_loss: " << e_loss << ", new_mom: " << new_mom << std::endl;
-		found = true;
+	      	found = true;
 	      }
 	    }
 	    if (DirectionMode == "muPC" || PositionMode == "muPC") {
 	      // Track back to the end of the beam pipe
-	      double z_pos_beam_pipe = -285.58 - 60;
-	      double n_steps = (z_pos_beam_pipe - muPCPos.z()/mm) / (direction.z()/mm);
+	    	double z_pos_beam_pipe = -285.58 - 60;
+	    	double n_steps = (z_pos_beam_pipe - muPCPos.z()/mm) / (direction.z()/mm);
 	      //	  std::cout << "n_steps to start of beam pipe: " << n_steps << std::endl;
-	      G4ThreeVector start_pos = muPCPos + n_steps*direction;
+	    	G4ThreeVector start_pos = muPCPos + n_steps*direction;
 	      //	      std::cout << "AE: PosSpread: " << xSpread << ", " << ySpread << ", " << zSpread << std::endl;
 	      G4ThreeVector move(xSpread, ySpread, zSpread); // to translate the whole beam
 	      start_pos += move;
@@ -630,19 +630,6 @@ void PrimaryGeneratorAction::InformEventHeaderHeader(){
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialParticle(particleGun->GetParticleDefinition()->GetParticleName());
 }
 
-void PrimaryGeneratorAction::SetUniformDirection(){
-	G4double dir_x = 0., dir_y = 0., dir_z = 0.;
-	G4bool dir_OK = false;
-	while( !dir_OK ){
-		dir_x=G4UniformRand()-0.5;
-		dir_y=G4UniformRand()-0.5;
-		dir_z=G4UniformRand()-0.5;
-		if ( dir_x*dir_x + dir_y*dir_y + dir_z*dir_z <= 0.025 && dir_x*dir_x + dir_y*dir_y + dir_z*dir_z != 0) dir_OK = true;
-	}
-	G4ThreeVector dir_3Vec(dir_x, dir_y, dir_z);
-	particleGun->SetParticleMomentumDirection(dir_3Vec);
-}
-
 void PrimaryGeneratorAction::SetRandomEnergy(){
 	if (EnergyType == 1){
 		G4double dE=0;
@@ -652,10 +639,9 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 		else if(EnergyMode=="uRand"){
 			dE=(G4UniformRand()-0.5)*EkinSpread;
 		}
-
-                else if(EnergyMode=="expRand"){
-                        dE=G4RandExponential::shoot(EkinSpread);
-                }
+		else if(EnergyMode=="expRand") {
+			dE=G4RandExponential::shoot(EkinSpread);
+		}
 		//std::cout << "Ekin: " << Ekin << " dE: " << dE << " EkinSpread: " << EkinSpread << std::endl;
 
 		particleGun->SetParticleEnergy(Ekin+dE);
@@ -677,31 +663,28 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 }
 
 void PrimaryGeneratorAction::SetRandomDirection(){
-	G4double dPhi=0;
-	G4double dTheta=0;
+	G4double t = Theta;
+	G4double dPhi = 0;
 	if(PhiMode=="gRand") {
 		dPhi = G4RandGauss::shoot(0, PhiSpread);
-	}
-	else if (PhiMode=="uRand"){
+	}	else if (PhiMode=="uRand" || PhiMode=="mixed"){
 		dPhi = (G4UniformRand()-0.5) * PhiSpread;
 	}
-	else if (PhiMode=="mixed") {
-		if (PhiSpread) {dPhi=(G4UniformRand()-0.5)*PhiSpread;}
-	}
 	if(ThetaMode=="gRand"){
-		dTheta = G4RandGauss::shoot(0, ThetaSpread);
-	}
-	else if (ThetaMode=="uRand"){
-		dTheta = (G4UniformRand()-0.5) * ThetaSpread;
+		t = G4RandGauss::shoot(Theta, ThetaSpread);
+	} else if (ThetaMode=="uRand"){
+		G4double lim[2] = { std::cos(Theta-ThetaSpread/2),
+			                  std::cos(Theta+ThetaSpread/2) };
+		t = std::acos(G4UniformRand() * (lim[1] - lim[0]) + lim[0]);
 	}
 
 	G4ThreeVector dir;
-	dir.setRThetaPhi(1, Theta+dTheta, Phi+dPhi);
+	dir.setRThetaPhi(1, t, Phi+dPhi);
 	if(PhiMode=="mixed") {
 		if(G4UniformRand() < 0.5)
-			dir.setPhi(0+dPhi);
+			dir.setPhi(dPhi);
 		else
-			dir.setPhi(180/57.3+dPhi);
+			dir.setPhi(pi+dPhi);
 	}
 	dir *= G4RotationMatrix(Ephi, Etheta, Epsi);
 	particleGun->SetParticleMomentumDirection(dir.unit());
@@ -727,41 +710,34 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	G4double dz2=0;
 	bool gotit=false;
 	if(PositionMode=="gRand"){
-		do {
-			//dx=G4RandGauss::shoot(x,xSpread);
-			dx=G4RandGauss::shoot(x,xSpread);
-			dy=G4RandGauss::shoot(y,ySpread);
-			dz=G4RandGauss::shoot(z,zSpread);
-			if (dx2+dy2+dz2<=PosLimit2) gotit = true;
-		} while (!gotit);
+		dx=G4RandGauss::shoot(0, xSpread);
+		dy=G4RandGauss::shoot(0, ySpread);
+		dz=G4RandGauss::shoot(0, zSpread);
 	}
-	else if(PositionMode=="mixed"){
-		do {
-			//dx=G4RandGauss::shoot(x,xSpread);
-	                TF1 *fGausLand = new TF1("fGausLand", "gaus(0)+landau(3)", -0.05, 0.05);
-			fGausLand->SetParameter(0,  5.36210e+03);
-			fGausLand->SetParameter(1, -1.99607e-02);
-			fGausLand->SetParameter(2, -1.15798e-02);
-			fGausLand->SetParameter(3,  1.36434e+04);
-			fGausLand->SetParameter(4, -3.39090e-02);
-			fGausLand->SetParameter(5,  9.66437e-03);
-                	dx = fGausLand->GetRandom(); // in mm
+	else if(PositionMode=="mixed") {
+		//dx=G4RandGauss::shoot(x,xSpread);
+		TF1 *fGausLand = new TF1("fGausLand", "gaus(0)+landau(3)", -0.05, 0.05);
+		fGausLand->SetParameter(0,  5.36210e+03);
+		fGausLand->SetParameter(1, -1.99607e-02);
+		fGausLand->SetParameter(2, -1.15798e-02);
+		fGausLand->SetParameter(3,  1.36434e+04);
+		fGausLand->SetParameter(4, -3.39090e-02);
+		fGausLand->SetParameter(5,  9.66437e-03);
+    dx = fGausLand->GetRandom(); // in mm
 
-			TF1 *fGaussY = new TF1("fGaussY", "gaus", -25, 25);
-			fGaussY->SetParameter(0, 1.707e+04);
-			fGaussY->SetParameter(1, 8.775 * 3.16);
-			fGaussY->SetParameter(2, 7.379 * 3.16);
-			dy = fGaussY->GetRandom(); //in mm
+    TF1 *fGaussY = new TF1("fGaussY", "gaus", -25, 25);
+    fGaussY->SetParameter(0, 1.707e+04);
+    fGaussY->SetParameter(1, 8.775 * 3.16);
+    fGaussY->SetParameter(2, 7.379 * 3.16);
+		dy = fGaussY->GetRandom(); //in mm
 
-			TF1 *fGaussZ = new TF1("fGaussZ", "gaus", -25, 25);
-			fGaussZ->SetParameter(0, 1.707e+04);
-			fGaussZ->SetParameter(1, 9.967 * 3.16);
-			fGaussZ->SetParameter(2, 4.994 * 3.16);
-			dz = fGaussZ->GetRandom(); //in mm
-			if (dx2+dy2+dz2<=PosLimit2) gotit = true;
-		} while (!gotit);
+		TF1 *fGaussZ = new TF1("fGaussZ", "gaus", -25, 25);
+		fGaussZ->SetParameter(0, 1.707e+04);
+		fGaussZ->SetParameter(1, 9.967 * 3.16);
+		fGaussZ->SetParameter(2, 4.994 * 3.16);
+		dz = fGaussZ->GetRandom(); //in mm
 	}
-	else if (PositionMode=="sRand"){
+	else if (PositionMode=="sRand") {
 		do {
 			if (xSpread) {dx=2.*(G4UniformRand()-0.5);dx2 = dx*dx;dx*=xSpread;}
 			if (ySpread) {dy=2.*(G4UniformRand()-0.5);dy2 = dy*dy;dy*=ySpread;}
@@ -801,17 +777,17 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 	    //	    std::cout << "AE (after rotation): " << position << std::endl;
 	    //	    std::cout << "AE vol name: " << phys_volume->GetName() << std::endl;
 
-	    if ( (PositionMode=="source" && phys_volume->GetName() == "Source") ||
-		 (PositionMode=="target" && phys_volume->GetName() == "Target") ) {
+	    if ((PositionMode=="source" && phys_volume->GetName() == "Source") ||
+	        (PositionMode=="target" && phys_volume->GetName() == "Target") ) {
 	      gotit = true;
 	    }
 	  } while (!gotit);
 	}
-        G4ThreeVector position(x+dx, y+dy, z+dz);
-        if (PositionMode == "mixed" || PositionMode == "bRand" || PositionMode == "source" || PositionMode == "target") {
-          position.rotateY(135*deg);
-        }
-        particleGun->SetParticlePosition(position);
+	G4ThreeVector position(x+dx, y+dy, z+dz);
+	if (PositionMode == "mixed" || PositionMode == "bRand" || PositionMode == "source" || PositionMode == "target") {
+		position.rotateY(135*deg);
+	}
+	particleGun->SetParticlePosition(position);
 }
 
 void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
@@ -842,7 +818,7 @@ void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
 		G4RotationMatrix rot(pmotSimpleGeometryParameter->get_Ephi(mot_index),
 		                     pmotSimpleGeometryParameter->get_Etheta(mot_index),
 		                     pmotSimpleGeometryParameter->get_Epsi(mot_index));
-		pos = rot.inverse()*pos;
+		pos *= rot.inverse();
 		pos += G4ThreeVector(pmotSimpleGeometryParameter->get_PosX(mot_index),
 		                     pmotSimpleGeometryParameter->get_PosY(mot_index),
 		                     pmotSimpleGeometryParameter->get_PosZ(mot_index));
@@ -1319,6 +1295,14 @@ void PrimaryGeneratorAction::ReadCard(G4String file_name){
 				knownValues.push_back(MacroValue);
 			}
 		}
+		else if ( keyword == "TheoreticalEnergyEmission:" ) {
+			buf_card>>EmissionThresh>>EmissionShape>>EmissionTemp>>EmissionMax;
+			fTheoreticalEnergyEmission = new TF1("TheoreticalEnergyEmission",
+			                                     "(1-[0]/x)^[1]*exp(-x/[2])",
+			                                     EmissionThresh, EmissionMax);
+			fTheoreticalEnergyEmission->SetParameters(EmissionThresh, EmissionShape,
+			                                          EmissionTemp);
+		}
 		else{
 			std::cout<<"In PrimaryGeneratorAction::ReadCard, unknown name: '"<<keyword<<"' in file "<<file_name<<std::endl;
 			std::cout<<"Will ignore this line!"<<std::endl;
@@ -1502,6 +1486,9 @@ void PrimaryGeneratorAction::Dump(){
 	std::cout<<"DirectionMode:                                "<<DirectionMode<<std::endl;
 	std::cout<<"PhiMode:                                      "<<PhiMode<<std::endl;
 	std::cout<<"ThetaMode:                                    "<<ThetaMode<<std::endl;
+	std::cout<<"Emission Threshold:                           "<<EmissionThresh<<std::endl;
+	std::cout<<"Emission Shape:                               "<<EmissionShape<<std::endl;
+	std::cout<<"Emission Temperature:                         "<<EmissionTemp<<std::endl;
 	std::cout<<"File Name for EnergyMode = histo:             "<<EM_hist_filename<<std::endl;
 	std::cout<<"Histogram Name for EnergyMode = histo:        "<<EM_hist_histname<<std::endl;
 	std::cout<<"File Name for DirectionMode = histo:          "<<DM_hist_filename<<std::endl;
