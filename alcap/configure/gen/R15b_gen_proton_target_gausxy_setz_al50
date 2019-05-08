@@ -1,4 +1,4 @@
-PhysicsList: QGSP_BERT
+	PhysicsList: QGSP_BERT
 
 #General setting  
 	Type:      simple #(simple/stable/ion)
@@ -7,20 +7,29 @@ PhysicsList: QGSP_BERT
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-	Direction: 90        180
+	Direction:  90       180
 	ThetaSpread:        180
 	PhiSpread:          360
 #Default Momentum Amplitude
 #	             MeV
-	Ekin:        10
-	EkinSpread:  20
+#	MomAmp:      10
+#	MomSpread:   10
+	Ekin:      12.5
+	EkinSpread:   25
+#	Ekin:      1
+#	EkinSpread:   5
+
+#Default Position     x    y   z
+#	                  mm   mm  mm
+	Position:         0.76  0.37  0.025
+	PosSpread:        19.19 16.44  0
+#	PosLimit:         17.5
 
 	RandMode:       none #(none/root)
 	EnergyMode:     uRand #(root/histo/none)
-	PositionMode:   localhisto #(uniform/root/none/gRand/uRand/turtle/muPC)
-	PMHFN:          mudist.root
-	PMHHN:          mustopdist
-	DirectionMode:  none #(none/histo/turtle/muPC)
+#	EnergyMode:     expoRand #(root/histo/none)
+	PositionMode:   target #(uniform/root/none/gRand/uRand/turtle/muPC)
+	DirectionMode:  none #(none/uniform/histo/turtle/muPC)
 	ThetaMode:      uRand #(none/gRand/uRand)
 	PhiMode:        uRand #(none/gRand/uRand)
 	TimeMode:       none #(none/root)
@@ -31,6 +40,11 @@ PhysicsList: QGSP_BERT
 #
 # Position histogram and file
 #
+#	PMHFN:       R15b_output_muon-stop-positions_shallower-still.root
+#	PMHFN:       R15b_output_Geom-P1_muon-stop-positions.root
+	PMHFN:       R15b_output_Geom-P5_muon-stop-positions_new.root
+#	PMHFN:       R15b_output_Geom-S14_muon-stop-positions.root
+	PMHHN:       hGlobalStoppingPositions
 
 #Scale Momentum  Spread
 #1.03  28.84     0.368

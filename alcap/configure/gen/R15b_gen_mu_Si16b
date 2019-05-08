@@ -20,14 +20,14 @@
 	Position:     2  3  -100      	  
 	PosSpread:    5  10  0
 
-	RandMode:       none #(none/root)
-	EnergyMode:	gRand
+	RandMode:       none   #(none/root)
+	EnergyMode:     gRand
 	PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
-	DirectionMode:  none #(none/uniform/histo)
-	ThetaMode:      gRand #(none/gRand/uRand)
-	PhiMode:        gRand #(none/gRand/uRand)
-	TimeMode:       none #(none/root)
-	pidMode:        none #(none/root)
+	DirectionMode:  none   #(none/uniform/histo)
+	ThetaMode:      gRand  #(none/gRand/uRand)
+	PhiMode:        gRand  #(none/gRand/uRand)
+	TimeMode:       none   #(none/root)
+	pidMode:        none   #(none/root)
 #Default Time
 #	         ns
 	Time:    0

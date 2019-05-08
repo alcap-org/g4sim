@@ -8,7 +8,7 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_Al50
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/R15b_gen_proton_target_al50_mudist
+/g4sim/gun/ResetGen               gen/beamwidth_studies/R15b_gen_proton_target_al50_mudist_pbite1.20
 
 # Set Geo
 /g4sim/det/ReloadGeo              geometry_R2015b/geometry_P3

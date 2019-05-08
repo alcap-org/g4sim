@@ -90,11 +90,11 @@ DEFINE: zLDetBlock Z0 # distance above floor
 #	                                                                               S R       Phi   Theta  
         B    wLDetBlock hLDetBlock thLDetBlock LeftDetBlock 1 ChamberIn Vacuum none      xLDetBlock yLDetBlock zLDetBlock -45 90 0
 
-	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_1 1 LeftDetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl1 0 0 0 
-	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_1 1 LeftDetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi1 0 0 0 
-	B    wStrip hStrip thStrip Target    16    LeftDetBlock Silicon  M/MonitorSD     xStrip yStrip zStrip  0    0   0 
-	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_2 1 LeftDetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi2 0 0 0 
-	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_2 1 LeftDetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl2 0 0 0 
+	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_1 1  LeftDetBlock Aluminium none         xSiL1  ySiL1  zSiL1DLAl1 0 0 0
+	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_1 1  LeftDetBlock Silicon   none         xSiL1  ySiL1  zSiL1DLSi1 0 0 0
+	B    wStrip hStrip thStrip Target       16 LeftDetBlock Silicon   M/MonitorSD  xStrip yStrip zStrip     0 0 0
+	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_2 1 LeftDetBlock Silicon none            xSiL1  ySiL1  zSiL1DLSi2 0 0 0 
+	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_2 1 LeftDetBlock Aluminium none          xSiL1  ySiL1  zSiL1DLAl2 0 0 0 
 
 #	B    wSiL3  hSiL3  thDLAl  SiL3DeadAl_1 1 LeftDetBlock Aluminium none          xSiL3  ySiL3 zSiL3DLAl1 0 0 0 
 #	B    wSiL3  hSiL3  thDLSi  SiL3DeadSi_1 1 LeftDetBlock Silicon none          xSiL3  ySiL3 zSiL3DLSi1 0 0 0 

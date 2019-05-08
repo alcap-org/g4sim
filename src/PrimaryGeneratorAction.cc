@@ -611,22 +611,22 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 }
 
 void PrimaryGeneratorAction::InformEventHeaderHeader(){
-        // Set Random number seeds in the event header (R0 and R1) taken from elsewhere
+	// Set Random number seeds in the event header (R0 and R1) taken from elsewhere
 	EventHeaderSvc::GetEventHeaderSvc()->SetSeedsValue();
 
-        // Set the primary particle's momentum in the event header
+	// Set the primary particle's momentum in the event header
 	G4ParticleMomentum mom=particleGun->GetParticleMomentumDirection();
-        double E_kinetic=particleGun->GetParticleEnergy();
-        double M=particleGun->GetParticleDefinition()->GetPDGMass();
-        double P=sqrt(E_kinetic*E_kinetic + 2*M*E_kinetic);
-        mom=P*mom;
+	double E_kinetic=particleGun->GetParticleEnergy();
+	double M=particleGun->GetParticleDefinition()->GetPDGMass();
+	double P=sqrt(E_kinetic*E_kinetic + 2*M*E_kinetic);
+	mom=P*mom;
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialMomentum(mom.x(),mom.y(),mom.z());
 
-        // Set the primary particle's position in the event header
+	// Set the primary particle's position in the event header
 	G4ThreeVector pos=particleGun->GetParticlePosition();
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialPosition(pos.x(),pos.y(),pos.z());
 
-        // Set the primary particle's position in the event header
+	// Set the primary particle's position in the event header
 	EventHeaderSvc::GetEventHeaderSvc()->SetInitialParticle(particleGun->GetParticleDefinition()->GetParticleName());
 }
 
@@ -750,41 +750,12 @@ void PrimaryGeneratorAction::SetRandomPosition(){
 		if (ySpread) dy=2.*(G4UniformRand()-0.5)*ySpread;
 		if (zSpread) dz=2.*(G4UniformRand()-0.5)*zSpread;
 	}
-	else if (PositionMode=="source" || PositionMode=="target"){
-	  // Make sure that the random position chosen is within the Target volume
-	  G4Navigator* theNavigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
-	  // Get a random position based on the spread (copied code from gRand)
-	  do {
-			dx=G4RandGauss::shoot(0, xSpread);
-			dy=G4RandGauss::shoot(0, ySpread);
-			dz=G4RandGauss::shoot(0, zSpread);
-			//			std::cout << "AE: xspread = " << xSpread << ", dx = " << dx << std::endl;
-			//			std::cout << "AE: yspread = " << ySpread << ", dy = " << dy << std::endl;
-			//			std::cout << "AE: zspread = " << zSpread << ", dz = " << dz << std::endl;
-			//dx=G4RandFlat::shoot(-xSpread,xSpread);
-			//dy=G4RandFlat::shoot(-ySpread,ySpread);
-			//dz=G4RandFlat::shoot(-xSpread,zSpread);
-
-	    G4ThreeVector position(x+dx, y+dy, z+dz);
-   	    //std::cout << "AE (before rotation): " << position << std::endl;
-	    position.rotateY(135*deg);
-	    G4VPhysicalVolume* phys_volume = theNavigator->LocateGlobalPointAndSetup(position);
-
-	    if (!phys_volume) {
-	      continue; // if theNavigator didn't return a physical volume
-	    }
-
-	    //	    std::cout << "AE (after rotation): " << position << std::endl;
-	    //	    std::cout << "AE vol name: " << phys_volume->GetName() << std::endl;
-
-	    if ((PositionMode=="source" && phys_volume->GetName() == "Source") ||
-	        (PositionMode=="target" && phys_volume->GetName() == "Target") ) {
-	      gotit = true;
-	    }
-	  } while (!gotit);
+	else if (PositionMode=="source" || PositionMode=="target") {
+		SetPositionInTargetFromGauss();
+		return;
 	}
 	G4ThreeVector position(x+dx, y+dy, z+dz);
-	if (PositionMode == "mixed" || PositionMode == "bRand" || PositionMode == "source" || PositionMode == "target") {
+	if (PositionMode == "mixed" || PositionMode == "bRand") {
 		position.rotateY(135*deg);
 	}
 	particleGun->SetParticlePosition(position);
@@ -798,13 +769,13 @@ void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
 
 	double x, y, z;
 	PM_hist->GetRandom3(x, y, z);
-	G4ThreeVector pos(x, y, z);
+	G4ThreeVector pos(x*mm, y*mm, z*mm);
 
 	// Rotate and move to mother coordinates
 	G4RotationMatrix rot(pSimpleGeometryParameter->get_Ephi(index),
 	                     pSimpleGeometryParameter->get_Etheta(index),
 	                     pSimpleGeometryParameter->get_Epsi(index));
-	pos = rot.inverse()*pos;
+	pos *= rot.inverse();
 	pos += G4ThreeVector(pSimpleGeometryParameter->get_PosX(index),
 	                     pSimpleGeometryParameter->get_PosY(index),
 	                     pSimpleGeometryParameter->get_PosZ(index));
@@ -815,15 +786,59 @@ void PrimaryGeneratorAction::SetPositionInTargetFromHistogram() {
 		  MyDetectorManager::GetMyDetectorManager()->GetParaFromVolume(mot_volume);
 		int mot_index = pmotSimpleGeometryParameter->get_VolIndex(mot_volume);
 
-		G4RotationMatrix rot(pmotSimpleGeometryParameter->get_Ephi(mot_index),
-		                     pmotSimpleGeometryParameter->get_Etheta(mot_index),
-		                     pmotSimpleGeometryParameter->get_Epsi(mot_index));
+		rot.set(pmotSimpleGeometryParameter->get_Ephi(mot_index),
+		        pmotSimpleGeometryParameter->get_Etheta(mot_index),
+		        pmotSimpleGeometryParameter->get_Epsi(mot_index));
 		pos *= rot.inverse();
 		pos += G4ThreeVector(pmotSimpleGeometryParameter->get_PosX(mot_index),
 		                     pmotSimpleGeometryParameter->get_PosY(mot_index),
 		                     pmotSimpleGeometryParameter->get_PosZ(mot_index));
 
 		mot_volume = pmotSimpleGeometryParameter->get_MotherName(mot_index);
+	}
+	particleGun->SetParticlePosition(pos);
+}
+
+void PrimaryGeneratorAction::SetPositionInTargetFromGauss() {
+	G4String VOL;
+	if      (PositionMode == "target") VOL = "Target";
+	else if (PositionMode == "source") VOL = "Source";
+	MyVGeometryParameter*    pMyVGeometryParameter    = MyDetectorManager::GetMyDetectorManager()->GetSvc("Target")->get_GeometryParameter();
+	SimpleGeometryParameter* pSimpleGeometryParameter = dynamic_cast<SimpleGeometryParameter*> (pMyVGeometryParameter);
+	int index = pSimpleGeometryParameter->get_VolIndex(VOL);
+	G4Navigator* theNavigator = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+	G4VPhysicalVolume* phys_volume = nullptr;
+	G4ThreeVector pos;
+	while (!phys_volume || phys_volume->GetName() != VOL) {
+		pos.set(G4RandGauss::shoot(x, xSpread),
+		        G4RandGauss::shoot(y, ySpread),
+		        G4RandGauss::shoot(z, zSpread));
+	  // Rotate and move to mother coordinates
+		G4RotationMatrix rot(pSimpleGeometryParameter->get_Ephi(index),
+		                     pSimpleGeometryParameter->get_Etheta(index),
+		                     pSimpleGeometryParameter->get_Epsi(index));
+		pos *= rot.inverse();
+		pos += G4ThreeVector(pSimpleGeometryParameter->get_PosX(index),
+		                     pSimpleGeometryParameter->get_PosY(index),
+		                     pSimpleGeometryParameter->get_PosZ(index));
+
+		G4String mot_volume = pSimpleGeometryParameter->get_MotherName(index);
+		while (mot_volume != "None") {
+			SimpleGeometryParameter* pmotSimpleGeometryParameter =
+			MyDetectorManager::GetMyDetectorManager()->GetParaFromVolume(mot_volume);
+			int mot_index = pmotSimpleGeometryParameter->get_VolIndex(mot_volume);
+
+			rot.set(pmotSimpleGeometryParameter->get_Ephi(mot_index),
+			        pmotSimpleGeometryParameter->get_Etheta(mot_index),
+			        pmotSimpleGeometryParameter->get_Epsi(mot_index));
+			pos *= rot.inverse();
+			pos += G4ThreeVector(pmotSimpleGeometryParameter->get_PosX(mot_index),
+			                     pmotSimpleGeometryParameter->get_PosY(mot_index),
+			                     pmotSimpleGeometryParameter->get_PosZ(mot_index));
+
+			mot_volume = pmotSimpleGeometryParameter->get_MotherName(mot_index);
+		}
+		phys_volume = theNavigator->LocateGlobalPointAndSetup(pos);
 	}
 	particleGun->SetParticlePosition(pos);
 }

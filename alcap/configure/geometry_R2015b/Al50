@@ -30,7 +30,7 @@ DEFINE: thTBS    thTB+2*thPb    # Thickness of Target Border Shielding
 #	                                               P R    Phi  Z                                                             P R    Phi  Z    
 #	                                               S R    Phi  Theta                                                         S R    Phi  Theta
 	BL   minus bTgtBdWh   bTgtBdHl    0    0    0    0    0    0      TargetBorder          1     TargetMount Scintillator      none    0    0    0     0    0    0  
-	BL   minus bTgtBdShWh bTgtBdShHl  0    0    0    0    0    0      uTgtBd1                     
+	BL   minus bTgtBdShWh bTgtBdShHl  0    0    0    0    0    0      uTgtBd1
 	BL   minus uTgtBd1    bTgtBdWh    0    0    0    0    0    0      TargetBorderShielding 1     TargetMount Lead     none    0    0    0     0    0    0
 
 #visual settings

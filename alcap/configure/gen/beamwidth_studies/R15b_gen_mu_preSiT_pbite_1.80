@@ -6,33 +6,36 @@ Particle:  mu-
 
 # Energy and positions from elog:123 and 169 (and 172 sort of)
 
-# We always fire straight.
+# We always fire straight I guess.
 #Default Direction
 #				Theta	Phi
 #				deg		deg
 Direction:		0        0
+#ThetaSpread:	15
+#PhiSpread:		10
 
 # Energy is for p=1.02 (with p0=25.4 MeV/c) with 3% p-bite, so 6% E-bite
 # This should be 3.13 MeV/c, with dE(FWHM?)=0.1878 MeV/c
 # We see a lower initial energy and higher spread, presumably because of
 # upstream material. These values are from the elogs 169 and 172.
+# For the beamwidth study, decrease EkinSpread by 20%.
 Ekin:	     1.54
-EkinSpread:  0.27
+EkinSpread:  0.486
 
 # This from elog 123.
-#Default Position     x     y      z
-#                     mm    mm     mm
-Position:             6.31  2.40  -125
-PosSpread:            15.66 23.36  0
-
-RandMode:       none  #(none/root)
+#Default Position     x    y   z
+#	              mm   mm  mm
+Position:     6.31  2.40  -125
+PosSpread:    15.66 23.36  0
+ 
+RandMode:       none #(none/root)
 EnergyMode:     gRand #(root/histo/none)
-PositionMode:   gRand #(uniform/root/none/gRand/uRand)
-DirectionMode:  none  #(none/uniform/histo)
+PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
+DirectionMode:  none #(none/uniform/histo)
 ThetaMode:      gRand #(none/gRand/uRand)
 PhiMode:        gRand #(none/gRand/uRand)
-TimeMode:       none  #(none/root)
-pidMode:        none  #(none/root)
+TimeMode:       none #(none/root)
+pidMode:        none #(none/root)
 #Default Time
 #	         ns
 Time:    0

@@ -71,6 +71,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction,
 		void SetRandomDirection();
 		void SetRandomPosition();
 		void SetPositionInTargetFromHistogram();
+		void SetPositionInTargetFromGauss();
 		void SetRandomEnergy();
 		void SetUniformPosition();
 		void BuildHistoFromFile();

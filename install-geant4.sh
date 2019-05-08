@@ -34,5 +34,5 @@ cd geant4-build/
 cmake -DCMAKE_INSTALL_PREFIX=../geant4-install -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_G3TOG4=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON ../geant${GEANT4_VERSION}/ 2>&1 |tee install_log.txt
 
 # Now compile and install
-make 2>&1 |tee -a install_log.txt
-make install 2>&1 |tee -a install_log.txt
+make -j 2>&1 |tee -a install_log.txt
+make -j install 2>&1 |tee -a install_log.txt
