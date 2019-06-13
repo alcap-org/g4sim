@@ -42,3 +42,6 @@ geant4*
 *.root
 *_C.d
 *.pcm
+
+# MacOS files
+.DS_Store
