@@ -18,6 +18,9 @@ DEFINE: lColL		360 # length of the collimator
 
 DEFINE: ZColl Z0 # in chamber coordinates
 
+DEFINE: XXX rMinColL*0.342
+DEFINE: YYY rMinColL*0.940
+
 #EllipticalTube info
 #	Type Dx          Dy          Dz                Name         RepNo MotVolume Material     SDName   posX  posY  posZ  Ephi Ethe Epsi
 #	     mm          mm          mm                                                                   mm    mm    mm    deg  deg  deg
@@ -38,17 +41,18 @@ DEFINE: ZColl Z0 # in chamber coordinates
 #	     mm          mm         mm       deg   deg                                                        mm   mm    mm     deg    deg    deg   
 #	                                                                                      P R    Phi   Z     
 #	                                                                                      S R    Phi   Theta 
-    T    rMinColL   rMaxColL   lColL     0     140  bColL   
-	T    rMinColL-1 rMaxColL+1 bYColP-25 0     45   tColLHole
+	T    rMinColL   rMaxColL   lColL     0     140  bColL   
+#	T    rMinColL-1 rMaxColL+1 bYColP-25 0     45   tColLHole
+#	T    rMinColL-1 rMaxColL+1 bYColP-25 0     45   tColLHole
 
 #BooleanSolid info
 #	Type type  vol1   vol2        Ephi Ethe Epsi PosX  PosY PosZ   name              RepNo MotVolume  Material    SDName    posX   posY posZ  Ephi Ethe Epsi  
 #	                              deg  deg  deg  mm    mm   mm                                                              mm     mm   mm    deg  deg  deg   
 #	                                           P R     Phi  Z                                                             P R      Phi  Z    
 #	                                           S R     Phi  Theta                                                         S R      Phi  Theta
-	BL   minus bColP  tColPHole   0    0    0    0      0   0      CollimatorPlastic 1     ChamberIn  Scintillator none   P pRColP 0    Z0     -90   90    0  
-	BL   minus bColL  tColLHole   45   0    0    0      0   Z0     CollimatorLead    1     ChamberIn  Lead         none   P pRColL 0    0      110    0    0
-
+	BL   minus bColP  tColPHole   0    0    0    2.3  0   0      CollimatorPlastic 1     ChamberIn  Scintillator none   P pRColP 0    ZColl  -90   90    0  
+#	BL   minus bColL  tColLHole   45   0    0    0    0   ZColl  CollimatorLead    1     ChamberIn  Lead         none   P pRColL 0    0      110    0    0
+	BL   minus bColL  tColPHole   -20    90   0  XXX-2.3 YYY ZColl  CollimatorLead    1     ChamberIn  Lead         none   P pRColL 0    0      110    0    0
 
 #visual settings
 	VerboseLevel:    5
