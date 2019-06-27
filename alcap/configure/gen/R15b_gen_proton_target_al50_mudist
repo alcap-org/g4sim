@@ -12,15 +12,8 @@ PhysicsList: QGSP_BERT
 	PhiSpread:          360
 #Default Momentum Amplitude
 #	             MeV
-#	MomAmp:      10
-#	MomSpread:   10
 	Ekin:        10
 	EkinSpread:  20
-#Default Position     x    y   z
-#	                  mm   mm  mm
-#	Position:         0  0  10
-#	PosSpread:        8.33 5   1
-#	PosLimit:         17.5
 
 	RandMode:       none #(none/root)
 	EnergyMode:     uRand #(root/histo/none)

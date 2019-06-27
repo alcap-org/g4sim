@@ -18,9 +18,9 @@ PhiSpread:		360
 # We see a lower initial energy and higher spread, presumably because of
 # upstream material. These values are from the elog:206.
 # For the beamwidth study, change EkinSpread by factor in file name.
-# This is with a pbite spred 1.7 of canonical (0.20MeV->0.34MeV)
+# This is with a pbite spread that's just the canonical (0.20MeV)
 Ekin:	     1.43
-EkinSpread:  0.34
+EkinSpread:  0.20
 
 # This from elog 123.
 #Default Position   x    y   z

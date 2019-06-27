@@ -15,4 +15,4 @@ for i in $(seq $3); do
 	sed -i "s/setSeeds .*/setSeeds $rnd1 $rnd2/" macros/parallel/$macro.$i
 done
 seq $3 | parallel --eta --keep-order --jobs 12 --results output/jobs \
-	"OFILENAMEROOT=output/$2_{}.root; g4sim macros/parallel/$macro.{}"
+	"OFILENAMEROOT=output/$2.{}.root; g4sim macros/parallel/$macro.{}"

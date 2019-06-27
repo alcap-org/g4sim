@@ -1,36 +1,32 @@
-	PhysicsList: QGSP_BERT
+PhysicsList: QGSP_BERT
 
 #General setting  
-	Type:      simple #(simple/stable/ion)
-	Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
+Type:      simple #(simple/stable/ion)
+Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
+
+# Energy and positions from elog:206
 
 #Default Direction
-#	           Theta    Phi
-#	           deg      deg
-	Direction: 0        180
-#	ThetaSpread:        10
-#	PhiSpread:	    10
-#	ThetaSpread:        1.71887
-#	PhiSpread:          180
-#Default Momentum Amplitude
-#	             MeV
-#	MomAmp:      15.9
-# 3% FWHM mom-bite
-#	MomSpread:   0.203
+#				Theta	Phi
+#				deg		deg
+Direction:		0        0
+ThetaSpread:	15
+PhiSpread:		360
 
-	Ekin:	     1.5
-	EkinSpread:  3.0
-#	Ekin:	     1.39
-#	EkinSpread:  0.122
+# Energy is for p=1.02 (with p0=25.4 MeV/c) with 3% p-bite, so 6% E-bite
+# This should be 3.13 MeV/c, with dE(FWHM?)=0.1878 MeV/c
+# We see a lower initial energy and higher spread, presumably because of
+# upstream material. These values are from the elog:206.
+Ekin:	     1.43
+EkinSpread:  0.20
 
-#Default Position     x    y   z
-#	              mm   mm  mm
-	Position:     6.31  2.40  -50
-	PosSpread:    15.66 23.36  0
-#	PosLimit:     17.5
+#Default Position     x     y      z
+#                     mm    mm     mm
+Position:             2     3    -100
+PosSpread:            5     10      0
 
 	RandMode:       none #(none/root)
-	EnergyMode:     uRand #(root/histo/none)
+	EnergyMode:     gRand #(root/histo/none)
 	PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
 	DirectionMode:  none #(none/uniform/histo)
 	ThetaMode:      gRand #(none/gRand/uRand)
