@@ -19,8 +19,8 @@ DEFINE: lColL		360 # length of the collimator
 
 DEFINE: ZColl       Z0 # in chamber coordinates
 
-DEFINE: XColLHole   rMinColL*cos(70)-XHOffset # x position in Pb tube of hole
-DEFINE: YColLHole   rMinColL*sin(70)          # y position in Pb tube of hole
+DEFINE: XColLHole   rMinColL*cos(70*pi/180)-XHOffset # x position in Pb tube of hole
+DEFINE: YColLHole   rMinColL*sin(70*pi/180)          # y position in Pb tube of hole
 
 #EllipticalTube info
 #	Type Dx          Dy          Dz                Name         RepNo MotVolume Material     SDName   posX  posY  posZ  Ephi Ethe Epsi
