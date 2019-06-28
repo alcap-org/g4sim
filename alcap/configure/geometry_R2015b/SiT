@@ -19,7 +19,7 @@ DEFINE: thSiTQuad thSiT	      # thickness of 1 quad
 # The full Ag collimator, if there was no hole
 DEFINE: wAgFull wSiT*2
 DEFINE: hAgFull hSiT*2
-DEFINE: thAgFull 1 # TODO:find actual thickness
+DEFINE: thAgFull 1. # TODO:find actual thickness
 # The dimensions of the hole
 DEFINE: wAgHole 46 # elog:247 (order determined from elog:257)
 DEFINE: hAgHole 35 # elog:247
@@ -76,7 +76,7 @@ DEFINE: zAgShield zSiTDLAl2+thDLAl/2+thAgFull/2
 #visual settings
 	VerboseLevel:    5
 	VISSETTING  #Keep this line to call Reset
-#	Name                red    green  blue  transparency
-	vis_SiTMother 0 1 0
-	vis_SiT	    1      0      0  
-	vis_AgShield 0 	   0 	  1
+#	Name			red	green	blue  transparency
+	vis_SiTMother	0	1		0
+	vis_SiT			1	0		0
+	vis_AgShield	0	0		1
