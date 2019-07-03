@@ -4,9 +4,8 @@ PhysicsList: QGSP_BERT
 Type:      simple
 Particle:  mu-
 
-# Energy and positions from elog:1206
+# Energy and positions from elog:206
 
-# We always fire straight I guess.
 #Default Direction
 #				Theta	Phi
 #				deg		deg
@@ -19,15 +18,15 @@ PhiSpread:		360
 # We see a lower initial energy and higher spread, presumably because of
 # upstream material. These values are from the elog:206.
 # For the beamwidth study, change EkinSpread by factor in file name.
-# This is with a pbite spred 0.7 of canonical (0.20MeV->0.14MeV)
+# This is with a pbite spread 0.7 of canonical (0.20MeV->0.14MeV)
 Ekin:	     1.43
 EkinSpread:  0.14
 
 # This from elog 123.
-#Default Position     x    y   z
-#                     mm   mm  mm
-Position:             2    3   -100
-PosSpread:            5    10  0
+#Default Position   x    y   z
+#                   mm   mm  mm
+Position:           2    3   -100
+PosSpread:          5    10  0
  
 RandMode:       none #(none/root)
 EnergyMode:     gRand #(root/histo/none)
