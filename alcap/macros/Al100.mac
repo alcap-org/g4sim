@@ -9,4 +9,4 @@
 /g4sim/gun/ResetGen               gen/gen_mu_1.09
 
 # Set Geo
-/g4sim/det/ReloadGeo              geometry_Al100
+/g4sim/det/ReloadGeo              geometry_R2015b/geometry_P2

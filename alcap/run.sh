@@ -14,5 +14,5 @@ for i in $(seq $3); do
 	rnd2=$(od -vAn -N4 -tu4 < /dev/urandom)
 	sed -i "s/setSeeds .*/setSeeds $rnd1 $rnd2/" macros/parallel/$macro.$i
 done
-seq $3 | parallel --eta --keep-order --jobs 12 --results output/jobs \
+seq $3 | parallel --eta --jobs 12 --results output/jobs \
 	"OFILENAMEROOT=output/$2.{}.root; g4sim macros/parallel/$macro.{}"

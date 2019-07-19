@@ -1,0 +1,45 @@
+PhysicsList: QGSP_BERT
+
+#General setting  
+Type:      simple
+Particle:  mu-
+
+# Energy and positions from elog:206
+
+#Default Direction
+#				Theta	Phi
+#				deg		deg
+Direction:		0        0
+ThetaSpread:	15
+PhiSpread:		360
+
+# These are the energy settings used in the simulation for the p=1.02 dataset
+#Ekin:		1.43
+#EkinSpread:	0.20
+
+# Scanning through momenta, p=17.44 MeV/c correponds to a dataset where
+# p=1.02*p0, with p0 = 25.4 MeV/c, meaning in the data p=25.9 MeV/c.
+# So to go from the filename momentum pf (corresponding to the data set's
+# tranche's momentum) to a momentum here, we do
+# MomAmp = pf/(1.02*p0)*17.44 MeV/c.
+# MomSpread = 0.07*MomAmp ()
+MomAmp:		17.44
+MomSpread:	1.22
+
+# This from elog 123.
+#Default Position   x    y   z
+#	                mm   mm  mm
+Position:           2    3   -100
+PosSpread:          5    10  0
+ 
+RandMode:       none #(none/root)
+EnergyMode:     gRand #(root/histo/none)
+PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
+DirectionMode:  none #(none/uniform/histo)
+ThetaMode:      gRand #(none/gRand/uRand)
+PhiMode:        gRand #(none/gRand/uRand)
+TimeMode:       none #(none/root)
+pidMode:        none #(none/root)
+#Default Time
+#	         ns
+Time:    0
