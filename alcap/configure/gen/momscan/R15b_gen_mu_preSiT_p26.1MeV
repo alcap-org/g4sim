@@ -1,0 +1,42 @@
+PhysicsList: QGSP_BERT
+
+#General setting  
+Type:      simple
+Particle:  mu-
+
+# Energy and positions from elog:339
+
+#Default Direction
+#				Theta	Phi
+#				deg		deg
+Direction:		0        0
+ThetaSpread:	5
+PhiSpread:		360
+
+
+# Scanning through momenta, p=18.16 MeV/c correponds to a dataset where
+# p=1.02*p0 (data beamset p0 = 25.4 MeV/c, p=25.9 MeV/c).
+# So to go from the filename momentum pf (corresponding to the dataset's
+# tranche's beamset momentum) to a momentum here, we do
+# MomAmp    = pf/(1.02*p0)*18.16 MeV/c = pf*0.7011.
+# MomSpread = (0.175/1.55/2)*MomAmp    = pf*0.03958
+MomAmp:		18.30
+MomSpread:	1.033
+
+
+#Default Position   x    y   z
+#	                mm   mm  mm
+Position:           1    20   -180
+PosSpread:          10   20  0
+ 
+RandMode:       none  #(none/root)
+EnergyMode:     gRand #(root/histo/none)
+PositionMode:   gRand #(uniform/root/none/gRand/uRand)
+DirectionMode:  none  #(none/uniform/histo)
+ThetaMode:      gRand #(none/gRand/uRand)
+PhiMode:        gRand #(none/gRand/uRand)
+TimeMode:       none  #(none/root)
+pidMode:        none  #(none/root)
+#Default Time
+#	         ns
+Time:    0

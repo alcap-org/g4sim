@@ -8,7 +8,7 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_Al50
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/momscan/R15b_gen_mu_postSiT_p26.3MeV
+/g4sim/gun/ResetGen               gen/momscan/R15b_gen_mu_preSiT_p26.3MeV
 
 # Set Geo
 /g4sim/det/ReloadGeo              geometry_R2015b/geometry_P3
