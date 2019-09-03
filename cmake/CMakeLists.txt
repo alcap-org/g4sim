@@ -19,28 +19,12 @@ endif()
 # Setup Geant4 include directories and compile definitions
 #
 include(${Geant4_USE_FILE})
-#include(${Geant4_USE_FILE} ${ROOT_USE_FILE})
 
 #----------------------------------------------------------------------------
 # Find ROOT (required package)
 #
-find_package(ROOT QUIET)
-if(NOT ROOT_FOUND)
-  message(STATUS "G4 Examples: ROOT package not found. --> P01 example disabled")  
-  return()
-endif()
-#if(NOT GCCXML)
-#   message(STATUS "G4 Examples: GCCXML not found. --> P01 example disabled")
-#   return()
-#endif() 
-
-#----------------------------------------------------------------------------
-# P01 requires shared libraries
-#
-if(BUILD_STATIC_LIBS AND NOT BUILD_SHARED_LIBS )
-  message(STATUS "G4 Examples: Building only Static Libraires. --> P01 example disabled")
-  return()
-endif()
+list(APPEND CMAKE_MODULE_PATH $ENV{MYG4SIMROOT}/cmake)
+find_package(ROOT REQUIRED)
 
 #----------------------------------------------------------------------------
 # Set default directories

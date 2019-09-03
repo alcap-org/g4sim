@@ -166,8 +166,8 @@ void EventHeaderSvc::SetValue(const G4Event* evt, int runNb, double w){
 	weight = w;
 }
 void EventHeaderSvc::SetSeedsValue(){
-    R0 = CLHEP::HepRandom::getTheSeeds()[0];
-    R1 = CLHEP::HepRandom::getTheSeeds()[1];
+    R0 = G4Random::getTheSeeds()[0];
+    R1 = G4Random::getTheSeeds()[1];
 }
 void EventHeaderSvc::SetInitialMomentum(double tipx, double tipy, double tipz){
 	ipx = tipx;
