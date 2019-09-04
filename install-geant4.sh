@@ -31,7 +31,7 @@ mkdir -p geant4-build geant4-install
 
 # Use cmake to create the Makefiles for your system
 cd geant4-build/
-cmake3 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=../geant4-install -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_G3TOG4=ON -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON ../geant${GEANT4_VERSION}/ 2>&1 |tee install_log.txt
+cmake3 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=../geant4-install -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON ../geant${GEANT4_VERSION}/ 2>&1 |tee install_log.txt
 
 
 # Now compile and install
