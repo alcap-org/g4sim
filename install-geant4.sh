@@ -17,10 +17,10 @@ if [ -d "geant4-install" ] ;then
 	exit 1
 fi
 
-GEANT4_VERSION=4.10.00.p02
+GEANT4_VERSION=4.10.05.p01
 
 # Get the Geant4 tarball
-wget http://geant4.cern.ch/support/source/geant${GEANT4_VERSION}.tar.gz
+wget http://geant4-data.web.cern.ch/geant4-data/releases/source/geant${GEANT4_VERSION}.tar.gz
 
 # Unpack the GEANT4 tarball, this creates the geant4/ directory
 # using checkpoint and the pipe tricks is to reduce output down to ~20 lines
@@ -31,7 +31,8 @@ mkdir -p geant4-build geant4-install
 
 # Use cmake to create the Makefiles for your system
 cd geant4-build/
-cmake -DCMAKE_INSTALL_PREFIX=../geant4-install -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_G3TOG4=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON ../geant${GEANT4_VERSION}/ 2>&1 |tee install_log.txt
+cmake3 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=../geant4-install -DGEANT4_INSTALL_DATA=ON -DGEANT4_USE_G3TOG4=ON -DGEANT4_USE_GDML=ON -DGEANT4_USE_OPENGL_X11=ON -DGEANT4_USE_RAYTRACER_X11=ON -DGEANT4_USE_QT=ON ../geant${GEANT4_VERSION}/ 2>&1 |tee install_log.txt
+
 
 # Now compile and install
 make 2>&1 |tee -a install_log.txt
