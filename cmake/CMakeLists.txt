@@ -79,7 +79,7 @@ target_link_libraries(g4simlib ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} Cintex Refl
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(g4sim ${sources} ${headers})
-target_link_libraries(g4sim g4simlib -ltbb ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
+target_link_libraries(g4sim g4simlib tbb ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
