@@ -10,16 +10,21 @@ Particle:  mu-
 #				Theta	Phi
 #				deg		deg
 Direction:		0        0
-#ThetaSpread:	15
-#PhiSpread:		10
+ThetaSpread:	10
+PhiSpread:		360
 
-Ekin:	     1.54
-EkinSpread:  0.27
+#s.f.1.02 KE=1.37 s=0.19
+#s.f.1.03 KE=1.46 s=0.19
+#s.f.1.035 KE=1.51 s=0.20
+#s.f.1.04 KE=1.56 s=0.21
+#s.f.1.05 KE=1.67 s=0.21
+Ekin:	     1.46
+EkinSpread:  0.19
 
 #Default Position     x    y   z
 #	              mm   mm  mm
-Position:     6.31  2.40  -125
-PosSpread:    15.66 23.36  0
+Position:     -3  20  -185
+PosSpread:    20 20  0
  
 RandMode:       none #(none/root)
 EnergyMode:     gRand #(root/histo/none)
