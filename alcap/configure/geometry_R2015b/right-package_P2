@@ -2,6 +2,7 @@ checkoverlap
 #==================================================================================================================
 #	SiR1
 #       - 58 microns thick (elog:Capture/29 attachment 3 and 4)
+#       - 53 microns thick MC validated (elog:R2015b/302)
 #	- 50 x 50 mm active area (Micron website)
 #	- 4 quadrants
 #
@@ -17,10 +18,14 @@ checkoverlap
 #==================================================================================================================
 
 #DEFINE: nomThSiR1 0.058 # nominal SiR1 thickness (dead layer needs to be included in this)
-DEFINE: nomThSiR1 0.053 # nominal SiR1 thickness (dead layer needs to be included in this)
+DEFINE: nomThSiR1 0.053 # calidated SiR1 thickness (dead layer needs to be included in this)
 DEFINE: thDLSiR1 thDLSi
 #DEFINE: thDLSiR1 thDLSi+0.005
 DEFINE: thSiR1  nomThSiR1-thDLSi-thDLSiR1-2*thDLAl # active SiR1 thickness
+=======
+DEFINE: nomThSiR1 0.053 # nominal SiR1 thickness (dead layer needs to be included in this)
+DEFINE: thSiR1  nomThSiR1 # -2*thDLSi # active SiR1 thickness
+>>>>>>> R15b
 DEFINE: wSiR1   50  # SiR1 width
 DEFINE: hSiR1   50  # SiR1 height
 DEFINE: nR1Quads 4    # SiR1 channels

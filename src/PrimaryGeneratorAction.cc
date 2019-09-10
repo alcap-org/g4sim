@@ -9,18 +9,18 @@
 
 #include "PrimaryGeneratorMessenger.hh"
 
-#include "G4RunManager.hh"
 #include "G4Event.hh"
+#include "G4IonTable.hh"
 #include "G4ParticleGun.hh"
+#include "G4ParticleMomentum.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4RotationMatrix.hh"
-#include "G4ThreeVector.hh"
-#include "G4ParticleMomentum.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4RotationMatrix.hh"
+#include "G4RunManager.hh"
+#include "G4ThreeVector.hh"
 #include "G4TransportationManager.hh"
 #include "Randomize.hh"
-#include "G4IonTable.hh"
 
 //supported geometry
 #include "MyDetectorManager.hh"
@@ -146,12 +146,12 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		seeds[1] = root_int[4];
 		seeds[2] = 0;
 //		std::cout<<"setTheSeeds("<<(int)seeds[0]<<","<<(int)seeds[1]<<")"<<std::endl;
-		CLHEP::HepRandom::setTheSeeds(seeds);
+		G4Random::setTheSeeds(seeds);
 	}
 
 	// Show Status:
 //	std::cout<<"==>Event "<<root_index<<std::endl;
-//        CLHEP::HepRandom::showEngineStatus();
+//        G4Random::showEngineStatus();
 
 	if (fType=="ion"){
 		if (!fParticle){
@@ -603,7 +603,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 //	std::cout<<"\tDirection: "<<particleGun->GetParticleMomentumDirection()<<std::endl;
 //	std::cout<<"\tEnergy: "<<particleGun->GetParticleEnergy()/MeV<<" MeV"<<std::endl;
 //	std::cout.precision(3);
-//    CLHEP::HepRandom::showEngineStatus();
+//    G4Random::showEngineStatus();
 
         /// Inform the event header of the primary particle so we store info in the output root tree
         InformEventHeaderHeader();
