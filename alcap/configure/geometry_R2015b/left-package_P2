@@ -11,6 +11,7 @@ checkoverlap
 #
 #	SiL3
 #       - 1500 microns thick (nominal elog:R2015b/22)
+#       - 1300 microns MC validated (elog:R2015b/307)
 #	- 50 x 50 mm active area (elog:R2015b/22))
 #
 # For P2 the order was SiL1, SiL3, SiL2 (SiL2 is at 20 V)
