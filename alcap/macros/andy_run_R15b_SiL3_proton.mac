@@ -8,10 +8,11 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_default
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/R15b_gen_triton-flat_Si16b
+/g4sim/gun/ResetGen               gen/R15b_gen_proton-flat_SiL3
+#/g4sim/gun/ResetGen               gen/R15b_gen_proton-sw_SiL3
 
 # Set Geo
-/g4sim/det/ReloadGeo              geometry_R2015b/geometry_P5
+/g4sim/det/ReloadGeo              geometry_R2015b/geometry_P1
 
 # Get visualisation
 #/control/execute {ALCAPWORKROOT}/macros/test_vis.mac
@@ -20,6 +21,6 @@
 #/tracking/verbose 2
 /random/setSeeds 5 6
 /g4sim/myAnalysisSvc/printModulo    10000
-/run/beamOn  10000000
+/run/beamOn  1000000
 
 #/vis/ogl/printEPS

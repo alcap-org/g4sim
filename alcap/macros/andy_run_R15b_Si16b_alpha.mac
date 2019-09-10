@@ -8,7 +8,7 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_default
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/R15b_gen_alpha_target
+/g4sim/gun/ResetGen               gen/R15b_gen_alpha-flat_Si16b
 
 # Set Geo
 /g4sim/det/ReloadGeo              geometry_R2015b/geometry_P5
@@ -20,6 +20,6 @@
 #/tracking/verbose 2
 /random/setSeeds 5 6
 /g4sim/myAnalysisSvc/printModulo    10000
-/run/beamOn  100000
+/run/beamOn  10000000
 
 #/vis/ogl/printEPS

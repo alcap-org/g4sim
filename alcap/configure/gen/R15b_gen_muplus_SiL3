@@ -1,0 +1,39 @@
+	PhysicsList: QGSP_BERT
+
+#General setting  
+	Type:      simple #(simple/stable/ion)
+	Particle:  mu+ #(e+/e-/deuteron/chargedgeantino/gamma/...)
+
+#Default Direction
+#	           Theta    Phi
+#	           deg      deg
+#	Direction:  90       180
+	ThetaSpread:        360
+	PhiSpread:          360
+#Default Momentum Amplitude
+#	             MeV
+#	MomAmp:      10
+#	MomSpread:   10
+	Ekin:      0
+	EkinSpread:   0
+#Default Position     x    y   z
+#	                  mm   mm  mm
+#	Position:         0  0  10
+#	PosSpread:        8.33 5   1
+#	PosLimit:         17.5
+
+	RandMode:       none #(none/root)
+	EnergyMode:     uRand #(root/histo/none)
+	PositionMode:   histo #(uniform/root/none/gRand/uRand/turtle/muPC)
+	DirectionMode:  none #(none/uniform/histo/turtle/muPC)
+	ThetaMode:      uRand #(none/gRand/uRand)
+	PhiMode:        uRand #(none/gRand/uRand)
+	TimeMode:       none #(none/root)
+	pidMode:        none #(none/root)
+#Default Time
+#	         ns
+	Time:    0
+#
+# Position histogram and file
+	PMHFN:       R15b_Geom-P1_muon-stop-positions.root
+	PMHHN:       hGlobalStoppingPositions

@@ -24,7 +24,7 @@ include(${Geant4_USE_FILE})
 #----------------------------------------------------------------------------
 # Find ROOT (required package)
 #
-find_package(ROOT QUIET)
+find_package(ROOT REQUIRED)
 if(NOT ROOT_FOUND)
   message(STATUS "G4 Examples: ROOT package not found. --> P01 example disabled")  
   return()
@@ -61,7 +61,8 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/../lib)
 #
 include_directories(${PROJECT_SOURCE_DIR}/../include 
                     ${Geant4_INCLUDE_DIR}
-                    ${ROOT_INCLUDE_DIR})
+                    ${ROOT_INCLUDE_DIR}
+		    ${ROOT_INCLUDE_DIRS})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/../src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/../include/*.hh)
 

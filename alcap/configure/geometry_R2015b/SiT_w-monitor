@@ -59,7 +59,7 @@ DEFINE: zAgShield zSiTDLAl2+thDLAl/2+thAgFull/2
 	B    wSiTMother hSiTMother thSiTMother SiTMother   1 ChamberIn Vacuum    none centralX centralY centralZ  90 90 0 
 	B    wSiT       hSiT       thDLAl      SiTDeadAl_1 1 SiTMother Aluminium none        xSiT     ySiT     zSiTDLAl1 0  0  0 
 	B    wSiT       hSiT       thDLSi      SiTDeadSi_1 1 SiTMother Silicon   none        xSiT     ySiT     zSiTDLSi1 0  0  0 
-	B    wSiTQuad   hSiTQuad   thSiTQuad   SiT         4 SiTMother Silicon   none xSiTQuad ySiTQuad zSiTQuad  0  0  0   
+	B    wSiTQuad   hSiTQuad   thSiTQuad   SiT         4 SiTMother Silicon   M/MonitorSD xSiTQuad ySiTQuad zSiTQuad  0  0  0
 	B    wSiT       hSiT       thDLSi      SiTDeadSi_2 1 SiTMother Silicon   none        xSiT     ySiT     zSiTDLSi2 0  0  0 
 	B    wSiT       hSiT       thDLAl      SiTDeadAl_2 1 SiTMother Aluminium none        xSiT     ySiT     zSiTDLAl2 0  0  0 
 	B    wAgFull    hAgFull    thAgFull    AgFull

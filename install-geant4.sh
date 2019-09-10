@@ -17,7 +17,8 @@ if [ -d "geant4-install" ] ;then
 	exit 1
 fi
 
-GEANT4_VERSION=4.10.00.p02
+#GEANT4_VERSION=4.10.00.p04
+GEANT4_VERSION=4.10.05
 
 # Get the Geant4 tarball
 wget http://geant4.cern.ch/support/source/geant${GEANT4_VERSION}.tar.gz
