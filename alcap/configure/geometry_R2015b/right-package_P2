@@ -16,7 +16,7 @@ checkoverlap
 # For P2 the order was SiR1, SiR2, SiR3 (SiR3 is OFF)
 #==================================================================================================================
 
-DEFINE: nomThSiR1 0.058 # nominal SiR1 thickness (dead layer needs to be included in this)
+DEFINE: nomThSiR1 0.053 # nominal SiR1 thickness (dead layer needs to be included in this)
 DEFINE: thSiR1  nomThSiR1 # -2*thDLSi # active SiR1 thickness
 DEFINE: wSiR1   50  # SiR1 width
 DEFINE: hSiR1   50  # SiR1 height
