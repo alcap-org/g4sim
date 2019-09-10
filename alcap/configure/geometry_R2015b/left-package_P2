@@ -33,7 +33,7 @@ DEFINE: thSiL2  nomThSiL2 # -2*thDLSi # SiL2 thickness
 DEFINE: wSiL2   50  # SiL2 width
 DEFINE: hSiL2   50  # SiL2 height
 
-DEFINE: nomThSiL3  1.500 # SiL3 thickness
+DEFINE: nomThSiL3  1.300 # SiL3 thickness
 DEFINE: thSiL3  nomThSiL3 # -2*thDLSi # SiL3 thickness
 DEFINE: wSiL3   50  # SiL3 width
 DEFINE: hSiL3   50  # SiL3 height
