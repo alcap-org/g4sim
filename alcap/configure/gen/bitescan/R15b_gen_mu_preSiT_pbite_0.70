@@ -4,7 +4,7 @@ PhysicsList: QGSP_BERT
 Type:      simple
 Particle:  mu-
 
-# Energy and positions from elog:339
+# Values from from elog:346
 
 #Default Direction
 #				Theta	Phi
@@ -13,21 +13,18 @@ Direction:		0        0
 ThetaSpread:	10
 PhiSpread:		360
 
-
-# Scanning through momenta, p=17.07 MeV/c correponds to a dataset where
-# p=1.02*p0 (data beamset p0 = 25.4 MeV/c, p=25.9 MeV/c).
-# So to go from the filename momentum pf (corresponding to the dataset's
-# tranche's beamset momentum) to a momentum here, we do
-# MomAmp    = pf/(1.02*p0)*17.07 MeV/c = pf*0.6589
-# MomSpread = (0.19/1.37/2)*MomAmp     = pf*0.04569
+# dpf is the pbite factor in the filename. It's the "scaling" we
+# use after we find the value in the MC (dp=1.184 MeV/c) that
+# best matches the data (setpoint 3% pbite>). And then we just
+# sort of go from there.
+# MomSpread = dp*dpf = 1.184 MeV/c * dpf
 MomAmp:		17.07
-MomSpread:	1.183
+MomSpread:	0.829
 
-
-#Default Position   x    y   z
-#	                mm   mm  mm
-Position:           -3   20   -185
-PosSpread:          20   20  0
+# Position	x	y	z
+#			mm	mm	mm
+Position:	-3	20	-185
+PosSpread:	20	20	0
  
 RandMode:       none  #(none/root)
 EnergyMode:     gRand #(root/histo/none)
