@@ -18,7 +18,7 @@ checkoverlap
 #==================================================================================================================
 
 #DEFINE: nomThSiR1 0.058 # nominal SiR1 thickness (dead layer needs to be included in this)
-DEFINE: nomThSiR1 0.053 # calidated SiR1 thickness (dead layer needs to be included in this)
+DEFINE: nomThSiR1 0.053 # validated SiR1 thickness (dead layer needs to be included in this)
 DEFINE: thDLSiR1 thDLSi
 #DEFINE: thDLSiR1 thDLSi+0.005
 DEFINE: thSiR1  nomThSiR1-thDLSi-thDLSiR1-2*thDLAl # active SiR1 thickness
