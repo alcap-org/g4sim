@@ -19,13 +19,13 @@
 #	EkinSpread:  0.175
 #	Ekin:	     1.40
 #	EkinSpread:  0.20
-#	Ekin:	     1.37
-#	EkinSpread:  0.19
+	Ekin:	     1.37
+	EkinSpread:  0.19
 
 #	Ekin:	     1.34
 #	EkinSpread:  0.19
-	Ekin:	     1.19
-	EkinSpread:  0.19
+#	Ekin:	     1.19
+#	EkinSpread:  0.19
 
 
 #Default Position     x    y   z
