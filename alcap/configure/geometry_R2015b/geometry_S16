@@ -3,11 +3,11 @@
 	checkoverlap
 #ServiceName        ServiceType         FileName
 	World           Simple              world_AlCap
-	PSI		Simple		    geometry_R2015b/chamber
+	PSI		Simple		    geometry_R2015b/chamber_air
 	PSI		Simple		    geometry_R2015b/germanium_detector
 	Target		Simple		    geometry_R2015b/left-package_S16
 	PSI		Simple		    geometry_R2015b/right-package_P2
-	PSI		Simple		    geometry_R2015b/SiT
+	PSI		Simple		    geometry_R2015b/SiT_w-monitor
 	PSI		Simple		    geometry_R2015b/back_wall
 	PSI		Simple		    geometry_R2015b/collimator
 	PSI		Simple		    geometry_R2015b/muScA

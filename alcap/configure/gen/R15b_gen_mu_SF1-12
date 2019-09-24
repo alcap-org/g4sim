@@ -9,16 +9,27 @@
 #	           Theta    Phi
 #	           deg      deg
 	Direction: 0      0
-	ThetaSpread: 15
+	ThetaSpread: 10
 	PhiSpread: 360
+
 #Default Momentum Amplitude
-	Ekin:	     1.43
-	EkinSpread:  0.20
+#	             MeV
+	Ekin:	     3.95
+	EkinSpread:  0.23
+
+
 
 #Default Position     x    y   z
 #	              mm   mm  mm
-	Position:     2  3  -100      	  
-	PosSpread:    5  10  0
+# At Target (data)
+#	Position:     6.31  2.40  -125
+#	PosSpread:    15.66 23.36  0
+#	Position:     2  3  -25
+#	PosSpread:    5  10  0
+#	PosLimit:     17.5
+#	Position:     2  30  -125
+	Position:     -3  20 -180
+	PosSpread:    20  20  0
 
 	RandMode:       none #(none/root)
 	EnergyMode:	gRand

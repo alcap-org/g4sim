@@ -7,15 +7,17 @@
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-#	Direction: 0        180
-	ThetaSpread:        360
+	Direction:  90       180
+	ThetaSpread:        180
 	PhiSpread:          360
 #Default Momentum Amplitude
 #	             MeV
 #	MomAmp:      10
 #	MomSpread:   10
+# Flat: 0 -- 25 MeV
 	Ekin:      12.5
 	EkinSpread:   25
+
 #Default Position     x    y   z
 #	                  mm   mm  mm
 #	Position:         0  0  10
@@ -33,11 +35,11 @@
 #Default Time
 #	         ns
 	Time:    0
+#
 # Position histogram and file
 #
-	PMHFN:       R15b_output_Geom-S14_muon-stop-positions.root
+	PMHFN:       R15b_Geom-P5_muon-stop-positions.root
 	PMHHN:       hGlobalStoppingPositions
-
 
 #Scale Momentum  Spread
 #1.03  28.84     0.368

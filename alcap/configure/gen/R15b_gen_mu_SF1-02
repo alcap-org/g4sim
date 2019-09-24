@@ -9,41 +9,31 @@
 #	           Theta    Phi
 #	           deg      deg
 	Direction: 0      0
-	ThetaSpread: 15
+	ThetaSpread: 10
 	PhiSpread: 360
 
-#	ThetaSpread: 1.89
-#	PhiSpread: 6.27
-# Don't know where I got these numbers
-#	ThetaSpread:        6.78
-#	PhiSpread:	    73.8
 #Default Momentum Amplitude
 #	             MeV
-#	MomAmp:      15.9
-# 3% FWHM mom-bite
-#	MomSpread:   0.203
-	Ekin:	     1.43
-	EkinSpread:  0.22
+# SF = 1.02 (data: Ekin=1.23, EkinSpread=0.17)
+#	Ekin:	     1.55
+#	EkinSpread:  0.175
+#	Ekin:	     1.40
+#	EkinSpread:  0.20
+	Ekin:	     1.37
+	EkinSpread:  0.19
 
-# dataRand
-#	Ekin:	     1.5
-#	EkinSpread:  0.15
-#	EkinSpread2: 0.1
+#	Ekin:	     1.34
+#	EkinSpread:  0.19
+#	Ekin:	     1.19
+#	EkinSpread:  0.19
 
 
 #Default Position     x    y   z
 #	              mm   mm  mm
-# At Target
-#	Position:     6.31  2.40  -125
-#	PosSpread:    15.66 23.36  0
-	Position:     2  3  -100      	  
-	PosSpread:    5  10  0
-#	PosLimit:     17.5
+	Position:     -3  20 -180
+	PosSpread:    20  20  0
 
 	RandMode:       none #(none/root)
-#	EnergyMode:     histo #(root/histo/none)
-#			EMHFN: muon_beam_energies.root
-#			EMHHN: hTotalMuonBeamEnergy_9740
 	EnergyMode:	gRand
 	PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
 	DirectionMode:  none #(none/uniform/histo)

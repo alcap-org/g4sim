@@ -8,7 +8,8 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_default
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/R15b_gen_proton_target
+/g4sim/gun/ResetGen               gen/R15b_gen_proton-flat_Si16b
+#/g4sim/gun/ResetGen               gen/R15b_gen_proton-sw_Si16b
 
 # Set Geo
 /g4sim/det/ReloadGeo              geometry_R2015b/geometry_P5

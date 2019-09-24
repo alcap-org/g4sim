@@ -37,9 +37,9 @@ DEFINE: rotToSiLPhi 90
 DEFINE: rotToSiLThe -90
 DEFINE: rotToSiLPsi 0
 
-DEFINE: rotPhi rotToSiLPhi
-DEFINE: rotThe rotToSiLThe
-DEFINE: rotPsi rotToSiLPsi
+DEFINE: rotPhi rotToSiRPhi
+DEFINE: rotThe rotToSiRThe
+DEFINE: rotPsi rotToSiRPsi
 
 #Tubs info
 #	Type RMin RMax  Length Start Span Name              RepNo MotVolume Material  SDName    posX posY  posZ   Ephi   Ethe   Epsi  

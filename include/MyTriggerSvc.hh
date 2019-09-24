@@ -9,6 +9,7 @@
 #define MyTriggerSvc_h 1
 
 #include "myglobals.hh"
+#include <vector>
 
 class G4Event;
 class MyDetectorManager;
@@ -47,7 +48,7 @@ class MyTriggerSvc
 		MonitorSD* myMonitorSD2;
 		McTruthSvc* myMcTruthSvc;
 		KillerSD* myKillerSD;
-
+                std::vector<std::string> requiredVols;
 };
 
 #endif

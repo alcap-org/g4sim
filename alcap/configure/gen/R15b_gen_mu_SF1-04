@@ -3,26 +3,30 @@
 #General setting  
 	Type:      simple #(simple/stable/ion)
 	Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
+#	Particle:  geantino
 
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-	Direction: 0        0
-	ThetaSpread:        15
-	PhiSpread:	    360
+	Direction: 0      0
+	ThetaSpread: 10
+	PhiSpread: 360
+
 #Default Momentum Amplitude
 #	             MeV
-	Ekin:	     3.94
-	EkinSpread:  0.26
+# SF = 1.04 (data: Ekin=??, EkinSpread=0.??)
+	Ekin:	     1.56
+	EkinSpread:  0.21
+
 
 
 #Default Position     x    y   z
 #	              mm   mm  mm
-	Position:     2    3   -100
-	PosSpread:    5    10   0
+	Position:     -3  20  -180
+	PosSpread:    20  20  0
 
 	RandMode:       none #(none/root)
-	EnergyMode:     gRand #(root/histo/none)
+	EnergyMode:	gRand
 	PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
 	DirectionMode:  none #(none/uniform/histo)
 	ThetaMode:      gRand #(none/gRand/uRand)
