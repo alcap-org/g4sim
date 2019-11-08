@@ -1,0 +1,34 @@
+PhysicsList: QGSP_BERT
+
+#General setting  
+	Type:      simple #(simple/stable/ion)
+	Particle:  proton #(e+/e-/deuteron/chargedgeantino/gamma/...)
+
+#Default Direction
+#	           Theta    Phi
+#	           deg      deg
+	Direction: 90        180
+	ThetaSpread:        180
+	PhiSpread:          360
+#Default Momentum Amplitude
+#	             MeV
+	Ekin:        10
+	EkinSpread:  20
+
+	RandMode:       none #(none/root)
+	EnergyMode:     uRand #(root/histo/none)
+	PositionMode:   localhisto #(uniform/root/none/gRand/uRand/turtle/muPC)
+	PMHFN:          momscan/mudist/mudist_al50_mom25.6MeV.root
+	PMHHN:          mustopdist
+	DirectionMode:  none #(none/histo/turtle/muPC)
+	ThetaMode:      uRand #(none/gRand/uRand)
+	PhiMode:        uRand #(none/gRand/uRand)
+	TimeMode:       none #(none/root)
+	pidMode:        none #(none/root)
+#Default Time
+#	         ns
+	Time:    0
+#
+# Position histogram and file
+#
+

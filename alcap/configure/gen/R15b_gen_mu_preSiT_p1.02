@@ -13,9 +13,10 @@ Direction:		0        0
 ThetaSpread:	10
 PhiSpread:		360
 
-# Momentum MeV/c
-MomAmp:		17.07
-MomSpread:	1.184
+# Slide 3 for p=1.02
+# Energy MeV
+Ekin:		1.37
+EkinSpread:	0.19
 
 # Position	x	y	z
 #			mm	mm	mm
