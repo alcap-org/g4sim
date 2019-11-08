@@ -86,27 +86,41 @@ void MyTriggerSvc::SetMyTrigger( G4String filename ){
 			}
 		}
 		else if ( n_TRIGGER_section_symbol == 1 ){
-			int para;
-			buf_card>>para;
 			if ( name == TRIGGERSECTIONNAME ){
 				n_TRIGGER_section_symbol++;
 			}
 			else if ( name == "minM_Hits" ){
-				minM_Hits = para;
+			  int para;
+			  buf_card>>para;
+			  minM_Hits = para;
 			}
 			else if ( name == "minV_Hits" ){
-				minV_Hits = para;
+			  int para;
+			  buf_card>>para;
+			  minV_Hits = para;
 			}
 			else if ( name == "minEleMom" ){
-				std::string unit;
-				buf_card>>unit;
-				minEleMom = para*MyString2Anything::get_U(unit);
+			  int para;
+			  buf_card>>para;
+			  std::string unit;
+			  buf_card>>unit;
+			  minEleMom = para*MyString2Anything::get_U(unit);
 			}
 			else if ( name == "minAntipNum" ){
-				minAntipNum = para;
+			  int para;
+			  buf_card>>para;
+			  minAntipNum = para;
 			}
 			else if ( name == "minTracks" ){
-				minTracks = para;
+			  int para;
+			  buf_card>>para;
+			  minTracks = para;
+			}
+			else if ( name == "ReqdVol") {
+			  std::string reqdVol = "";
+			  buf_card>>reqdVol;
+			  std::cout << "AE: pushing back " << reqdVol << std::endl;
+			  requiredVols.push_back(reqdVol);
 			}
 			else{
 				std::cout<<"In MyTriggerSvc::SetMyTrigger, unknown name: "<<name<<" in file "<<filename<<std::endl;
@@ -197,6 +211,25 @@ bool MyTriggerSvc::TriggerIt( const G4Event* evt ){
 		int nTracks = myMcTruthSvc->get_nTracks();
 		if (nTracks<minTracks) return false;
 	}
+
+	if ( requiredVols.size()>0 ) {
+	  if (myMonitorSD) {
+	    for (int i_hit = 0; i_hit < myMonitorSD->Get_nHits(); ++i_hit) {
+	      std::string hitvol = myMonitorSD->Get_m_volName(i_hit);
+	      //	      std::cout << "Checking " << hitvol << std::endl;
+	      for (size_t i_vol = 0; i_vol < requiredVols.size(); ++i_vol) {
+		std::string i_reqdVol = requiredVols.at(i_vol);
+		//		std::cout << "\tagainst " << i_reqdVol << std::endl;
+		if (hitvol == i_reqdVol) {
+		  //		  std::cout << "A match!" << std::endl;
+		  //		  std::cout << hitvol << " " << i_reqdVol << " -- A match!" << std::endl;
+		  return true;
+		}
+	      }
+	    }
+	  }
+	  return false; // if the volume has not been hit
+	}
 	//std::cout<<"Passed Cut!"<<std::endl;
 
 	return true;
@@ -208,6 +241,7 @@ void MyTriggerSvc::ReSet(){
 	minEleMom = -1*MeV;
 	minAntipNum = -1;
 	minTracks = -1;
+	requiredVols.clear();
 }
 
 void MyTriggerSvc::ShowOutCard(){

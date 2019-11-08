@@ -48,6 +48,11 @@
 #include "MyStepLimiter.hh"
 #include "QGSP_BERT.hh"
 #include "QGSP_BERT_HP.hh"
+#include "QGSP_BIC.hh"
+#include "G4EmStandardPhysics_option3.hh"
+#include "G4EmStandardPhysics_option4.hh"
+#include "G4EmLivermorePhysics.hh"
+#include "G4EmPenelopePhysics.hh"
 //#include "myQGSP_BERT_HP.hh"
 
 #ifdef G4VIS_USE
@@ -110,6 +115,22 @@ int main(int argc,char** argv)
 	}
 	else if (PhysicsListName=="PhysicsList"){
 		physics = new PhysicsList;
+	}
+	else if (PhysicsListName=="QGSP_BIC_EMZ") {
+	  physics = new QGSP_BIC;
+	  physics->ReplacePhysics(new G4EmStandardPhysics_option4());
+	}
+	else if (PhysicsListName=="QGSP_BIC_EMY") {
+	  physics = new QGSP_BIC;
+	  physics->ReplacePhysics(new G4EmStandardPhysics_option3());
+	}
+	else if (PhysicsListName=="QGSP_BIC_LIV") {
+	  physics = new QGSP_BIC;
+	  physics->ReplacePhysics(new G4EmLivermorePhysics());
+	}
+	else if (PhysicsListName=="QGSP_BIC_PEN") {
+	  physics = new QGSP_BIC;
+	  physics->ReplacePhysics(new G4EmPenelopePhysics());
 	}
 	else{
 		physics = new QGSP_BERT;

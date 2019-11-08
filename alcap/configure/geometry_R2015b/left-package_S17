@@ -13,14 +13,14 @@ checkoverlap
 #       - 1500 microns thick (nominal elog:R2015b/22)
 #	- 50 x 50 mm active area (elog:R2015b/22))
 #
-# For P5 only SiL1 is in the centre, SiL3 is in it's correct position
-# for the time being jsut turn off the SiL3 detector
+# S17 is for a vertical beam profile
 #==================================================================================================================
 DEFINE: thDLSi 0.0005 # thickness of the Si dead layer
 DEFINE: thDLAl 0.0005 # thickness of the Al dead layer
 
 DEFINE: nomThSiL1 0.052 # nominal SiL1 thickness (dead layer needs to be included in this)
-DEFINE: thSiL1  nomThSiL1 # -2*thDLSi-2*thDLAl # active SiL1 thickness
+DEFINE: thDLSiL1 thDLSi
+DEFINE: thSiL1  nomThSiL1-thDLSi-thDLSiL1-2*thDLAl # active SiL1 thickness
 DEFINE: wSiL1   50 #.5  # SiL1 width
 DEFINE: hSiL1   50 #.5  # SiL1 height
 DEFINE: nStrips 16    # SiL1 channels
@@ -30,12 +30,16 @@ DEFINE: hStrip  hSiL1         # height of 1 strip
 DEFINE: thStrip thSiL1	      # thickness of 1 strip
 
 DEFINE: nomThSiL2  1.535 # SiL2 thickness
-DEFINE: thSiL2  nomThSiL2 #-2*thDLSi # SiL2 thickness
+DEFINE: thDLSiL2 thDLSiL2
+DEFINE: thSiL2  nomThSiL2-thDLSi-thDLSiL2-2&thDLAl # SiL2 thickness
 DEFINE: wSiL2   50  # SiL2 width
 DEFINE: hSiL2   50  # SiL2 height
 
-DEFINE: nomThSiL3  1.500 # SiL3 thickness
-DEFINE: thSiL3  nomThSiL3 #-2*thDLSi # SiL3 thickness
+#DEFINE: nomThSiL3  1.500 # SiL3 thickness
+#DEFINE: nomThSiL3  1.475 # SiL3 thickness
+DEFINE: nomThSiL3  1.300 # SiL3 thickness
+DEFINE: thDLSiL3 thDLSi
+DEFINE: thSiL3  nomThSiL3-thDLSi-thDLSiL3-2*thDLAl # SiL3 thickness
 DEFINE: wSiL3   50  # SiL3 width
 DEFINE: hSiL3   50  # SiL3 height
 
@@ -43,7 +47,7 @@ DEFINE: LBlockGaps 1 # 1 mm between silicon layers (?)
 
 DEFINE: wLDetBlock wSiL1+1 # the width of the left detector block mother volume
 DEFINE: hLDetBlock hSiL1+1 # the height of the left detector block mother volume
-DEFINE: thLDetBlock nomThSiL1+nomThSiL3+nomThSiL2+2*LBlockGaps+2*3*thDLAl # the width of the left detector block mother volume
+DEFINE: thLDetBlock nomThSiL1+nomThSiL3+nomThSiL2+2*LBlockGaps+2*3*thDLSi+2*3*thDLAl+1 # the width of the left detector block mother volume
 
 DEFINE: zSiL1DLAl1 -thLDetBlock/2+thDLAl/2
 DEFINE: zSiL1DLSi1 zSiL1DLAl1+thDLAl/2+thDLSi/2
@@ -55,8 +59,8 @@ DEFINE: xStrip xSiL1-(nStrips/2)*wStrip+0.5*wStrip+(x*wStrip)
 DEFINE: yStrip ySiL1
 DEFINE: zStrip zSiL1
 
-DEFINE: zSiL1DLSi2 zSiL1+thSiL1/2+thDLSi/2
-DEFINE: zSiL1DLAl2 zSiL1DLSi2+thDLSi/2+thDLAl/2
+DEFINE: zSiL1DLSi2 zSiL1+thSiL1/2+thDLSiL1/2
+DEFINE: zSiL1DLAl2 zSiL1DLSi2+thDLSiL1/2+thDLAl/2
 
 DEFINE: zSiL3DLAl1 zSiL1DLSi2+thDLAl/2+LBlockGaps+thDLAl/2
 DEFINE: zSiL3DLSi1 zSiL3DLAl1+thDLAl/2+thDLSi/2
@@ -65,8 +69,8 @@ DEFINE: xSiL3 0
 DEFINE: ySiL3 0
 DEFINE: zSiL3 zSiL3DLSi1+thDLSi/2+thSiL3/2
 
-DEFINE: zSiL3DLSi2 zSiL3+thSiL3/2+thDLSi/2
-DEFINE: zSiL3DLAl2 zSiL3DLSi2+thDLSi/2+thDLAl/2
+DEFINE: zSiL3DLSi2 zSiL3+thSiL3/2+thDLSiL3/2
+DEFINE: zSiL3DLAl2 zSiL3DLSi2+thDLSiL3/2+thDLAl/2
 
 DEFINE: zSiL2DLAl1 zSiL3DLSi2+thDLAl/2+LBlockGaps+thDLAl/2
 DEFINE: zSiL2DLSi1 zSiL2DLAl1+thDLAl/2+thDLSi/2
@@ -75,8 +79,8 @@ DEFINE: xSiL2 0
 DEFINE: ySiL2 0
 DEFINE: zSiL2 zSiL2DLSi1+thDLSi/2+thSiL2/2
 
-DEFINE: zSiL2DLSi2 zSiL2+thSiL2/2+thDLSi/2
-DEFINE: zSiL2DLAl2 zSiL2DLSi2+thDLSi/2+thDLAl/2
+DEFINE: zSiL2DLSi2 zSiL2+thSiL2/2+thDLSiL2/2
+DEFINE: zSiL2DLAl2 zSiL2DLSi2+thDLSiL2/2+thDLAl/2
 
 
 DEFINE: xLDetBlock 0 # now the target
@@ -93,19 +97,19 @@ DEFINE: zLDetBlock Z0 # distance above floor
 	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_1 1 LeftDetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl1 0 0 0 
 	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_1 1 LeftDetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi1 0 0 0 
 	B    wStrip hStrip thStrip SiL1    16    LeftDetBlock Silicon  M/MonitorSD     xStrip yStrip zStrip  0    0   0 
-	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_2 1 LeftDetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi2 0 0 0 
+	B    wSiL1  hSiL1  thDLSiL1  SiL1DeadSi_2 1 LeftDetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi2 0 0 0 
 	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_2 1 LeftDetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl2 0 0 0 
 
 #	B    wSiL3  hSiL3  thDLAl  SiL3DeadAl_1 1 LeftDetBlock Aluminium none          xSiL3  ySiL3 zSiL3DLAl1 0 0 0 
 #	B    wSiL3  hSiL3  thDLSi  SiL3DeadSi_1 1 LeftDetBlock Silicon none          xSiL3  ySiL3 zSiL3DLSi1 0 0 0 
 #	B    wSiL3  hSiL3  thSiL3  SiL3    1    LeftDetBlock Silicon  M/MonitorSD        xSiL3  ySiL3  zSiL3   0    0   0 
-#	B    wSiL3  hSiL3  thDLSi  SiL3DeadSi_2 1 LeftDetBlock Silicon none          xSiL3  ySiL3 zSiL3DLSi2 0 0 0 
+#	B    wSiL3  hSiL3  thDLSiL3  SiL3DeadSi_2 1 LeftDetBlock Silicon none          xSiL3  ySiL3 zSiL3DLSi2 0 0 0 
 #	B    wSiL3  hSiL3  thDLAl  SiL3DeadAl_2 1 LeftDetBlock Aluminium none          xSiL3  ySiL3 zSiL3DLAl2 0 0 0 
 
 #	B    wSiL2  hSiL2  thDLAl  SiL2DeadAl_1 1 LeftDetBlock Aluminium none          xSiL2  ySiL2 zSiL2DLAl1 0 0 0 
 #	B    wSiL2  hSiL2  thDLSi  SiL2DeadSi_1 1 LeftDetBlock Silicon none          xSiL2  ySiL2 zSiL2DLSi1 0 0 0 
 #	B    wSiL2  hSiL2  thSiL2  SiL2    1    LeftDetBlock Silicon  M/MonitorSD        xSiL2  ySiL2  zSiL2   0    0   0 
-#	B    wSiL2  hSiL2  thDLSi  SiL2DeadSi_2 1 LeftDetBlock Silicon none          xSiL2  ySiL2 zSiL2DLSi2 0 0 0 
+#	B    wSiL2  hSiL2  thDLSiL2  SiL2DeadSi_2 1 LeftDetBlock Silicon none          xSiL2  ySiL2 zSiL2DLSi2 0 0 0 
 #	B    wSiL2  hSiL2  thDLAl  SiL2DeadAl_2 1 LeftDetBlock Aluminium none          xSiL2  ySiL2 zSiL2DLAl2 0 0 0 
 
 

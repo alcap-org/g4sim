@@ -643,8 +643,11 @@ void PrimaryGeneratorAction::SetRandomEnergy(){
 			dE=G4RandExponential::shoot(EkinSpread);
 		}
 		//std::cout << "Ekin: " << Ekin << " dE: " << dE << " EkinSpread: " << EkinSpread << std::endl;
-
-		particleGun->SetParticleEnergy(Ekin+dE);
+		G4double finalE = Ekin+dE;
+		if (finalE<0) {
+		  finalE = 0;
+		}
+		particleGun->SetParticleEnergy(finalE);
 	}
 	else if (EnergyType == 0 ){
 		G4double dMom=0;

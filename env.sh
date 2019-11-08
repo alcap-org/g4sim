@@ -9,8 +9,7 @@ fi
 
 source geant4-install/bin/geant4.sh
 source geant4-install/share/Geant4-*/geant4make/geant4make.sh
-source ../AlcapDAQ/root-install/bin/thisroot.sh
-
+#source ../AlcapDAQ/root-install/bin/thisroot.sh
 
 export ALCAPWORKROOT=$MYG4SIMROOT/alcap
 
@@ -20,7 +19,7 @@ export PHYSICSLIST=QGSP_BERT           # QGSP_BERT;QGSP_BERT_HP;QGSP_BERT_noRadi
 export MATERIALLISTROOT=material_list
 export MAGFIELDCARDROOT=mag/MagField_none
 export OUTCARDROOT=output/output_default
-export GEOCARDROOT=geometry_R2013/archive/geometry_1217
+export GEOCARDROOT=geometry_R2015b/geometry_P2
 export GENFILEROOT=gen/gen_default
 
 #for directories

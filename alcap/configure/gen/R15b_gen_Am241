@@ -7,8 +7,8 @@
 #Default Direction
 #	           Theta    Phi
 #	           deg      deg
-	Direction: 0      180
-	ThetaSpread: 360
+	Direction: 90      180
+	ThetaSpread: 180
 	PhiSpread: 360
 #Default Momentum Amplitude
 #	             MeV

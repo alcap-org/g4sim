@@ -5,9 +5,7 @@
 	World           Simple              world_AlCap
 	PSI		Simple		    geometry_R2015b/chamber
 	PSI		Simple		    geometry_R2015b/germanium_detector
-	Left		Simple		    geometry_R2015b/left-package_S14
+	Left		Simple		    geometry_R2015b/left-package_P1
 	PSI		Simple		    geometry_R2015b/right-package_P2
-	PSI		Simple		    geometry_R2015b/SiT_w-monitor
-	PSI		Simple		    geometry_R2015b/back_wall
-	PSI		Simple		    geometry_R2015b/collimator
-	PSI		Simple		    geometry_R2015b/muScA
+	PSI		Simple		    geometry_R2015b/SiT_C1
+#	PSI		Simple		    geometry_R2015b/muScA

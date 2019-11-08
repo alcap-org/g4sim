@@ -148,7 +148,12 @@ TRIGGERSECTION
 	minCdcCellHits    -1           // minimum required CDCCell nHits. Would be set invalid if minCdcCellHits = -1
 	minTriggerHits    -1           // minimum required Trigger nHits. Would be set invalid if minTriggerHits = -1
 	minV_Hits         -1           // minimum required V_nHits. Would be set invalid if = -1
-	minM_Hits         -1            // minimum required M_nHits. Would be set invalid if = -1
+	minM_Hits         0            // minimum required M_nHits. Would be set invalid if = -1
 	minEleMom         -1  MeV      // minimum required Electron momentum. Would be set invalid if minEleMom = -1 MeV
 	minAntipNum       -1           // minimum required Anti-Proton number. Would be set invalid if minAntipNum = -1
+#	ReqdVol		  SiR3 	       // volume that must be hit in this event (need to set minM_Hits to 0 to get it to work)
+#	ReqdVol		  SiR2 	       // volume that must be hit in this event (need to set minM_Hits to 0 to get it to work)
+#	ReqdVol		  SiR1 	       // volume that must be hit in this event (need to set minM_Hits to 0 to get it to work)
+#	ReqdVol		  SiL3 	       // volume that must be hit in this event (need to set minM_Hits to 0 to get it to work)
+#	ReqdVol		  SiL1 	       // volume that must be hit in this event (need to set minM_Hits to 0 to get it to work)
 TRIGGERSECTION
