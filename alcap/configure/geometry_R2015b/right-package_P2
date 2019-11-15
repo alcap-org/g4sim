@@ -22,8 +22,6 @@ DEFINE: nomThSiR1 0.053 # validated SiR1 thickness (dead layer needs to be inclu
 DEFINE: thDLSiR1 thDLSi
 #DEFINE: thDLSiR1 thDLSi+0.005
 DEFINE: thSiR1  nomThSiR1-thDLSi-thDLSiR1-2*thDLAl # active SiR1 thickness
-DEFINE: nomThSiR1 0.053 # nominal SiR1 thickness (dead layer needs to be included in this)
-DEFINE: thSiR1  nomThSiR1 # -2*thDLSi # active SiR1 thickness
 DEFINE: wSiR1   50  # SiR1 width
 DEFINE: hSiR1   50  # SiR1 height
 DEFINE: nR1Quads 4    # SiR1 channels
@@ -46,11 +44,13 @@ DEFINE: thSiR3  nomThSiR3-2*thDLAl-thDLSi-thDLSiR3 # SiR3 thickness
 DEFINE: wSiR3   50  # SiR3 width
 DEFINE: hSiR3   50  # SiR3 height
 
-DEFINE: RBlockGaps 1 # 1 mm between silicon layers (?)
+#DEFINE: RBlockGaps 1 # 1 mm between silicon layers (?)
+DEFINE: R12BlockGap 6 # elog:Analysis-R2015b/360
+DEFINE: R23BlockGap 8 # elog:Analysis-R2015b/360
 
 DEFINE: wRDetBlock wSiR1+1 # the width of the right detector block mother volume
 DEFINE: hRDetBlock hSiR1+1 # the height of the right detector block mother volume
-DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+2*RBlockGaps+2*3*thDLSi+2*3*thDLAl+1 # the width of the left detector block mother volume
+DEFINE: thRDetBlock nomThSiR1+nomThSiR3+nomThSiR2+R12BlockGap+R23BlockGap+2*3*thDLSi+2*3*thDLAl+1 # the width of the left detector block mother volume
 
 DEFINE: zSiR1DLAl1 -thRDetBlock/2+thDLAl/2
 DEFINE: zSiR1DLSi1 zSiR1DLAl1+thDLAl/2+thDLSi/2
@@ -65,7 +65,7 @@ DEFINE: zR1Quad zSiR1
 DEFINE: zSiR1DLSi2 zSiR1+thSiR1/2+thDLSiR1/2
 DEFINE: zSiR1DLAl2 zSiR1DLSi2+thDLSiR1/2+thDLAl/2
 
-DEFINE: zSiR2DLAl1 zSiR1DLSi2+thDLAl/2+RBlockGaps+thDLAl/2
+DEFINE: zSiR2DLAl1 zSiR1DLSi2+thDLAl/2+R12BlockGap+thDLAl/2
 DEFINE: zSiR2DLSi1 zSiR2DLAl1+thDLAl/2+thDLSi/2
 
 DEFINE: xSiR2 0
@@ -75,7 +75,7 @@ DEFINE: zSiR2 zSiR2DLSi1+thDLSi/2+thSiR2/2
 DEFINE: zSiR2DLSi2 zSiR2+thSiR2/2+thDLSiR2/2
 DEFINE: zSiR2DLAl2 zSiR2DLSi2+thDLSiR2/2+thDLAl/2
 
-DEFINE: zSiR3DLAl1 zSiR2DLSi2+thDLAl/2+RBlockGaps+thDLAl/2
+DEFINE: zSiR3DLAl1 zSiR2DLSi2+thDLAl/2+R23BlockGap+thDLAl/2
 DEFINE: zSiR3DLSi1 zSiR3DLAl1+thDLAl/2+thDLSi/2
 
 DEFINE: xSiR3 0
