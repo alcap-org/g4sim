@@ -9,8 +9,9 @@ mkdir -p macros/parallel/
 macro=$(basename $1)
 for i in $(seq $3); do
 	cp $1 macros/parallel/$macro.$i
-	rnd=$(od -vAn -N4 -td4 < /dev/urandom)
-	sed -i "s/setSeeds .*/setSeeds $rnd/" macros/parallel/$macro.$i
+	rnd1=$(od -vAn -N4 -td4 < /dev/urandom)
+	rnd2=$(od -vAn -N4 -td4 < /dev/urandom)
+	sed -i "s/setSeeds .*/setSeeds $rnd1 $rnd2/" macros/parallel/$macro.$i
 done
 
 mkdir -p work

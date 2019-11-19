@@ -8,10 +8,10 @@
 /g4sim/myAnalysisSvc/set_out_card output/output_Al50
 
 # Set Gen
-/g4sim/gun/ResetGen               gen/R15b_gen_mu_preSiT
+/g4sim/gun/ResetGen               gen/R15b_gen_mu_preVacWin_p1.03
 
 # Set Geo
-/g4sim/det/ReloadGeo              geometry_R2015b/geometry_P3_al100
+/g4sim/det/ReloadGeo              geometry_R2015b/geometry_P2
 
 #	For this run
 #/tracking/verbose 2
