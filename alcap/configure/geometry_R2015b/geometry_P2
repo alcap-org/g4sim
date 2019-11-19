@@ -7,7 +7,7 @@
 	Ge				Simple		geometry_R2015b/germanium_detector
 	SiL				Simple		geometry_R2015b/left-package_P2
 	SiR				Simple		geometry_R2015b/right-package_P2
-	SiT				Simple		geometry_R2015b/SiT
+	SiT				Simple		geometry_R2015b/SiT_w-monitor
 	Target			Simple		geometry_R2015b/Al100
 	BackShielding	Simple		geometry_R2015b/back_wall
 	Coll			Simple		geometry_R2015b/collimator
