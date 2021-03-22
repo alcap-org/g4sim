@@ -14,9 +14,9 @@
 #	             MeV
 #	MomAmp:      10
 #	MomSpread:   10
-# Flat: 0 -- 25 MeV
-	Ekin:      12.5
-	EkinSpread:   25
+# Flat: 0 -- 30 MeV
+	Ekin:      15
+	EkinSpread:   30
 
 #Default Position     x    y   z
 #	                  mm   mm  mm
@@ -38,7 +38,10 @@
 #
 # Position histogram and file
 #
-	PMHFN:       R15b_Geom-P5_muon-stop-positions.root
+	PMHFN:       R15b_Geom-P5_muon-stop-positions_new.root
+#	PMHFN:       R15b_Geom-P5-higherE_muon-stop-positions.root
+#	PMHFN:       R15b_Geom-P5-lowerE_muon-stop-positions.root
+#	PMHFN:       R15b_Geom-P5_muon-stop-positions_retune.root
 	PMHHN:       hGlobalStoppingPositions
 
 #Scale Momentum  Spread

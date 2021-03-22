@@ -9,6 +9,7 @@
 
 # Set Gen
 /g4sim/gun/ResetGen               gen/R15b_gen_deuteron-flat_SiL3
+#/g4sim/gun/ResetGen               gen/R15b_gen_deuteron-sw_SiL3
 
 # Set Geo
 /g4sim/det/ReloadGeo              geometry_R2015b/geometry_P1

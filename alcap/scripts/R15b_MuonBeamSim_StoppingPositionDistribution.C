@@ -19,7 +19,10 @@ void R15b_MuonBeamSim_StoppingPositionDistribution() {
   //  std::string filename = "output/R15b_1M_Geom-P5_muon-beam-sim_Ekin-0-84MeV_EkinSpread-0-18MeV.root";
   //  std::string filename = "output/R15b_500k_Geom-P4_muon-beam-sim.root";
   //  std::string filename = "output/R15b_200k_Geom-S14_muon-beam-sim_SF1-05.root";
-  std::string filename = "output/raw_g4sim.root";
+  //  std::string filename = "output/raw_g4sim.root";
+  //  std::string filename = "output/R15b_200k_Geom-P1_muon-beam-sim_SF1-12-nominal.root";
+  //  std::string filename = "output/R15b_200k_Geom-P1_muon-beam-sim_SF1-12-lowerE.root";
+  //  std::string filename = "output/R15b_200k_Geom-P1_muon-beam-sim_SF1-12-higherE.root";
   
   //  std::string filename = "output/R15b_100k_Geom-S17_muon-beam-sim.root"; // volName = SiL1
   //  std::string outfilename ="data/R15b_output_Geom-S17_muon-stop-positions.root";
@@ -31,7 +34,29 @@ void R15b_MuonBeamSim_StoppingPositionDistribution() {
   //  std::string outfilename ="data/R15b_output_Geom-P5_check.root";
   //  std::string outfilename ="data/R15b_output_Geom-P4_muon-stop-positions.root";
   //  std::string outfilename ="data/R15b_output_Geom-P4_muon-stop-positions.root";
-  std::string outfilename = "data/dump.root";
+
+  //  std::string filename = "output/R15b_2M_Geom-S14_muon-beam-sim_SF1-02-midHighE.root";
+  //  std::string outfilename = "data/R15b_Geom-P5-midHighE_muon-stop-positions.root";
+  //  std::string filename = "output/R15b_2M_Geom-S14_muon-beam-sim_SF1-02-midLowE.root";
+  //  std::string outfilename = "data/R15b_Geom-P5-midLowE_muon-stop-positions.root";
+
+  //  std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02_new.root";
+  //  std::string outfilename = "data/R15b_Geom-P5_muon-stop-positions_new.root";
+  //  std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02-lowerE_new.root";
+  //  std::string outfilename = "data/R15b_Geom-P5-lowerE_muon-stop-positions_new.root";
+  // std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02-higherE_new.root";
+  // std::string outfilename = "data/R15b_Geom-P5-higherE_muon-stop-positions_new.root";
+  // std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02-midLowE_new.root";
+  // std::string outfilename = "data/R15b_Geom-P5-midLowE_muon-stop-positions_new.root";
+  // std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02-midHighE_new.root";
+  // std::string outfilename = "data/R15b_Geom-P5-midHighE_muon-stop-positions_new.root";
+  // std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02-lowestE_new.root";
+  // std::string outfilename = "data/R15b_Geom-P5-lowestE_muon-stop-positions_new.root";
+  std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02-highestE_new.root";
+  std::string outfilename = "data/R15b_Geom-P5-highestE_muon-stop-positions_new.root";
+
+
+
 
   //  std::string tgtVolName = "Target";
   std::string tgtVolName = "SiL1";
@@ -114,7 +139,7 @@ void R15b_MuonBeamSim_StoppingPositionDistribution() {
   }
 
   //    tree->Draw("M_Oz:M_Oy:M_Ox>>hGlobalStoppingPositions", "M_particleName==\"mu-\" && M_volName==\"Target\" && M_stopped==1", "", 10000);
-
+  std::cout << "NStops = " << hLocalStoppingPositions->GetEntries() << std::endl;
   TFile* out_file = new TFile(outfilename.c_str(), "RECREATE");
   hLocalStoppingPositions->Write();
   hGlobalStoppingPositions->Write();

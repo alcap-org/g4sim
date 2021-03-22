@@ -10,7 +10,8 @@ DEFINE: thColP		6 # Thickness of Collimator Plastic
 DEFINE: pRColP          RI-80 # in-chamber collimator is 8.0 cm from upstream inner chamber wall (elog:385)
 DEFINE: XColH           34 # Dx of plastic Collimator Hole
 DEFINE: YColH           50 # Dy of plastic Collimator Hole
-DEFINE: XHOffset    2.3 # x offset of collimator hole
+#DEFINE: XHOffset    2.3 # x offset of collimator hole
+DEFINE: XHOffset    0 # x offset of collimator hole
 
 DEFINE: rMaxColL        RI-pRColP-thColP/2-0.5 # maximum radius of the lead collimator (from the edge of the chamber)
 DEFINE: rMinColL        rMaxColL-thColL # minimum radius of the lead collimator

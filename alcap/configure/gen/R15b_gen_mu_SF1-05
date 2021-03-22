@@ -9,7 +9,7 @@
 #	           Theta    Phi
 #	           deg      deg
 	Direction: 0      0
-	ThetaSpread: 10
+	ThetaSpread: 5
 	PhiSpread: 360
 
 #Default Momentum Amplitude
@@ -33,8 +33,8 @@
 #	PosSpread:    5  10  0
 #	PosLimit:     17.5
 #	Position:     2  30  -125
-	Position:     -3  20 -180
-	PosSpread:    20  20  0
+	Position:     -12  20 -180
+	PosSpread:    3  25  0
 
 	RandMode:       none #(none/root)
 	EnergyMode:	gRand

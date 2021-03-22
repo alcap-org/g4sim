@@ -13,7 +13,7 @@
 /vis/viewer/set/viewpointThetaPhi 70 90
 
 # Top Down
-#/vis/viewer/set/viewpointThetaPhi 90 90
+/vis/viewer/set/viewpointThetaPhi 90 90
 
 # Side View
 #/vis/viewer/set/viewpointThetaPhi 90 0
@@ -28,9 +28,9 @@
 #/vis/scene/add/axes 20 -2.5 -20 5 cm
 #/vis/scene/add/axes -5 -2.5 5 5 cm
 
-/vis/filtering/trajectories/create/particleFilter muon
+#/vis/filtering/trajectories/create/particleFilter muon
 #/vis/filtering/trajectories/muon/add mu-
-/vis/filtering/trajectories/muon/add e+
+#/vis/filtering/trajectories/muon/add e+
 #/vis/filtering/trajectories/muon/add geantino
 #/vis/filtering/trajectories/muon/add proton
 #/vis/filtering/trajectories/muon/invert false

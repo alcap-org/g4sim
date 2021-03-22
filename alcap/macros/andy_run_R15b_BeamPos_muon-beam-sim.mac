@@ -10,7 +10,7 @@
 # Run 10477
 #/g4sim/det/ReloadGeo              geometry_R2015b/geometry_S17
 #/g4sim/gun/ResetGen               gen/R15b_gen_mu_SF1-02
-#/g4sim/gun/ResetGen               gen/R15b_gen_mu_centreStop
+##/g4sim/gun/ResetGen               gen/R15b_gen_mu_centreStop
 
 # Run 10473
 /g4sim/det/ReloadGeo              geometry_R2015b/geometry_S16

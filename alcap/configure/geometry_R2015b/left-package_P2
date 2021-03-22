@@ -43,6 +43,7 @@ DEFINE: thDLSiL3 thDLSi
 #DEFINE: thDLSiL3 0.275 # want to get down to 1200 um thick active SiL3
 #DEFINE: thDLSiL3 0.375 # want to get down to 1100 um thick active SiL3
 DEFINE: thSiL3  nomThSiL3-thDLSiL3-thDLSi-2*thDLAl # SiL3 thickness
+
 DEFINE: wSiL3   50  # SiL3 width
 DEFINE: hSiL3   50  # SiL3 height
 

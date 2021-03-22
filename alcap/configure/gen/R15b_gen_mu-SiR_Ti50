@@ -1,0 +1,36 @@
+	PhysicsList: QGSP_BERT
+
+#General setting  
+	Type:      simple #(simple/stable/ion)
+	Particle:  mu- #(e+/e-/deuteron/chargedgeantino/gamma/...)
+#	Particle:  geantino
+
+#Default Direction
+#	           Theta    Phi
+#	           deg      deg
+	Direction: 15      180
+	ThetaSpread: 0
+	PhiSpread: 0
+#Default Momentum Amplitude
+#	Ekin:	     2.00
+#	EkinSpread:  1.00
+	Ekin:	     1.66
+	EkinSpread:  0.20
+
+#Default Position     x    y   z
+#	              mm   mm  mm
+	Position:         -110  20  -20
+	PosSpread:        5 5   0
+	PosLimit:         17.5
+
+	RandMode:       none #(none/root)
+	EnergyMode:	gRand
+	PositionMode:   gRand  #(uniform/root/none/gRand/uRand)
+	DirectionMode:  none #(none/uniform/histo)
+	ThetaMode:      none #(none/gRand/uRand)
+	PhiMode:        none #(none/gRand/uRand)
+	TimeMode:       none #(none/root)
+	pidMode:        none #(none/root)
+#Default Time
+#	         ns
+	Time:    0

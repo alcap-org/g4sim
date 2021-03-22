@@ -3,7 +3,7 @@
 #include "TTree.h"
 #include "TF1.h"
 
-void R15b_MuPlusEDep(std::string filename, std::string outfilename, std::string detname, double det_resolution, double det_threshold, double det_k_factor) {
+void R15b_MuPlusEDep(std::string filename, std::string outfilename, std::string detname, double det_resolution, double det_threshold, double det_k_factor, std::string tgtvolname, double x_max = 50) {
 
   TFile* muplus_file = new TFile(filename.c_str(), "READ");  
   TTree* muplus_tree = (TTree*) muplus_file->Get("tree");
@@ -28,8 +28,8 @@ void R15b_MuPlusEDep(std::string filename, std::string outfilename, std::string 
   br_tid->SetAddress(&tid);
 
   double min_energy = 0;
-  double max_energy = 50000;
-  double energy_width = 50;
+  double max_energy = x_max;
+  double energy_width = 0.050;
   int n_energy_bins = (max_energy - min_energy) / energy_width;
 
   TH1F* hEDep_muplus = new TH1F("hEDep_muplus", "", n_energy_bins, min_energy, max_energy);
@@ -59,7 +59,7 @@ void R15b_MuPlusEDep(std::string filename, std::string outfilename, std::string 
       double i_time = t->at(iElement);
       int i_tid = tid->at(iElement)*1e6;
       
-      if (i_tid == 1 && i_ovolName.find("Target")==std::string::npos) { // only want events that started in the target
+      if (i_tid == 1 && i_ovolName.find(tgtvolname)==std::string::npos) { // only want events that started in the target
 	//	std::cout << "Actually started in " << i_ovolName << std::endl;
 	didnt_start_in_target = true;
 	break;
@@ -67,7 +67,7 @@ void R15b_MuPlusEDep(std::string filename, std::string outfilename, std::string 
 
       
       if (i_volName==detname) {
-	//       	std::cout << "Event #" << i_entry << ": " << i_volName << ": " << i_particleName << ": i_edep = " << i_edep << " keV, t = " << i_time << " ns" << std::endl;
+	//	std::cout << "Event #" << i_entry << ": " << i_volName << ": " << i_particleName << ": i_edep = " << i_edep << " keV, t = " << i_time << " ns" << std::endl;
 	total_edep += i_edep;
       }
     }
@@ -76,14 +76,14 @@ void R15b_MuPlusEDep(std::string filename, std::string outfilename, std::string 
     total_edep *= det_k_factor;
     if (total_edep>det_threshold) {
       //      std::cout << "Total EDep = " << total_edep << std::endl;
-      hEDep_muplus->Fill(total_edep);
+      hEDep_muplus->Fill(total_edep*1e-3);
     }
   }
 
-  //  hEDep_muplus->Scale(1.0 / muplus_tree->GetEntries());
-  //  hEDep_muplus->SetYTitle("Per Generated Event");
-  hEDep_muplus->Scale(1.0 / hEDep_muplus->Integral());
-  hEDep_muplus->SetYTitle("Probability");
+  hEDep_muplus->Scale(1.0 / muplus_tree->GetEntries());
+  hEDep_muplus->SetYTitle("Per Generated Event");
+  //  hEDep_muplus->Scale(1.0 / hEDep_muplus->Integral());
+  //  hEDep_muplus->SetYTitle("Probability");
 
   std::cout << "Integral = " << hEDep_muplus->Integral() << std::endl;
   

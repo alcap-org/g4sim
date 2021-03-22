@@ -63,7 +63,7 @@ void R15b_EvdEPlot(std::string filename, std::vector<Arm>& arms) {
   //  double energy_high = 25000;
   //  double energy_low = 0;
   //  int n_bins = (energy_high - energy_low) / bin_width;
-  double total_energy_high = 10000;
+  double total_energy_high = 20000;
   double total_energy_low = 0;
   int n_total_bins = (total_energy_high - total_energy_low) / bin_width;
   double thin_energy_high = 10000;

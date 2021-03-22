@@ -5,10 +5,20 @@
 #include "TLegend.h"
 
 void R15b_Si16a_EvdEPlot() {
-  std::string filename = "output/raw_g4sim.root";
+  //  std::string filename = "output/raw_g4sim.root";
   
   //  std::string filename = "output/R15b_200k_Geom-S14_muon-beam-sim_SF1-02.root";
   //  std::string outfilename = "MC_raw_spectra09740.root";
+  //  std::string filename = "output/R15b_2M_Geom-P5_muon-beam-sim_SF1-02-lowerE.root";
+  //  std::string outfilename = "MC_raw_spectra09740_moreStats_lowerE.root";
+  //  std::string filename = "output/R15b_2M_Geom-S14_muon-beam-sim_SF1-02-lowestE.root";
+  //  std::string outfilename = "MC_raw_spectra09740_moreStats_lowestE.root";
+  //  std::string filename = "output/R15b_2M_Geom-S14_muon-beam-sim_SF1-02-highestE.root";
+  //  std::string outfilename = "MC_raw_spectra09740_moreStats_highestE.root";
+  // std::string filename = "output/R15b_2M_Geom-S14_muon-beam-sim_SF1-02-midHighE.root";
+  // std::string outfilename = "MC_raw_spectra09740_moreStats_midHighE.root";
+  std::string filename = "output/R15b_2M_Geom-S14_muon-beam-sim_SF1-02-midLowE.root";
+  std::string outfilename = "MC_raw_spectra09740_moreStats_midLowE.root";
 
   //  std::string filename = "output/R15b_200k_Geom-S14_muon-beam-sim_SF1-03.root";
   //  std::string outfilename = "MC_raw_spectra09741.root";
@@ -16,7 +26,7 @@ void R15b_Si16a_EvdEPlot() {
   //  std::string outfilename = "MC_raw_spectra09742.root";
   
   //  std::string filename = "output/R15b_200k_Geom-S14_muon-beam-sim_SF1-05.root";
-  std::string outfilename = "MC_raw_spectra09743.root";
+  //  std::string outfilename = "MC_raw_spectra09743.root";
   std::vector<Arm> arms;
   Arm right_arm;
   Arm left_arm;

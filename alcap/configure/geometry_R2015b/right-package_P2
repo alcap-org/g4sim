@@ -45,8 +45,8 @@ DEFINE: wSiR3   50  # SiR3 width
 DEFINE: hSiR3   50  # SiR3 height
 
 #DEFINE: RBlockGaps 1 # 1 mm between silicon layers (?)
-DEFINE: R12BlockGap 6 # elog:Analysis-R2015b/360
-DEFINE: R23BlockGap 8 # elog:Analysis-R2015b/360
+DEFINE: R12BlockGap 1 # elog:Analysis-R2015b/360
+DEFINE: R23BlockGap 1 # elog:Analysis-R2015b/360
 
 DEFINE: wRDetBlock wSiR1+1 # the width of the right detector block mother volume
 DEFINE: hRDetBlock hSiR1+1 # the height of the right detector block mother volume
@@ -88,7 +88,8 @@ DEFINE: zSiR3DLAl2 zSiR3DLSi2+thDLSiR3/2+thDLAl/2
 DEFINE: SiR1ToChamberWall 40 # see elog:385
 DEFINE: xRDetBlock 0 # "nicely centred" (see elog:302, NB for Al50) (relative to ChamberIn)
 DEFINE: yRDetBlock RO-zSiR1-SiR1ToChamberWall # beam right of target
-#DEFINE: yRDetBlock RO-zSiR1-SiR1ToChamberWall-1 # move closer to target
+#DEFINE: yRDetBlock RO-zSiR1-SiR1ToChamberWall-1.5 # move closer to target
+#DEFINE: yRDetBlock RO-zSiR1-SiR1ToChamberWall+1.5 # move further from target
 DEFINE: zRDetBlock Z0 # distance above floor
 
 #Box info

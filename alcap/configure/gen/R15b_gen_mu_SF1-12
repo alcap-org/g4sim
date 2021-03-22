@@ -14,8 +14,17 @@
 
 #Default Momentum Amplitude
 #	             MeV
-	Ekin:	     3.95
-	EkinSpread:  0.23
+# central
+	Ekin:	     3.80
+	EkinSpread:  0.17
+##	Ekin:	     3.95
+##	EkinSpread:  0.23
+# lowerE
+#	Ekin:	     3.75
+#	EkinSpread:  0.17
+# higherE
+#	Ekin:	     3.85
+#	EkinSpread:  0.17
 
 
 

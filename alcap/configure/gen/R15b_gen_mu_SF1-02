@@ -9,21 +9,31 @@
 #	           Theta    Phi
 #	           deg      deg
 	Direction: 0      0
-	ThetaSpread: 10
+	ThetaSpread: 5
 	PhiSpread: 360
 
 #Default Momentum Amplitude
 #	             MeV
 # SF = 1.02 (data: Ekin=1.23, EkinSpread=0.17)
+# highest E
 #	Ekin:	     1.55
 #	EkinSpread:  0.175
+# midHighE
+#	Ekin:	     1.47
+#	EkinSpread:  0.20
+# higher E
 #	Ekin:	     1.40
 #	EkinSpread:  0.20
-	Ekin:	     1.37
-	EkinSpread:  0.19
-
+# central
+#	Ekin:	     1.37
+#	EkinSpread:  0.19
+# lower E
 #	Ekin:	     1.34
 #	EkinSpread:  0.19
+# midLowE
+#	Ekin:	     1.27
+#	EkinSpread:  0.19
+# lowest E
 #	Ekin:	     1.19
 #	EkinSpread:  0.19
 
@@ -32,6 +42,8 @@
 #	              mm   mm  mm
 	Position:     -3  20 -180
 	PosSpread:    20  20  0
+#	Position:     -12  20 -180
+#	PosSpread:    3  25  0
 
 	RandMode:       none #(none/root)
 	EnergyMode:	gRand

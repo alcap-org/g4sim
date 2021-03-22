@@ -5,10 +5,12 @@
 #include "TLegend.h"
 
 void R15b_SiL3_EvdEPlot() {
-  std::string filename = "output/raw_g4sim.root";
-
+  //  std::string filename = "output/raw_g4sim.root";
+  std::string filename = "output/R15b_200k_Geom-P1_muon-beam-sim_SF1-12.root";
+  std::string outfilename = "dump.root";
+  
   //  std::string filename = "output/R15b_200k_Geom-S14_muon-beam-sim_SF1-03.root";
-  std::string outfilename = "MC_raw_spectra09040.root";
+  //  std::string outfilename = "MC_raw_spectra09040.root";
   
   std::vector<Arm> arms;
   Arm left_arm;

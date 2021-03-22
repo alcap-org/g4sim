@@ -55,7 +55,10 @@ DEFINE: zSiL1DLSi1 zSiL1DLAl1+thDLAl/2+thDLSi/2
 DEFINE: xSiL1 0
 DEFINE: ySiL1 0
 DEFINE: zSiL1 zSiL1DLSi1+thDLSi/2+thSiL1/2
-DEFINE: xStrip xSiL1-(nStrips/2)*wStrip+0.5*wStrip+(x*wStrip)
+# Original Order
+#DEFINE: xStrip xSiL1-(nStrips/2)*wStrip+0.5*wStrip+(x*wStrip)
+# Flipped Order
+DEFINE: xStrip xSiL1+(nStrips/2)*wStrip-0.5*wStrip-(x*wStrip)
 DEFINE: yStrip ySiL1
 DEFINE: zStrip zSiL1
 

@@ -50,7 +50,9 @@
 #
 # Position histogram and file
 #
-	PMHFN:       R15b_Geom-P1_muon-stop-positions.root
+#	PMHFN:       R15b_Geom-P1_muon-stop-positions.root
+#	PMHFN:       R15b_Geom-P1-higherE_muon-stop-positions.root
+	PMHFN:       R15b_Geom-P1-lowerE_muon-stop-positions.root
 	PMHHN:       hGlobalStoppingPositions
 
 #Scale Momentum  Spread

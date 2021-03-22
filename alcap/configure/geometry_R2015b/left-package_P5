@@ -37,8 +37,8 @@ DEFINE: thSiL2  nomThSiL2-thDLSi-thDLSiL2-2*thDLAl # SiL2 thickness
 DEFINE: wSiL2   50  # SiL2 width
 DEFINE: hSiL2   50  # SiL2 height
 
-#DEFINE: nomThSiL3  1.500 # SiL3 thickness
-DEFINE: nomThSiL3  1.300 # SiL3 thickness
+DEFINE: nomThSiL3  1.500 # SiL3 thickness
+#DEFINE: nomThSiL3  1.300 # SiL3 thickness
 #DEFINE: nomThSiL3  1.200 # SiL3 thickness
 DEFINE: thDLSiL3 thDLSi
 #DEFINE: thDLSiL3 0.225 # want to get down to 1250 um thick active SiL3
@@ -64,7 +64,10 @@ DEFINE: zSiL1DLSi1 zSiL1DLAl1+thDLAl/2+thDLSi/2
 DEFINE: xSiL1 0
 DEFINE: ySiL1 0
 DEFINE: zSiL1 zSiL1DLSi1+thDLSi/2+thSiL1/2
-DEFINE: xStrip xSiL1-(nStrips/2)*wStrip+0.5*wStrip+(x*wStrip)
+# Original Order
+#DEFINE: xStrip xSiL1-(nStrips/2)*wStrip+0.5*wStrip+(x*wStrip)
+# Flipped Order
+DEFINE: xStrip xSiL1+(nStrips/2)*wStrip-0.5*wStrip-(x*wStrip)
 DEFINE: yStrip ySiL1
 DEFINE: zStrip zSiL1
 
@@ -110,7 +113,8 @@ DEFINE: zLDetBlock Z0 # distance above floor
 
 	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_1 1 TargetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl1 0 0 0 
 	B    wSiL1  hSiL1  thDLSi  SiL1DeadSi_1 1 TargetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi1 0 0 0 
-	B    wStrip hStrip thStrip SiL1    16    TargetBlock Silicon  none     xStrip yStrip zStrip  0    0   0 
+	B    wStrip hStrip thStrip SiL1    16    TargetBlock Silicon  none     xStrip yStrip zStrip  0    0   0
+#	B    wStrip hStrip thStrip SiL1    16    TargetBlock Silicon  M/MonitorSD     xStrip yStrip zStrip  0    0   0 
 	B    wSiL1  hSiL1  thDLSiL1  SiL1DeadSi_2 1 TargetBlock Silicon none          xSiL1  ySiL1 zSiL1DLSi2 0 0 0 
 	B    wSiL1  hSiL1  thDLAl  SiL1DeadAl_2 1 TargetBlock Aluminium none          xSiL1  ySiL1 zSiL1DLAl2 0 0 0
 

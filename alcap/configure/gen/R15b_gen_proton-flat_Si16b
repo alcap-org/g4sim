@@ -38,11 +38,14 @@
 #
 # Position histogram and file
 #
-#	PMHFN:       R15b_Geom-P5_muon-stop-positions.root
+#	PMHFN:       R15b_Geom-P5_muon-stop-positions_new.root
+#	PMHFN:       R15b_Geom-P5-midLowE_muon-stop-positions_new.root
+	PMHFN:       R15b_Geom-P5-midHighE_muon-stop-positions_new.root
 #	PMHFN: 	     R15b_Geom-P5-higherE_muon-stop-positions.root
 #	PMHFN: 	     R15b_Geom-P5-highestE_muon-stop-positions.root
 #	PMHFN: 	     R15b_Geom-P5-lowerE_muon-stop-positions.root
-	PMHFN: 	     R15b_Geom-P5-lowestE_muon-stop-positions.root
+#	PMHFN: 	     R15b_Geom-P5-lowestE_muon-stop-positions.root
+#	PMHFN:       R15b_Geom-P5_muon-stop-positions_retune.root
 	PMHHN:       hGlobalStoppingPositions
 
 #Scale Momentum  Spread

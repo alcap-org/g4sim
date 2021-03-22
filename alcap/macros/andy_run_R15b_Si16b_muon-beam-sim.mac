@@ -18,7 +18,7 @@
 #/control/execute {ALCAPWORKROOT}/macros/test_vis.mac
 
 #	For this run
-#/tracking/verbose 2
+#/tracking/verbose 1
 /random/setSeeds 5 6
 /g4sim/myAnalysisSvc/printModulo    10000
 /run/beamOn  2000000
